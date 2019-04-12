@@ -6,8 +6,10 @@ import Sidebar from '../Containers/Sidebar';
 
 import gogo from './gogo';
 import secondMenu from './second-menu';
+import customer from './customer';
 
 import { connect } from 'react-redux';
+
 
 class MainApp extends Component {
 	constructor(props) {
@@ -16,6 +18,7 @@ class MainApp extends Component {
 
 	render() {
 		const { match, containerClassnames} = this.props;
+		console.log(this.props);
 		return (
 			<div id="app-container" className={containerClassnames}>
 				<TopNav history={this.props.history} />
@@ -25,6 +28,7 @@ class MainApp extends Component {
 						<Switch>
 							<Route path={`${match.url}/gogo`} component={gogo} />
 							<Route path={`${match.url}/second-menu`} component={secondMenu} />
+							<Route path={`${match.url}/customer`} component={customer} />
 							<Redirect to="/error" />
 						</Switch>
 					</div>
