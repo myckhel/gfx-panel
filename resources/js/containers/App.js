@@ -25,8 +25,8 @@ color options :
 	 'light.red'		'dark.red'
 */
 
-const InitialPath = ({ component: Component,  authUser,...rest }) =>
-	<Route
+const InitialPath = ({ component: Component,  authUser,...rest }) =>{
+	return (<Route
 		{...rest}
 		render={props =>
 			authUser
@@ -37,13 +37,13 @@ const InitialPath = ({ component: Component,  authUser,...rest }) =>
 						state: { from: props.location }
 					}}
 				/>}
-	/>;
+	/>);}
 
 class App extends Component {
 	render() {
 		const { location, match, user, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
-		if (location.pathname === '/'  || location.pathname==='/app'|| location.pathname==='/app/') {
+		if (location.pathname === '/' || location.pathname === '/app' || location.pathname === '/app/') {
 			return (<Redirect to={defaultStartPath} />);
 		}
 		return (
@@ -53,17 +53,17 @@ class App extends Component {
 						locale={currentAppLocale.locale}
 						messages={currentAppLocale.messages}
 					>
-						<Fragment>
+					<Fragment>
 						<Switch>
+							<Route exact path={`/login`} component={login} />
+							<Route exact path={`/register`} component={register} />
+							<Route exact path={`/forgot-password`} component={forgotPassword} />
+							<Route exact path={`/error`} component={error} />
 							<InitialPath
 								path={`${match.url}app`}
 								authUser={user}
 								component={MainRoute}
 							/>
-							<Route path={`/login`} component={login} />
-							<Route path={`/register`} component={register} />
-							<Route path={`/forgot-password`} component={forgotPassword} />
-							<Route path={`/error`} component={error} />
 							<Redirect to="/error" />
 						</Switch>
 						</Fragment>

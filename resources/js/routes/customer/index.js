@@ -6,8 +6,8 @@ import View from './view';
 
 export default ({ match }) => (
     <Switch>
-        <Route path={`${match.url}`} component={all} />
-        <Route path={`${match.url}/:id`} render={props => <View id={id} />} />
+        <Route exact path={`${match.url}/`} component={all} />
+        <Route exact path={`${match.url}/:id`} render={props => <View id={props.id} />} />
         <Redirect to="/error" />
     </Switch>
 );
