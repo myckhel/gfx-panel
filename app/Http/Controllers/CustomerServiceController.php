@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomerService;
+use App\Customer;
 use Illuminate\Http\Request;
 
 class CustomerServiceController extends Controller
@@ -15,6 +16,7 @@ class CustomerServiceController extends Controller
     public function index()
     {
         //
+        dd(Customer::with('customer_service')->get());
         dd(CustomerService::all());
     }
 

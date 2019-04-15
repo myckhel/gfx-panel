@@ -11,4 +11,8 @@ class Service extends Model
     public function customer_services(){
       return $this->hasMany(CustomerService::class);
     }
+
+    public function customer_service_meta(){
+      return $this->hasMany(CustomerServiceMeta::class);
+    }
 }
