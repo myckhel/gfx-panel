@@ -19,9 +19,11 @@ class CreateCustomersTable extends Migration
           $table->string('firstname');
           $table->string('lastname');
           $table->string('email', 50)->nullable()->unique();
-          $table->integer('phone', 12)->nullable();
+          $table->bigInteger('phone')->unsigned()->nullable();
           $table->timestamps();
         });
+
+        // DB::statement("ALTER TABLE customers AUTO_INCREMENT = 50000;");
     }
 
     /**
