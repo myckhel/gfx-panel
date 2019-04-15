@@ -15,6 +15,7 @@ class CustomerServiceController extends Controller
     public function index()
     {
         //
+        dd(CustomerService::all());
     }
 
     /**
