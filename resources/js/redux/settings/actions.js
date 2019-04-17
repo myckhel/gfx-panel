@@ -1,6 +1,6 @@
 import {
     CHANGE_LOCALE
-} from '../../Constants/actionTypes';
+} from 'Constants/actionTypes';
 
 
 export const changeLocale = (locale) => {
@@ -12,3 +12,4 @@ export const changeLocale = (locale) => {
         }
     )
 }
+

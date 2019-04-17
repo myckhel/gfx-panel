@@ -4,9 +4,9 @@ import {
 	MENU_CONTAINER_ADD_CLASSNAME,
 	MENU_CLICK_MOBILE_MENU,
 	MENU_CHANGE_DEFAULT_CLASSES
-} from '../../Constants/actionTypes';
+} from 'Constants/actionTypes';
 
-import {defaultMenuType, subHiddenBreakpoint, menuHiddenBreakpoint } from '../../Constants/defaultValues'
+import {defaultMenuType,  subHiddenBreakpoint, menuHiddenBreakpoint } from 'Constants/defaultValues'
 
 
 const INIT_STATE = {
@@ -40,7 +40,7 @@ export default (state = INIT_STATE, action) => {
 			return Object.assign({}, state, {
 				containerClassnames: action.payload
 			})
-
+			
 		default: return { ...state };
 	}
 }

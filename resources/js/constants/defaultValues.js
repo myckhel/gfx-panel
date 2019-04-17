@@ -1,9 +1,7 @@
+export const defaultMenuType = 'menu-default'; // 'menu-default', 'menu-sub-hidden', 'menu-hidden';
+export const defaultStartPath = '/app/dashboards/default'; 
 export const subHiddenBreakpoint=1440;
 export const menuHiddenBreakpoint = 768;
-export const defaultMenuType = 'menu-default'; //'menu-sub-hidden', 'menu-hidden'
-export const defaultStartPath = 'app/customer';
-
-
 export const defaultLocale='en';
 export const localeOptions=[
     {id:'en',name:'English'},
@@ -19,6 +17,6 @@ export const firebaseConfig = {
     messagingSenderId: "216495999563"
 };
 
-export const apiUrl ="http://localhost:9000/api/"
 
-export const searchPath = "app/customer"
+export const searchPath = "/app/pages/search"
+export const servicePath = "https://api.coloredstrategies.com"

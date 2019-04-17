@@ -3,7 +3,7 @@ import {
     MENU_CONTAINER_ADD_CLASSNAME,
     MENU_CLICK_MOBILE_MENU,
     MENU_CHANGE_DEFAULT_CLASSES
-} from '../../Constants/actionTypes';
+} from 'Constants/actionTypes';
 
 export const changeDefaultClassnames = (strCurrentClasses) => {
     return (

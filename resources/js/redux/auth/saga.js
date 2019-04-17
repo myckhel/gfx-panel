@@ -5,7 +5,7 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     LOGOUT_USER
-} from '../../Constants/actionTypes';
+} from 'Constants/actionTypes';
 
 import {
     loginUserSuccess,
