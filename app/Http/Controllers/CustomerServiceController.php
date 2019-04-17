@@ -16,8 +16,8 @@ class CustomerServiceController extends Controller
     public function index()
     {
         //
-        dd(Customer::with('customer_service')->get());
-        dd(CustomerService::all());
+        $customer = Customer::first();
+        dd($customer->customer_service_meta()->with('customer_service')->get());
     }
 
     /**
