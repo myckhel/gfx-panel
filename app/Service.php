@@ -8,7 +8,7 @@ class Service extends Model
 {
     //
     // relationship
-    public function customer_services(){
+    public function customer_service(){
       return $this->hasMany(CustomerService::class);
     }
 
