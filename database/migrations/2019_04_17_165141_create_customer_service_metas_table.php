@@ -17,7 +17,7 @@ class CreateCustomerServiceMetasTable extends Migration
            $table->bigIncrements('id');
            $table->bigInteger('customer_service_id')->unsigned();
            $table->string('name');
-           $table->string('value');
+           $table->string('value', 30)->unique();
            $table->timestamps();
        });
 

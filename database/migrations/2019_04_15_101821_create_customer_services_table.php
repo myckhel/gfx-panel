@@ -15,16 +15,12 @@ class CreateCustomerServicesTable extends Migration
     {
       Schema::create('customer_services', function (Blueprint $table) {
         $table->bigIncrements('id');
-        $table->bigInteger('service_id')->unsigned();
         $table->bigInteger('customer_id')->unsigned();
-        $table->bigInteger('service_meta_id')->unsigned();
         $table->timestamps();
       });
 
       Schema::table('customer_services', function (Blueprint $table) {
-        $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-        $table->foreign('service_meta_id')->references('id')->on('service_metas')->onDelete('cascade');
       });
     }
 

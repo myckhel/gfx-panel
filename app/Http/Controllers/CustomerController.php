@@ -15,7 +15,7 @@ class CustomerController extends Controller
     public function index()
     {
         //
-        return Customer::all();
+        return Customer::with('customer_service.customer_service_metas')->get();
     }
 
     /**
@@ -23,7 +23,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
     }
@@ -37,6 +37,7 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
+        return Customer::create($request);
     }
 
     /**
@@ -48,6 +49,7 @@ class CustomerController extends Controller
     public function show($id)
     {
         //
+        return Customer::find($id);
     }
 
     /**
@@ -59,6 +61,7 @@ class CustomerController extends Controller
     public function edit($id)
     {
         //
+        return Customer::findOrFail($id);
     }
 
     /**
@@ -71,6 +74,8 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $customer = Customer::findOrFail($id);
+        return $customer->update($request->all());
     }
 
     /**
@@ -82,5 +87,7 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
+        $customer = Customer::findOrFail($id);
+        return $customer->delete();
     }
 }

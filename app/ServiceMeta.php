@@ -8,7 +8,7 @@ class ServiceMeta extends Model
 {
   //
   //
-  public function customer_service(){
-    return $this->belongsTo(CustomerService::class);
+  public function service(){
+    return $this->belongsTo(Service::class);
   }
 }
