@@ -10,8 +10,7 @@ class CustomerServiceMeta extends Model
     public function services(){
       return $this->belongsTo(Service::class);
     }
-
-    public function customers(){
-      return $this->belongsTo(Customer::class);
+    public function customer_service(){
+      return $this->belongsTo(CustomerService::class);
     }
 }

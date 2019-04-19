@@ -11,15 +11,9 @@ class CustomerService extends Model
   public function customer(){
     return $this->belongsTo(Customer::class);
   }
-
-  public function services(){
-    return $this->belongsTo(Service::class);
+  public function customer_service_metas(){
+    return $this->hasMany(CustomerServiceMeta::class);
   }
-
-  public function service_metas(){
-    return $this->hasMany(ServiceMeta::class);
-  }
-
   public function payments(){
     return $this->hasMany(Payment::class);
   }
