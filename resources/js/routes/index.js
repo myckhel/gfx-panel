@@ -4,10 +4,9 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 import TopNav from 'Containers/TopNav'
 import Sidebar from 'Containers/Sidebar';
 
-import dashboards from './dashboards';
-import pages from './pages';
-import applications from './applications';
-import ui from './ui';
+import dashboard from './dashboard';
+import secondMenu from './second-menu';
+import customer from './customer';
 
 import { connect } from 'react-redux';
 
@@ -21,10 +20,9 @@ class MainApp extends Component {
 				<main>
 					<div className="container-fluid">
 						<Switch>
-							<Route path={`${match.url}/applications`} component={applications} />
-							<Route path={`${match.url}/dashboards`} component={dashboards} />
-							<Route path={`${match.url}/pages`} component={pages} />
-							<Route path={`${match.url}/ui`} component={ui} />
+							<Route path={`${match.url}/`} component={dashboard} />
+							<Route path={`${match.url}/second-menu`} component={secondMenu} />
+							<Route path={`${match.url}/customer`} component={customer} />
 							<Redirect to="/error" />
 						</Switch>
 					</div>
@@ -37,5 +35,5 @@ const mapStateToProps = ({ menu }) => {
 	const { containerClassnames} = menu;
 	return { containerClassnames };
   }
-  
+
 export default withRouter(connect(mapStateToProps, {})(MainApp));
