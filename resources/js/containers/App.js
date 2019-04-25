@@ -43,9 +43,10 @@ class App extends Component {
 	render() {
 		const { location, match, user, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
-		if (location.pathname === '/' || location.pathname === '/app' || location.pathname === '/app/') {
+		if (location.pathname === '/' ) {
 			return (<Redirect to={defaultStartPath} />);
 		}
+		console.log(match.url);
 		return (
 				<Fragment>
 					<NotificationContainer />
@@ -60,15 +61,15 @@ class App extends Component {
 							<Route exact path={`/forgot-password`} component={forgotPassword} />
 							<Route exact path={`/error`} component={error} />
 							<InitialPath
-								path={`${match.url}app`}
+								path={`${match.url}app/`}
 								authUser={user}
 								component={MainRoute}
 							/>
 							<Redirect to="/error" />
 						</Switch>
-						</Fragment>
-					</IntlProvider>
-				</Fragment>
+					</Fragment>
+				</IntlProvider>
+			</Fragment>
 		);
 	}
 }
@@ -80,3 +81,4 @@ const mapStateToProps = ({ authUser, settings }) => {
 };
 
 export default connect(mapStateToProps,{  })(App);
+// || location.pathname === '/app' || location.pathname === '/app/'

@@ -167,7 +167,7 @@ class Sidebar extends Component {
         });
       }else if (this.state.selectedParentMenu == "") {
         this.setState({
-          selectedParentMenu: "gogo"
+          selectedParentMenu: "home"
         });
       }
 
@@ -256,28 +256,42 @@ class Sidebar extends Component {
               <Nav vertical className="list-unstyled">
                 <NavItem
                   className={classnames({
-                    active: ((this.state.selectedParentMenu == "gogo" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="gogo")
+                    active: ((this.state.selectedParentMenu == "home" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="home")
                   })}
                 >
                   <NavLink
-                    to="/app/gogo"
-                    onClick={e => this.openSubMenu(e, "gogo")}
+                    to="/app"
+                    onClick={e => this.openSubMenu(e, "home")}
                   >
                     <i className="iconsmind-Air-Balloon" />{" "}
-                    <IntlMessages id="menu.gogo" />
+                    Dashboard
                   </NavLink>
                 </NavItem>
                 <NavItem
                   className={classnames({
-                    active: ((this.state.selectedParentMenu == "second-menu" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="second-menu")
+                    active: ((this.state.selectedParentMenu == "customer" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="customer")
                   })}
                 >
                   <NavLink
-                    to="/app/second-menu"
-                    onClick={e => this.openSubMenu(e, "second-menu")}
+                    to="/app/customer"
+                    onClick={e => this.openSubMenu(e, "customer")}
                   >
                     <i className="iconsmind-Chemical-3" />{" "}
-                    <IntlMessages id="menu.second-menu" />
+                    customer
+                  </NavLink>
+                </NavItem>
+
+                <NavItem
+                  className={classnames({
+                    active: ((this.state.selectedParentMenu == "service" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="service")
+                  })}
+                >
+                  <NavLink
+                    to="/app/service"
+                    onClick={e => this.openSubMenu(e, "service")}
+                  >
+                    <i className="iconsmind-Chemical-3" />{" "}
+                    service
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -292,28 +306,42 @@ class Sidebar extends Component {
             >
               <Nav
                 className={classnames({
-                  "d-block": ((this.state.selectedParentMenu == "gogo" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="gogo")
+                  "d-block": ((this.state.selectedParentMenu == "home" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="home")
                 })}
-                data-parent="gogo"
+                data-parent="home"
               >
                 <NavItem>
-                  <NavLink to="/app/gogo/start">
+                  <NavLink to="/app">
                     <i className="simple-icon-paper-plane" />{" "}
-                    <IntlMessages id="menu.start" />
+                    dashboard
                   </NavLink>
                 </NavItem>
               </Nav>
 
               <Nav
                 className={classnames({
-                  "d-block": ((this.state.selectedParentMenu == "second-menu" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="second-menu")
+                  "d-block": ((this.state.selectedParentMenu == "customer" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="customer")
                 })}
-                data-parent="second-menu"
+                data-parent="customer"
               >
                 <NavItem>
-                  <NavLink to="/app/second-menu/second">
+                  <NavLink to="/app/customer">
                     <i className="simple-icon-paper-plane" />{" "}
-                    <IntlMessages id="menu.second" />
+                    customers
+                  </NavLink>
+                </NavItem>
+              </Nav>
+
+              <Nav
+                className={classnames({
+                  "d-block": ((this.state.selectedParentMenu == "service" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="service")
+                })}
+                data-parent="service"
+              >
+                <NavItem>
+                  <NavLink to="/app/service">
+                    <i className="simple-icon-paper-plane" />{" "}
+                    services
                   </NavLink>
                 </NavItem>
               </Nav>

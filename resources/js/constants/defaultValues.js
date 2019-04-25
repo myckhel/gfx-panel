@@ -1,7 +1,7 @@
 export const subHiddenBreakpoint=1440;
 export const menuHiddenBreakpoint = 768;
 export const defaultMenuType = 'menu-default'; //'menu-sub-hidden', 'menu-hidden'
-export const defaultStartPath = 'app/customer';
+export const defaultStartPath = 'app';
 
 
 export const defaultLocale='en';
@@ -21,4 +21,5 @@ export const firebaseConfig = {
 
 export const apiUrl ="http://localhost:9000/api/"
 
-export const searchPath = "app/customer"
+export const searchPath = "app"
+export const servicePath = "https://api.coloredstrategies.com"
