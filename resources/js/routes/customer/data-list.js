@@ -25,6 +25,23 @@ function collect(props) {
 import { servicePath } from '../../Constants/defaultValues'
 const apiUrl =servicePath+"/cakes/paging"
 
+import createNotification from './alerts';
+// import $ from 'jquery';
+
+
+
+// $(document).ready(() => {
+//   $('#').submit(event) => {
+//     console.log('kkkkkkk');
+//     event.preventDefault();
+//     const data = new FormData(event.target);
+//     console.log(data.get('firstname'));
+//     console.log(data.get('lastname'));
+//     console.log(data.get('email'));
+//   }
+//   alert('ok')
+// })
+
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
@@ -37,6 +54,7 @@ class DataListLayout extends Component {
 
 
       this.state = {
+        visible: true,
         form: {
           firstname: '',
           lastname: '',
@@ -52,11 +70,12 @@ class DataListLayout extends Component {
           {label:'Desserts',value:'Desserts',key:2},
         ],
         orderOptions:[
-          {column: "title",label: "Product Name"},
-          {column: "category",label: "Category"},
-          {column: "status",label: "Status"}
+          {column: "firstname",label: "Firstname"},
+          {column: "lastname",label: "Lastname"},
+          {column: "phone",label: "Phone"},
+          {column: "email",label: "Email"}
         ],
-        selectedOrderOption:  {column: "title",label: "Product Name"},
+        selectedOrderOption:  {column: "title",label: "Firstname"},
         dropdownSplitOpen: false,
         modalOpen: false,
         currentPage: 1,
@@ -69,6 +88,11 @@ class DataListLayout extends Component {
         isLoading:false
       };
     }
+
+    onDismiss = () => {
+      this.setState({ visible: false });
+    }
+
     componentWillMount() {
       this.props.bindShortcut(["ctrl+a", "command+a"], () =>
         this.handleChangeSelectAll(false)
@@ -208,12 +232,9 @@ class DataListLayout extends Component {
       this.dataListRender();
     }
 
-    handlePhone = (e) => {
-      this.setState(prev => {return {...prev.form, phone: e.event.target.value}})
-    }
-
     addNew = () => {
-
+      console.log($('#customer-form'));
+      $('#customer-form').trigger('submit');
       return
     }
 
@@ -242,6 +263,26 @@ class DataListLayout extends Component {
       //     totalItemCount : data.totalItem,
       //     isLoading:true
       //   });
+      })
+    }
+
+    // form submit
+    submitForm = (event) => {
+      const form = $(event.target)
+      event.persist()
+      event.preventDefault();
+      $.post('/api/customer', $(form).serializeArray())
+      .done((res) => {
+        if (res.status) {
+        $(form).trigger('reset')
+        // alert success
+        createNotification('success', 'True')
+        } else {
+          // alert warning
+        }
+      })
+      .fail((err) => {
+        console.log(err);
       })
     }
 
@@ -275,7 +316,7 @@ class DataListLayout extends Component {
               <Colxx xxs="12">
                 <div className="mb-2">
                   <h1>
-                    cutomers List
+                    Customers List
                   </h1>
 
                   <div className="float-sm-right">
@@ -295,53 +336,53 @@ class DataListLayout extends Component {
                       wrapClassName="modal-right"
                       backdrop="static"
                     >
-                      <ModalHeader toggle={this.toggleModal}>
-                        Add New customer +
-                      </ModalHeader>
-                      <ModalBody>
-                        <Form>
-                          <Label>
-                            Firstname
-                          </Label>
-                          <Input
-                            value={this.state.form.firstname} type="text" required name="firstname"
-                            id="firstname" placeholder="customer Firstname"  onChange={this.handlePhone}
-                          />
-                          <Label>
-                            Lasstname
-                          </Label>
-                          <Input
-                            value={this.state.form.lastname} type="lastname" name="lastname"
-                             id="lastname" placeholder="lastname" onChange={(e) => this.handlePhone(e)}
-                          />
-                          <Label>
-                            Email
-                          </Label>
-                          <Input
-                            value={this.state.form.email} type="email" name="email" id="email"
-                            placeholder="Email"  onChange={this.handleEmail}
-                          />
-                          <Label>
-                            Phone
-                          </Label>
-                          <Input
-                            value={this.state.form.phone} type="phone" name="phone"
-                            id="phone" placeholder="phone" onChange={this.handlePhone}
-                          />
-                        </Form>
-                      </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          color="secondary"
-                          outline
-                          onClick={this.toggleModal}
-                        >
-                          cancel
-                        </Button>
-                        <Button color="primary" onClick={this.addNew}>
-                          Submit
-                        </Button>{" "}
-                      </ModalFooter>
+                      <Form id={'customer-form'} onSubmit={(e) => {this.submitForm(e)}}>
+                        <ModalHeader toggle={this.toggleModal}>
+                          Add New customer +
+                        </ModalHeader>
+                        <ModalBody>
+                            <Label>
+                              Firstname
+                            </Label>
+                            <Input
+                              type="text" required name="firstname"
+                              id="firstname" placeholder="customer Firstname"
+                            />
+                            <Label>
+                              Lasstname
+                            </Label>
+                            <Input
+                              type="lastname" name="lastname"
+                               id="lastname" placeholder="lastname"
+                            />
+                            <Label>
+                              Email
+                            </Label>
+                            <Input
+                              type="email" name="email" id="email"
+                              placeholder="Email"
+                            />
+                            <Label>
+                              Phone
+                            </Label>
+                            <Input
+                              type="number" name="phone"
+                              id="phone" placeholder="phone"
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button
+                            color="secondary"
+                            outline
+                            onClick={this.toggleModal}
+                          >
+                            cancel
+                          </Button>
+                          <Button type="submit" id="btn" color="primary" >
+                            Submit
+                          </Button>{" "}
+                        </ModalFooter>
+                      </Form>
                     </Modal>
                     <ButtonDropdown
                       isOpen={this.state.dropdownSplitOpen}
@@ -356,6 +397,7 @@ class DataListLayout extends Component {
                             className="custom-control-input"
                             type="checkbox"
                             id="checkAll"
+                            onChange = {() => {}}
                             checked={
                               this.state.selectedItems.length >=
                               this.state.items.length
@@ -380,10 +422,10 @@ class DataListLayout extends Component {
                       />
                       <DropdownMenu right>
                         <DropdownItem>
-                          <IntlMessages id="pages.delete" />
+                          Delete
                         </DropdownItem>
                         <DropdownItem>
-                          <IntlMessages id="pages.another-action" />
+                          Edit
                         </DropdownItem>
                       </DropdownMenu>
                     </ButtonDropdown>
@@ -398,7 +440,7 @@ class DataListLayout extends Component {
                     className="pt-0 pl-0 d-inline-block d-md-none"
                     onClick={this.toggleDisplayOptions}
                   >
-                    <IntlMessages id="pages.display-options" />{" "}
+                    Display Options{" "}
                     <i className="simple-icon-arrow-down align-middle" />
                   </Button>
                   <Collapse
@@ -449,7 +491,7 @@ class DataListLayout extends Component {
                     <div className="d-block d-md-inline-block">
                       <UncontrolledDropdown className="mr-1 float-md-left btn-group mb-1">
                         <DropdownToggle caret color="outline-dark" size="xs">
-                          <IntlMessages id="pages.orderby" />
+                          Order By
                           {this.state.selectedOrderOption.label}
                         </DropdownToggle>
                         <DropdownMenu>

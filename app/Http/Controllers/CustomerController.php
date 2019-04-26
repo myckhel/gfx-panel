@@ -34,15 +34,21 @@ class CustomerController extends Controller
       */
      public function store(Request $request)
      {
-         //
-         $lastIndex = Customer::last();
-         return Customer::create([
-           'gfx_id' => $lastIndex->gfx_id++ || 50001,
+       //
+       $lastIndex = Customer::latest()->first();
+       // dd($lastIndex->gfx_id);
+       try {
+         $customer = Customer::create([
+           'gfx_id' => $lastIndex->gfx_id ? (int) $lastIndex->gfx_id+ 1 : 50001,
            'firstname' => $request->firstname,
            'lastname' => $request->lastname,
            'email' => $request->email,
            'phone' => $request->phone,
          ]);
+         return ['status' => true];
+       } catch (\Exception $e) {
+         return ['status' => false, 'text' => $e->getMessage()];
+       }
      }
      /**
       * Display the specified resource.

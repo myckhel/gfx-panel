@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     //
+    protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone' ];
 
     // relationship
     public function customer_service(){
