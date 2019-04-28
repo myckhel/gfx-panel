@@ -11,7 +11,7 @@ export default class extends Component {
     }
   }
   componentWillMount = () => axios.get('/api/customer')
-    .then((res) => res.data ? this.setState({customers: res.data}) : console.log('no data') )
+    .then((res) => res.data.data ? this.setState({customers: res.data.data}) : console.log('no data') )
     .catch((error) => console.log('error fetching', error))
 
   Customers = props => (

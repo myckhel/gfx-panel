@@ -46,7 +46,6 @@ class App extends Component {
 		if (location.pathname === '/' ) {
 			return (<Redirect to={defaultStartPath} />);
 		}
-		console.log(match.url);
 		return (
 				<Fragment>
 					<NotificationContainer />

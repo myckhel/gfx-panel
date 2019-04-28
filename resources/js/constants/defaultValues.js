@@ -23,3 +23,4 @@ export const apiUrl ="http://localhost:9000/api/"
 
 export const searchPath = "app"
 export const servicePath = "https://api.coloredstrategies.com"
+export const _token = document.head.querySelector('meta[name="csrf-token"]').content;

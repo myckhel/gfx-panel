@@ -11,7 +11,6 @@ import Select from "react-select";
 import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
-import IntlMessages from "../../Util/IntlMessages";
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
 
@@ -22,32 +21,16 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 function collect(props) {
   return { data: props.data };
 }
-import { servicePath } from '../../Constants/defaultValues'
-const apiUrl =servicePath+"/cakes/paging"
 
 import createNotification from './alerts';
-// import $ from 'jquery';
-
-
-
-// $(document).ready(() => {
-//   $('#').submit(event) => {
-//     console.log('kkkkkkk');
-//     event.preventDefault();
-//     const data = new FormData(event.target);
-//     console.log(data.get('firstname'));
-//     console.log(data.get('lastname'));
-//     console.log(data.get('email'));
-//   }
-//   alert('ok')
-// })
+import {EmptyRow} from '../../Components/empty';
+import {_token} from '../../Constants/defaultValues';
 
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
       this.toggleDisplayOptions = this.toggleDisplayOptions.bind(this);
       this.toggleSplit = this.toggleSplit.bind(this);
-      this.dataListRender = this.dataListRender.bind(this);
       this.toggleModal = this.toggleModal.bind(this);
       this.getIndex = this.getIndex.bind(this);
       this.onContextMenuClick = this.onContextMenuClick.bind(this);
@@ -75,7 +58,7 @@ class DataListLayout extends Component {
           {column: "phone",label: "Phone"},
           {column: "email",label: "Email"}
         ],
-        selectedOrderOption:  {column: "title",label: "Firstname"},
+        selectedOrderOption:  {column: "firstname",label: "Firstname"},
         dropdownSplitOpen: false,
         modalOpen: false,
         currentPage: 1,
@@ -144,22 +127,21 @@ class DataListLayout extends Component {
       return false;
     }
     onChangePage(page) {
-      this.setState(
-        {
-          currentPage: page
-        },
+      this.setState({ currentPage: page },
         () => this.dataListRender()
       );
     }
 
+    handleSearchChange = (e) => {
+      this.setState({ search: e.target.value.toLowerCase() })
+    }
+
     handleKeyPress(e) {
       if (e.key === "Enter") {
-        this.setState(
-          {
-            search: e.target.value.toLowerCase()
-          },
-          () => this.dataListRender()
-        );
+        // this.setState({ search: e.target.value.toLowerCase() },
+          // () =>
+          this.dataListRender()
+        // );
       }
     }
 
@@ -232,38 +214,54 @@ class DataListLayout extends Component {
       this.dataListRender();
     }
 
-    addNew = () => {
-      console.log($('#customer-form'));
-      $('#customer-form').trigger('submit');
-      return
+    dataListRender = () => {
+      const {selectedPageSize,currentPage,selectedOrderOption,search} = this.state;
+      this.setState({
+        isLoading:false
+      }, () => {
+        axios.get(`/api/customers?pageSize=${selectedPageSize}&page=${currentPage}
+          &orderBy=${selectedOrderOption.column}&search=${search}`)
+        .then(res => {
+          return res.data
+        }).then(data=>{
+          this.setState({
+            totalPage: data.last_page,
+            items: data.data,
+            selectedItems:[],
+            totalItemCount : data.total,
+            isLoading:true
+          });
+        // axios.get(`${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}
+        // &orderBy=${selectedOrderOption.column}&search=${search}`)
+        })
+      });
     }
 
-    dataListRender() {
-
-      const {selectedPageSize,currentPage,selectedOrderOption,search} = this.state;
-      axios.get('/api/customer')
-      .then(res => {
-        return res.data
-      }).then(data=>{
-        this.setState({
-          totalPage: 1,
-          items: data,
-          selectedItems:[],
-          totalItemCount : 1,
-          isLoading:true
-        });
-      // axios.get(`${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${selectedOrderOption.column}&search=${search}`)
-      // .then(res => {
-      //   return res.data
-      // }).then(data=>{
-      //   this.setState({
-      //     totalPage: data.totalPage,
-      //     items: data.data,
-      //     selectedItems:[],
-      //     totalItemCount : data.totalItem,
-      //     isLoading:true
-      //   });
-      })
+    // delete
+    delete = async () => {
+      const items = this.state.selectedItems
+      if (!items.length > 0) {
+        return;
+      }
+      // delete items
+      if (confirm('Are you sure you wish to delete selected customers?')) {
+        this.setState({isLoading: false}, () => {
+          items.map( async (item) => {
+            await $.ajax({url: `/api/customers/${item}`, data: {_token}, type: 'DELETE'})
+            .done((res) => {
+              if (item === items[items.length - 1]) {
+                this.dataListRender()
+              }
+            })
+            .fail((err) => {
+              if (item === items[items.length - 1]) {
+                this.dataListRender()
+              }
+              console.log(err)
+            })
+          })
+        })
+      }
     }
 
     // form submit
@@ -271,18 +269,24 @@ class DataListLayout extends Component {
       const form = $(event.target)
       event.persist()
       event.preventDefault();
-      $.post('/api/customer', $(form).serializeArray())
-      .done((res) => {
-        if (res.status) {
-        $(form).trigger('reset')
-        // alert success
-        createNotification('success', 'True')
-        } else {
-          // alert warning
-        }
-      })
-      .fail((err) => {
-        console.log(err);
+      this.setState({isLoading: false}, () => {
+        $.post('/api/customers', $(form).serializeArray())
+        .done((res) => {
+          if (res.status) {
+            $(form).trigger('reset')
+            // alert success
+            this.dataListRender()
+            alert(res.status)
+            createNotification('success', 'True')
+          } else {
+            // alert warning
+            alert(res.text)
+          }
+        })
+        .fail((err) => {
+          alert(err)
+          console.log(err);
+        })
       })
     }
 
@@ -298,7 +302,6 @@ class DataListLayout extends Component {
           selectedItems :[clickedProductId]
         });
       }
-
       return true;
     };
 
@@ -421,11 +424,8 @@ class DataListLayout extends Component {
                         className="dropdown-toggle-split pl-2 pr-2"
                       />
                       <DropdownMenu right>
-                        <DropdownItem>
-                          Delete
-                        </DropdownItem>
-                        <DropdownItem>
-                          Edit
+                        <DropdownItem onClick={() => this.delete()} >
+                          <i className="simple-icon-trash" /> <span>Delete</span>
                         </DropdownItem>
                       </DropdownMenu>
                     </ButtonDropdown>
@@ -511,7 +511,9 @@ class DataListLayout extends Component {
                         <input
                           type="text"
                           name="keyword"
+                          value={this.state.search}
                           id="search"
+                          onChange={(e) => this.handleSearchChange(e)}
                           placeholder={messages["menu.search"]}
                           onKeyPress={e => this.handleKeyPress(e)}
                         />
@@ -545,7 +547,7 @@ class DataListLayout extends Component {
               </Colxx>
             </Row>
             <Row>
-              {this.state.items.map(product => {
+              {!this.state.items.length > 0 ? <EmptyRow /> : this.state.items.map(product => {
                 if (this.state.displayMode === "imagelist") {
                   return (
                     <Colxx
@@ -572,7 +574,7 @@ class DataListLayout extends Component {
                         >
                           <div className="position-relative">
                             <NavLink
-                              to={`?p=${product.id}`}
+                              to={`/app/customer/${product.id}`}
                               className="w-40 w-sm-100"
                             >
                               <CardImg
@@ -605,6 +607,8 @@ class DataListLayout extends Component {
                               </Colxx>
                               <Colxx xxs="10" className="mb-3">
                                 <CardSubtitle>{product.firstname}</CardSubtitle>
+                                {" "}
+                                <CardSubtitle>{product.lastname}</CardSubtitle>
                                 <CardText className="text-muted text-small mb-0 font-weight-light">
                                   {product.created_at}
                                 </CardText>
@@ -634,7 +638,7 @@ class DataListLayout extends Component {
                           })}
                         >
                           <NavLink
-                            to={`?p=${product.id}`}
+                            to={`/app/customer/${product.id}`}
                             className="d-flex"
                           >
                             <img
@@ -646,11 +650,11 @@ class DataListLayout extends Component {
                           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
                             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                               <NavLink
-                                to={`?p=${product.id}`}
+                                to={`/app/customer/${product.id}`}
                                 className="w-40 w-sm-100"
                               >
                                 <p className="list-item-heading mb-1 truncate">
-                                  {product.firstname}
+                                  {product.firstname} {' - '} {product.lastname}
                                 </p>
                               </NavLink>
                               <p className="mb-1 text-muted text-small w-15 w-sm-100">
@@ -703,13 +707,24 @@ class DataListLayout extends Component {
                           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
                             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                               <NavLink
-                                to={`?p=${product.id}`}
-                                className="w-40 w-sm-100"
+                                to={`/app/customer/${product.id}`}
+                                className="w-20 w-sm-50"
                               >
                                 <p className="list-item-heading mb-1 truncate">
                                   {product.firstname}
                                 </p>
                               </NavLink>
+                              <NavLink
+                                to={`/app/customer/${product.id}`}
+                                className="w-20 w-sm-50"
+                              >
+                                <p className="list-item-heading mb-1 truncate">
+                                  {product.lastname}
+                                </p>
+                              </NavLink>
+                              <p className="mb-1 text-muted text-small w-15 w-sm-100">
+                                {product.phone}
+                              </p>
                               <p className="mb-1 text-muted text-small w-15 w-sm-100">
                                 {product.email}
                               </p>
