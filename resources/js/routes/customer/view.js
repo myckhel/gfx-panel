@@ -24,7 +24,7 @@ export default class extends Component {
           </Colxx>
         </Row>
         <Row>
-          {this.state.id}
+          {this.state.id}{'  '}
         </Row>
       </Fragment>
     );
