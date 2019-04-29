@@ -41,7 +41,7 @@ class Error404 extends Component {
                     </p>
                     <p className="display-1 font-weight-bold mb-5">404</p>
                     <Button
-                      href="/app"
+                      href="/"
                       color="primary"
                       className="btn-shadow"
                       size="lg"

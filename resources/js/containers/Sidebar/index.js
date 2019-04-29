@@ -17,7 +17,6 @@ import {
 class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.handleWindowResize = this.handleWindowResize.bind(this);
     this.addEvents = this.addEvents.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.toggle = this.toggle.bind(this);
@@ -33,7 +32,7 @@ class Sidebar extends Component {
     };
   }
 
-  handleWindowResize(event) {
+  handleWindowResize = (event) => {
     if (event && !event.isTrusted) {
       return;
     }
@@ -260,7 +259,7 @@ class Sidebar extends Component {
                   })}
                 >
                   <NavLink
-                    to="/app"
+                    to="/"
                     onClick={e => this.openSubMenu(e, "home")}
                   >
                     <i className="simple-icon-home" />{" "}
@@ -273,7 +272,7 @@ class Sidebar extends Component {
                   })}
                 >
                   <NavLink
-                    to="/app/customer"
+                    to="/customers"
                     onClick={e => this.openSubMenu(e, "customer")}
                   >
                     <i className="simple-icon-people" />{" "}
@@ -287,7 +286,7 @@ class Sidebar extends Component {
                   })}
                 >
                   <NavLink
-                    to="/app/service"
+                    to="/services"
                     onClick={e => this.openSubMenu(e, "service")}
                   >
                     <i className="simple-icon-layers" />{" "}
@@ -301,7 +300,7 @@ class Sidebar extends Component {
                   })}
                 >
                   <NavLink
-                    to="/app/message"
+                    to="/messaging"
                     onClick={e => this.openSubMenu(e, "message")}
                   >
                     <i className="simple-icon-speech" />{" "}
@@ -315,7 +314,7 @@ class Sidebar extends Component {
                   })}
                 >
                   <NavLink
-                    to="/app/settings"
+                    to="/settings"
                     onClick={e => this.openSubMenu(e, "settings")}
                   >
                     <i className="simple-icon-settings" />{" "}
@@ -339,7 +338,7 @@ class Sidebar extends Component {
                 data-parent="home"
               >
                 <NavItem>
-                  <NavLink to="/app">
+                  <NavLink to="/">
                     <i className="simple-icon-home" />{" "}
                     dashboard
                   </NavLink>
@@ -353,7 +352,7 @@ class Sidebar extends Component {
                 data-parent="customer"
               >
                 <NavItem>
-                  <NavLink to="/app/customer">
+                  <NavLink to="/customers">
                     <i className="simple-icon-paper-plane" />{" "}
                     customers
                   </NavLink>
@@ -367,7 +366,7 @@ class Sidebar extends Component {
                 data-parent="service"
               >
                 <NavItem>
-                  <NavLink to="/app/service">
+                  <NavLink to="/services">
                     <i className="simple-icon-paper-plane" />{" "}
                     services
                   </NavLink>

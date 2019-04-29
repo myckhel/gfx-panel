@@ -43,9 +43,9 @@ class App extends Component {
 	render() {
 		const { location, match, user, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
-		if (location.pathname === '/' ) {
-			return (<Redirect to={defaultStartPath} />);
-		}
+		// if (location.pathname === '/' ) {
+		// 	return (<Redirect to={defaultStartPath} />);
+		// }
 		return (
 				<Fragment>
 					<NotificationContainer />
@@ -60,7 +60,7 @@ class App extends Component {
 							<Route exact path={`/forgot-password`} component={forgotPassword} />
 							<Route exact path={`/error`} component={error} />
 							<InitialPath
-								path={`${match.url}app/`}
+								path={`${match.url}`}
 								authUser={user}
 								component={MainRoute}
 							/>
