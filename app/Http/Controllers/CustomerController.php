@@ -50,7 +50,7 @@ class CustomerController extends Controller
      $lastIndex = Customer::latest()->first();
      try {
        $customer = Customer::create([
-         'gfx_id' => $lastIndex->gfx_id ? (int) $lastIndex->gfx_id+ 1 : 50001,
+         'gfx_id' => $lastIndex ? (int) $lastIndex->gfx_id+ 1 : 50001,
          'firstname' => $request->firstname,
          'lastname' => $request->lastname,
          'email' => $request->email,
