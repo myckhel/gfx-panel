@@ -37,6 +37,7 @@ module.exports = {
   "menu.survey": "Survey",
   "menu.todo": "Todo",
   "menu.search": "Search",
+  "menu.customers": "Customers",
 
   /* 04.Error Page */
   "layouts.error-title": "Ooops... looks like an error occurred!",

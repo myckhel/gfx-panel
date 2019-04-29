@@ -1,7 +1,7 @@
 export const subHiddenBreakpoint=1440;
 export const menuHiddenBreakpoint = 768;
 export const defaultMenuType = 'menu-default'; //'menu-sub-hidden', 'menu-hidden'
-export const defaultStartPath = '/';
+export const defaultStartPath = '/customers';
 
 
 export const defaultLocale='en';

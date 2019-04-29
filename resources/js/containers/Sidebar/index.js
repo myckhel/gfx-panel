@@ -353,7 +353,7 @@ class Sidebar extends Component {
               >
                 <NavItem>
                   <NavLink to="/customers">
-                    <i className="simple-icon-paper-plane" />{" "}
+                    <i className="simple-icon-people" />{" "}
                     customers
                   </NavLink>
                 </NavItem>
@@ -369,6 +369,34 @@ class Sidebar extends Component {
                   <NavLink to="/services">
                     <i className="simple-icon-paper-plane" />{" "}
                     services
+                  </NavLink>
+                  </NavItem>
+              </Nav>
+
+              <Nav
+                className={classnames({
+                  "d-block": ((this.state.selectedParentMenu == "message" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="message")
+                })}
+                data-parent="message"
+              >
+                <NavItem>
+                  <NavLink to="/email">
+                    <i className="simple-icon-envelope-letter" />{" "}
+                    Email
+                  </NavLink>
+                </NavItem>
+              </Nav>
+
+              <Nav
+                className={classnames({
+                  "d-block": ((this.state.selectedParentMenu == "message" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="message")
+                })}
+                data-parent="message"
+              >
+                <NavItem>
+                  <NavLink to="/sms">
+                    <i className="simple-icon-screen-smartphone" />{" "}
+                    SMS
                   </NavLink>
                 </NavItem>
               </Nav>

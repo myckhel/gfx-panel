@@ -10,7 +10,7 @@ export default ({ match }) => {
     <Switch>
         <Route exact path={`${match.url}`} component={dataList} />
         <Route exact path={`${match.url}/data-list`} component={dataList} />
-        <Route exact path={`${match.url}/:id`} render={props => <View id={props.id} />} />
+        <Route exact path={`${match.url}/:id`} render={props => <View {...props} id={props.id} />} />
         <Redirect to="/error" />
     </Switch>
 )};

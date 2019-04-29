@@ -14,6 +14,7 @@ class RegisterLayout extends Component {
     this.state = {
       email: "demo@gogo.com",
       password: "gogo123",
+      password_confirmation: "gogo123",
       name: "Sarah Kortney"
     };
   }

@@ -349,7 +349,7 @@ class DataListLayout extends Component {
                             </Label>
                             <Input
                               type="text" required name="firstname"
-                              id="firstname" placeholder="customer Firstname"
+                              id="firstname" placeholder="Firstname"
                             />
                             <Label>
                               Lasstname
@@ -574,7 +574,7 @@ class DataListLayout extends Component {
                         >
                           <div className="position-relative">
                             <NavLink
-                              to={`/app/customer/${product.id}`}
+                              to={`/customers/${product.id}`}
                               className="w-40 w-sm-100"
                             >
                               <CardImg
@@ -638,7 +638,7 @@ class DataListLayout extends Component {
                           })}
                         >
                           <NavLink
-                            to={`/app/customer/${product.id}`}
+                            to={`/customers/${product.id}`}
                             className="d-flex"
                           >
                             <img
@@ -650,7 +650,7 @@ class DataListLayout extends Component {
                           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
                             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                               <NavLink
-                                to={`/app/customer/${product.id}`}
+                                to={`/customers/${product.id}`}
                                 className="w-40 w-sm-100"
                               >
                                 <p className="list-item-heading mb-1 truncate">
@@ -707,7 +707,7 @@ class DataListLayout extends Component {
                           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
                             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                               <NavLink
-                                to={`/app/customer/${product.id}`}
+                                to={`/customers/${product.id}`}
                                 className="w-20 w-sm-50"
                               >
                                 <p className="list-item-heading mb-1 truncate">
@@ -715,7 +715,7 @@ class DataListLayout extends Component {
                                 </p>
                               </NavLink>
                               <NavLink
-                                to={`/app/customer/${product.id}`}
+                                to={`/customers/${product.id}`}
                                 className="w-20 w-sm-50"
                               >
                                 <p className="list-item-heading mb-1 truncate">

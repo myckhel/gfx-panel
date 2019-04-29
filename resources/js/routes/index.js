@@ -17,7 +17,6 @@ class MainApp extends Component {
 
 	render() {
 		const { match, containerClassnames} = this.props;
-		console.log(match);
 		return (
 			<div id="app-container" className={containerClassnames}>
 				<TopNav history={this.props.history} />
