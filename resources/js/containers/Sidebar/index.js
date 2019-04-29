@@ -263,7 +263,7 @@ class Sidebar extends Component {
                     to="/app"
                     onClick={e => this.openSubMenu(e, "home")}
                   >
-                    <i className="iconsmind-Air-Balloon" />{" "}
+                    <i className="simple-icon-home" />{" "}
                     Dashboard
                   </NavLink>
                 </NavItem>
@@ -276,8 +276,8 @@ class Sidebar extends Component {
                     to="/app/customer"
                     onClick={e => this.openSubMenu(e, "customer")}
                   >
-                    <i className="iconsmind-Chemical-3" />{" "}
-                    customer
+                    <i className="simple-icon-people" />{" "}
+                    Customers
                   </NavLink>
                 </NavItem>
 
@@ -290,8 +290,36 @@ class Sidebar extends Component {
                     to="/app/service"
                     onClick={e => this.openSubMenu(e, "service")}
                   >
-                    <i className="iconsmind-Chemical-3" />{" "}
-                    service
+                    <i className="simple-icon-layers" />{" "}
+                    Services
+                  </NavLink>
+                </NavItem>
+
+                <NavItem
+                  className={classnames({
+                    active: ((this.state.selectedParentMenu == "message" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="message")
+                  })}
+                >
+                  <NavLink
+                    to="/app/message"
+                    onClick={e => this.openSubMenu(e, "message")}
+                  >
+                    <i className="simple-icon-speech" />{" "}
+                    Messaging
+                  </NavLink>
+                </NavItem>
+
+                <NavItem
+                  className={classnames({
+                    active: ((this.state.selectedParentMenu == "settings" && this.state.viewingParentMenu=="" )|| this.state.viewingParentMenu=="settings")
+                  })}
+                >
+                  <NavLink
+                    to="/app/settings"
+                    onClick={e => this.openSubMenu(e, "settings")}
+                  >
+                    <i className="simple-icon-settings" />{" "}
+                    Settings
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -312,7 +340,7 @@ class Sidebar extends Component {
               >
                 <NavItem>
                   <NavLink to="/app">
-                    <i className="simple-icon-paper-plane" />{" "}
+                    <i className="simple-icon-home" />{" "}
                     dashboard
                   </NavLink>
                 </NavItem>
