@@ -5,7 +5,6 @@ import TopNav from '../Containers/TopNav'
 import Sidebar from '../Containers/Sidebar';
 
 import dashboard from './dashboard';
-import secondMenu from './second-menu';
 import customer from './customer';
 
 import { connect } from 'react-redux';
@@ -18,6 +17,7 @@ class MainApp extends Component {
 
 	render() {
 		const { match, containerClassnames} = this.props;
+		console.log(match);
 		return (
 			<div id="app-container" className={containerClassnames}>
 				<TopNav history={this.props.history} />
@@ -25,9 +25,11 @@ class MainApp extends Component {
 				<main>
 					<div className="container-fluid">
 						<Switch>
-							<Route exact path={`${match.url}/`} component={dashboard} />
-							<Route path={`${match.url}/second-menu`} component={secondMenu} />
-							<Route path={`${match.url}/customer`} component={customer} />
+							<Route exact path={`${match.url}`} component={dashboard} />
+							<Route path={`${match.url}customers`} component={customer} />
+							<Route path={`${match.url}services`} component={customer} />
+							<Route path={`${match.url}messaging`} component={customer} />
+							<Route path={`${match.url}settings`} component={customer} />
 							<Redirect to="/error" />
 						</Switch>
 					</div>

@@ -6,7 +6,7 @@ import dashboard from './dashboard';
 const Dashboards = ({ match }) => (
     <div className="dashboard-wrapper">
         <Switch>
-            <Route exact path={`${match.url}/`} component={dashboard} />
+            <Route exact path={`${match.url}`} component={dashboard} />
             <Redirect to="/error" />
 
         </Switch>
