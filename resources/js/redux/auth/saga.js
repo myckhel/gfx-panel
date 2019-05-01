@@ -7,13 +7,15 @@ import {
     LOGOUT_USER
 } from '../../Constants/actionTypes';
 
+import {authentication} from '../../helpers'
+
 import {
     loginUserSuccess,
     registerUserSuccess
 } from './actions';
 
 const loginWithEmailPasswordAsync = async (email, password) =>
-    await auth.signInWithEmailAndPassword(email, password)
+    await authentication.signInWithEmailAndPassword(email, password)
         .then(authUser => authUser)
         .catch(error => error);
 
@@ -25,7 +27,7 @@ function* loginWithEmailPassword({ payload }) {
     try {
         const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
         if (!loginUser.message) {
-            localStorage.setItem('user_id', loginUser.user.uid);
+            localStorage.setItem('user_id', loginUser.user.id);
             yield put(loginUserSuccess(loginUser));
             history.push('/');
         } else {
@@ -38,19 +40,19 @@ function* loginWithEmailPassword({ payload }) {
     }
 }
 
-const registerWithEmailPasswordAsync = async (email, password) =>
-    await auth.createUserWithEmailAndPassword(email, password)
+const registerWithEmailPasswordAsync = async (email, password, name,  password_confirmation) =>
+    await authentication.createUserWithEmailAndPassword(email, password, name,  password_confirmation)
         .then(authUser => authUser)
         .catch(error => error);
 
 function* registerWithEmailPassword({ payload }) {
-    const { email, password } = payload.user;
+    const { name, email, password, password_confirmation } = payload.user;
     const { history } = payload
     try {
-        const registerUser = yield call(registerWithEmailPasswordAsync, email, password);
-        if (!registerUser.message) {
-            localStorage.setItem('user_id', registerUser.user.uid);
-            yield put(registerUserSuccess(registerUser));
+        const registerUser = yield call(registerWithEmailPasswordAsync, name, email, password,  password_confirmation);
+        if (registerUser.message === "Successfully created user!") {
+            localStorage.setItem('user_id', registerUser.user.id);
+            yield put(registerUserSuccess(registerUser.user));
             history.push('/')
         } else {
             // catch throw

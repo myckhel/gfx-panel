@@ -12,18 +12,24 @@ class RegisterLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123",
-      password_confirmation: "gogo123",
-      name: "Sarah Kortney"
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
     };
   }
   onUserRegister() {
     if (this.state.email !== "" && this.state.password !== "") {
       // This is for adding user to Firebase. Commented out for demo purpose.
-      // this.props.registerUser(this.state, this.props.history);
-      this.props.history.push("/");
+      this.props.registerUser(this.state, this.props.history);
+      // this.props.history.push("/");
     }
+  }
+
+  handleInputChange = (e) => {
+    const name = e.target.name
+    const value = e.target.value
+    this.setState({[name]: value})
   }
 
   componentDidMount() {
@@ -61,18 +67,35 @@ class RegisterLayout extends Component {
                     </CardTitle>
                     <Form>
                       <Label className="form-group has-float-label mb-4">
-                        <Input type="name" defaultValue={this.state.name} />
-                        <IntlMessages id="user.fullname" />
+                        <Input
+                          type="name" name="name" onChange={(e) => this.handleInputChange(e)}
+                          defaultValue={this.state.name}
+                        />
+                        <IntlMessages id="user.name" />
                       </Label>
                       <Label className="form-group has-float-label mb-4">
-                        <Input type="email" defaultValue={this.state.email} />
+                        <Input
+                          type="email" name="email" defaultValue={this.state.email}
+                          onChange={(e) => this.handleInputChange(e)}
+                        />
                         <IntlMessages id="user.email" />
                       </Label>
                       <Label className="form-group has-float-label mb-4">
-                        <Input type="password" />
+                        <Input type="password" name="password"
+                           onChange={(e) => this.handleInputChange(e)}
+                        />
                         <IntlMessages
                           id="user.password"
                           defaultValue={this.state.password}
+                        />
+                      </Label>
+                      <Label className="form-group has-float-label mb-4">
+                        <Input type="password" name="password_confirmation"
+                          defaultValue={this.state.password_confirmation}
+                           onChange={(e) => this.handleInputChange(e)}
+                        />
+                        <IntlMessages
+                          id="user.password_confirmation"
                         />
                       </Label>
                       <div className="d-flex justify-content-end align-items-center">

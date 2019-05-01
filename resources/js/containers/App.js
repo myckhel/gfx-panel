@@ -39,6 +39,20 @@ const InitialPath = ({ component: Component,  authUser,...rest }) =>{
 				/>}
 	/>);}
 
+const UnAuthRoute = ({ component: Component,  authUser,...rest }) =>{
+	return (<Route
+		{...rest}
+		render={props =>
+			authUser
+				? <Component {...props} />
+				: <Redirect
+					to={{
+						pathname: '/',
+						state: { from: props.location }
+					}}
+				/>}
+	/>);}
+
 class App extends Component {
 	render() {
 		const { location, match, user, locale } = this.props;
@@ -46,6 +60,11 @@ class App extends Component {
 		if (location.pathname === '/' ) {
 			return (<Redirect to={defaultStartPath} />);
 		}
+		// else if (location.pathname === '/login' || location.pathname === '/register'
+		// || location.pathname === '/forgot-password' && user) {
+		// 	return (<Redirect to='/' />);
+		// }
+
 		return (
 				<Fragment>
 					<NotificationContainer />

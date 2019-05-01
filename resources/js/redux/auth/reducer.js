@@ -22,7 +22,7 @@ export default (state = INIT_STATE, action) => {
       return { ...state, loading: true };
     case REGISTER_USER_SUCCESS:
       //notify.success('Register User Success');
-      return { ...state, loading: false, user: action.payload.uid };
+      return { ...state, loading: false, user: action.payload.id };
     case LOGOUT_USER:
       return { ...state, user: null };
     default:

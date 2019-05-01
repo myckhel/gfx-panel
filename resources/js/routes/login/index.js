@@ -12,10 +12,17 @@ class LoginLayout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123"
+      email: "",
+      password: ""
     };
   }
+
+  handleInputChange = (e) => {
+    const name = e.target.name
+    const value = e.target.value
+    this.setState({[name]: value})
+  }
+
   onUserLogin() {
     if (this.state.email !== "" && this.state.password !== "") {
       this.props.loginUser(this.state, this.props.history);
@@ -28,6 +35,7 @@ class LoginLayout extends Component {
   componentWillUnmount() {
     document.body.classList.remove("background");
   }
+
   render() {
     return (
       <Fragment>
@@ -58,11 +66,15 @@ class LoginLayout extends Component {
                     </CardTitle>
                     <Form>
                       <Label className="form-group has-float-label mb-4">
-                        <Input type="email" defaultValue={this.state.email} />
+                        <Input type="email" name="email" defaultValue={this.state.email}
+                          onChange={(e) => this.handleInputChange(e)}
+                        />
                         <IntlMessages id="user.email" />
                       </Label>
                       <Label className="form-group has-float-label mb-4">
-                        <Input type="password" />
+                        <Input type="password" onChange={(e) => this.handleInputChange(e)}
+                          name='password'
+                        />
                         <IntlMessages
                           id="user.password"
                           defaultValue={this.state.password}
