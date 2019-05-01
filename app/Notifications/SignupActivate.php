@@ -40,10 +40,12 @@ class SignupActivate extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+      $url = url('/api/auth/signup/activate/'.$notifiable->activation_token);
+      return (new MailMessage)
+        ->subject('Confirm your account')
+        ->line('Thanks for signup! Please before you begin, you must confirm your account.')
+        ->action('Confirm Account', url($url))
+        ->line('Thank you for using our application!');
     }
 
     /**
