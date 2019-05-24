@@ -20,7 +20,7 @@ class CustomerController extends Controller
        $customer = $customer->where('firstname', 'LIKE', '%'.$search.'%')->orWhere('lastname', 'LIKE', '%'.$search.'%')
        ->orWhere('phone', 'LIKE', '%'.$search.'%')->orWhere('email', 'LIKE', '%'.$search.'%');
      }
-     return $customer->orderBy($request->orderBy)->paginate($request->pageSize);
+     return $customer->orderBy(($request->orderBy ? $request->orderBy : 'firstname'))->paginate($request->pageSize);
    }
    /**
     * Show the form for creating a new resource.
@@ -56,7 +56,7 @@ class CustomerController extends Controller
          'email' => $request->email,
          'phone' => $request->phone,
        ]);
-       return ['status' => true];
+       return ['status' => true, 'customer' => $customer];
      } catch (\Exception $e) {
        return ['status' => false, 'text' => $e->getMessage()];
      }
@@ -111,5 +111,20 @@ class CustomerController extends Controller
        return ['status' => true];
      }
      return ['status' => false];
+   }
+
+   public function delete(Request $request)
+   {
+     //
+     $text = [];  $ids = $request->ids;
+     foreach ($ids as $id) {
+       if ($customer = Customer::find($id) ) {
+         $customer->delete();
+       } else {
+         $text[] = $id;
+       }
+     }
+
+     return ['status' => true, 'failed' => $text];
    }
 }

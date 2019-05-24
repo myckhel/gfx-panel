@@ -22,21 +22,16 @@ function collect(props) {
   return { data: props.data };
 }
 
-import createNotification from './alerts';
+import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
 
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
-      this.toggleDisplayOptions = this.toggleDisplayOptions.bind(this);
-      this.toggleSplit = this.toggleSplit.bind(this);
-      this.toggleModal = this.toggleModal.bind(this);
-      this.getIndex = this.getIndex.bind(this);
-      this.onContextMenuClick = this.onContextMenuClick.bind(this);
-
 
       this.state = {
+        items: [],
         visible: true,
         form: {
           firstname: '',
@@ -88,20 +83,23 @@ class DataListLayout extends Component {
       });
     }
 
-    toggleModal() {
+    toggleModal = () => {
       this.setState({
         modalOpen: !this.state.modalOpen
       });
     }
-    toggleDisplayOptions() {
+
+    toggleDisplayOptions = () => {
       this.setState({ displayOptionsIsOpen: !this.state.displayOptionsIsOpen });
     }
-    toggleSplit() {
+
+    toggleSplit = () => {
       this.setState(prevState => ({
         dropdownSplitOpen: !prevState.dropdownSplitOpen
       }));
     }
-    changeOrderBy(column) {
+
+    changeOrderBy = (column) => {
       this.setState(
         {
           selectedOrderOption: this.state.orderOptions.find(
@@ -187,7 +185,7 @@ class DataListLayout extends Component {
       document.activeElement.blur();
     }
 
-    getIndex(value, arr, prop) {
+    getIndex = (value, arr, prop) => {
       for (var i = 0; i < arr.length; i++) {
         if (arr[i][prop] === value) {
           return i;
@@ -246,19 +244,14 @@ class DataListLayout extends Component {
       // delete items
       if (confirm('Are you sure you wish to delete selected customers?')) {
         this.setState({isLoading: false}, () => {
-          items.map( async (item) => {
-            await $.ajax({url: `/api/customers/${item}`, data: {_token}, type: 'DELETE'})
-            .done((res) => {
-              if (item === items[items.length - 1]) {
-                this.dataListRender()
-              }
-            })
-            .fail((err) => {
-              if (item === items[items.length - 1]) {
-                this.dataListRender()
-              }
-              console.log(err)
-            })
+          $.ajax({url: `/api/customers/delete/multiple`, data: {_token, ids: items}, type: 'DELETE'})
+          .done((res) => {
+            console.log(res.text);
+            this.dataListRender()
+          })
+          .fail((err) => {
+            this.dataListRender()
+            console.log(err)
           })
         })
       }
