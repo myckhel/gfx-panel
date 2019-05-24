@@ -21,11 +21,18 @@ Route::get('/db/migrate', function() {
     return Artisan::call('migrate');
 });
 
-Route::get('/app/install', function() {
+Route::get('/app/reset', function() {
   $output = [];
-  $output['freshDb'] = Artisan::call('migrate:fresh');
+  // $output['inspire'] = Artisan::call('inspire');
+  // $output['freshDb'] = Artisan::call('migrate:fresh');
+  // $output['passportDb'] = Artisan::call('migrate', [
+  //   '--path' => 'vendor/laravel/passport/database/migrations', '--force' => true
+  // ]);
+  // sleep(10);
   $output['passportInstall'] = Artisan::call('passport:install');
-  $output['dbSeed'] = Artisan::call('db:seed');
+  // sleep(3);
+  // $output['dbSeed'] = Artisan::call('db:seed');
+  // sleep(3);
   return $output;
 });
 
