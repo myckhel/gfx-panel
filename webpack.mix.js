@@ -14,8 +14,8 @@ const mix = require('laravel-mix');
 
  mix.react('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
-   .copyDirectory('resources/js/app.js', 'js')
-   .copyDirectory('resources/sass/app.scss', 'css');
+   .copyDirectory('public/js', 'js')
+   .copyDirectory('public/css', 'css');
 
 // mix.react('resources/js/app.js', 'public/js')
 //    .sass('resources/sass/app.scss', 'public/css');

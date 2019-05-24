@@ -1,4 +1,4 @@
-/* Gogo Main Style 
+/* Gogo Main Style
 
 Table of Contents
 
@@ -85,6 +85,18 @@ $info-color: #3195a5;
 $success-color: #3e884f;
 $warning-color: #b69329;
 $error-color: #c43d4b;
+
+// prepend
+#service-type-inputs {
+  margin-top: 20px;
+  .col-5, .col-2{
+    padding-right: 0px;
+  }
+}
+
+#add-service-type-row {
+  margin-top: 20px;
+}
 
 /* 01.Base */
 html {

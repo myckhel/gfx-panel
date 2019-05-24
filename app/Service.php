@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    //
+    protected $fillable = [ 'name' ];
     // relationship
     public function customer_service_meta(){
       return $this->hasMany(CustomerServiceMeta::class);

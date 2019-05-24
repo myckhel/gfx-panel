@@ -27,6 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::resource('customers', 'CustomerController');
+Route::delete('customers/delete/multiple', 'CustomerController@delete');
 // Route::get('customer_services', 'CustomerController@customer_services');
 Route::resource('services', 'ServiceController');
+Route::delete('services/delete/multiple', 'ServiceController@delete');
 Route::resource('customer_services', 'CustomerServiceController');

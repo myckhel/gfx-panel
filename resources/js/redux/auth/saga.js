@@ -1,6 +1,5 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth } from '../../firebase';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -67,7 +66,7 @@ function* registerWithEmailPassword({ payload }) {
 
 
 const logoutAsync = async (history) => {
-    await auth.signOut().then(authUser => authUser).catch(error => error);
+    // await auth.signOut().then(authUser => authUser).catch(error => error);
     history.push('/')
 }
 

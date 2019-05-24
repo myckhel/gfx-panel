@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Alert } from "reactstrap";
 
-import {  NotificationManager} from "../../Components/ReactNotifications";
+import {  NotificationManager} from "./";
 
 class AlertsUi extends Component {
   constructor(props) {

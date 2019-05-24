@@ -21,6 +21,14 @@ Route::get('/db/migrate', function() {
     return Artisan::call('migrate');
 });
 
+Route::get('/app/install', function() {
+  $output = [];
+  $output['freshDb'] = Artisan::call('migrate:fresh');
+  $output['passportInstall'] = Artisan::call('passport:install');
+  $output['dbSeed'] = Artisan::call('db:seed');
+  return $output;
+});
+
 Route::get('/db/migrate/fresh', function() {
   return Artisan::call('migrate:fresh');
 });
