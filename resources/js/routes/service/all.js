@@ -291,7 +291,7 @@ class All extends Component {
     const form = $(event.target)
     event.persist()
     event.preventDefault();
-    const slug = this.state.form.state === 'type' ? '/api/service-metas/' : '/api/services/';
+    const slug = this.state.form.state === 'type' ? '/api/service-metas' : '/api/services';
     const callback = this.state.form.state === 'type' ? false : this.toggleFormState;
     this.setState({isLoading: false}, () => {
       $.post(slug, $(form).serializeArray())
