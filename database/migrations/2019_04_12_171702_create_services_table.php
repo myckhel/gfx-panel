@@ -17,7 +17,7 @@ class CreateServicesTable extends Migration
           $table->bigIncrements('id');
           $table->string('name', 40)->unique();
           $table->timestamps();
-        });
+        });//
     }
 
     /**
