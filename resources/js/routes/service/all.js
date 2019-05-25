@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { injectIntl} from 'react-intl';
 import { NavLink } from "react-router-dom";
 import mouseTrap from "react-mousetrap";
-import Select from "react-select";
+import Select from "react-select-search";
+import "react-select-search/style.css";
 import classnames from "classnames";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { Row, Card, CustomInput, Button, Modal, ModalHeader, ModalBody,
@@ -31,15 +32,15 @@ class All extends Component {
       items: [],
       visible: true,
       serviceTypeRow: [],
-      services: [{label: 'James', value: 33},{label: 'Fake', value: 34}],
-      serviceId: 34,
+      services: [],//{name: 'James', value: 33},{name: 'Fake', value: 29}
+      selectedService: {},
       form: {
         name: '',
         submitName: 'Save',
         cancelName: 'Cancel',
         state: 'service'
       },
-      displayMode: "list",
+      displayMode: "imagelist",
       pageSizes: [10, 20, 30, 50, 100],
       selectedPageSize: 10,
       orderOptions:[
@@ -273,8 +274,8 @@ class All extends Component {
     }
   }
 
-  selectService = (serviceId) => {
-    this.setState({ serviceId  })
+  selectService = (service) => {
+    this.setState({ selectedService: service  })
   }
 
   toggleFormState = () => {
@@ -282,8 +283,24 @@ class All extends Component {
     this.setState((prev) => {
       return {form: {...prev.form, state}}
     }, () => {
-      this.selectService(this.state.serviceId);
+      // this.selectService(this.state.selectedService);
     })
+  }
+
+  handleKeyUp = (keys) => {
+    console.log(keys);
+    if (keys.length >! 2) {
+      return;
+    }
+
+    this.setState({
+      isLoading:false
+    }, () => {
+      $.get(`/api/services?pagenate=${false}&search=${keys}`)
+      .done((res) => {      })
+      .fail((err) => console.log(err))
+    }
+    )
   }
 
   // form submit
@@ -299,7 +316,12 @@ class All extends Component {
         if (res.status) {
           $(form).trigger('reset')
 
-          this.setState({serviceId: res.service.id}, () => console.log(this.state.serviceId))
+          if (this.state.form.state === 'service') {
+            const service = {name: res.service.name, value: res.service.id};
+            this.setState( (prev) => {
+              return {services: [ service ] }
+            }, () => this.selectService(service))
+          }
 
           this.dataListRender()
           if (callback) {
@@ -377,8 +399,8 @@ class All extends Component {
                       : <Fragment>
                         <Row id="add-service-type-row">
                           <Col sm="8" className="col-sm-offset-2">
-                            <Select value={this.state.serviceId} name='service_id' onChange={this.selectService}
-                              options={this.state.services}></Select>
+                            <Select value={this.state.selectedService.value} name='service_id' onChange={this.selectService}
+                              options={this.state.services} onKeyUp={console.log}></Select>
                           </Col>
                         </Row>
                         {serviceType}

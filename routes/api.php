@@ -32,3 +32,4 @@ Route::delete('customers/delete/multiple', 'CustomerController@delete');
 Route::resource('services', 'ServiceController');
 Route::delete('services/delete/multiple', 'ServiceController@delete');
 Route::resource('customer_services', 'CustomerServiceController');
+Route::resource('service-metas', 'ServiceMetaController');
