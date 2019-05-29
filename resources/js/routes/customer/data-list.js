@@ -362,7 +362,7 @@ class DataListLayout extends Component {
                               Phone
                             </Label>
                             <Input
-                              type="number" name="phone"
+                              type="text" name="phone"
                               id="phone" placeholder="phone"
                             />
                         </ModalBody>
@@ -573,7 +573,7 @@ class DataListLayout extends Component {
                               <CardImg
                                 top
                                 alt={product.firstname}
-                                src={'/assets/img/gfx-logo.jpg'}
+                                src={'/assets/img/default-service.png'}
                               />
                             </NavLink>
                             <Badge
@@ -636,7 +636,7 @@ class DataListLayout extends Component {
                           >
                             <img
                               alt={product.firstname}
-                              src={'/assets/img/gfx-logo.jpg'}
+                              src={'/assets/img/default-service.png'}
                               className="list-thumbnail responsive border-0"
                             />
                           </NavLink>

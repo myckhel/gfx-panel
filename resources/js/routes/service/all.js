@@ -106,6 +106,7 @@ class All extends Component {
   toggleModal = () => {
     this.setState({
       modalOpen: !this.state.modalOpen
+    }, () => {
     });
   }
 
@@ -320,7 +321,9 @@ class All extends Component {
             const service = {name: res.service.name, value: res.service.id};
             this.setState( (prev) => {
               return {services: [ service ] }
-            }, () => this.selectService(service))
+            }, () => this.selectService(service) )
+          } else {
+            this.toggleFormState()
           }
 
           this.dataListRender()
@@ -618,7 +621,7 @@ class All extends Component {
                         <CardImg
                           top
                           alt={product.firstname}
-                          src={'/assets/img/gfx-logo.jpg'}
+                          src={'/assets/img/default-service.png'}
                         />
                       </NavLink>
                       <Badge
@@ -679,7 +682,7 @@ class All extends Component {
                     >
                       <img
                         alt={product.name}
-                        src={'/assets/img/gfx-logo.jpg'}
+                        src={'/assets/img/default-service.png'}
                         className="list-thumbnail responsive border-0"
                       />
                     </NavLink>
