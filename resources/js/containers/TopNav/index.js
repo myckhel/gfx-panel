@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { injectIntl} from 'react-intl';
+import { Redirect } from 'react-router-dom';
 
 import {
   Nav,
@@ -18,30 +19,36 @@ import {
   setContainerClassnames,
   clickOnMobileMenu,
   logoutUser,
-  changeLocale
+  changeLocale,
+  checkAuth
 } from "../../Redux/actions";
 
 import notifications from "../../Data/topnav.notifications.json";
 
 import { menuHiddenBreakpoint,searchPath,localeOptions } from "../../Constants/defaultValues";
-
+import "../../assets/js/vendor/sweetalert.min.js";
+import "../../assets/css/vendor/sweetalert.css";
 
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    this.menuButtonClick = this.menuButtonClick.bind(this);
-    this.mobileMenuButtonClick = this.mobileMenuButtonClick.bind(this);
-    this.search = this.search.bind(this);
-    this.handleChangeLocale = this.handleChangeLocale.bind(this);
-    this.handleDocumentClickSearch = this.handleDocumentClickSearch.bind(this);
-    this.addEventsSearch = this.addEventsSearch.bind(this);
-    this.removeEventsSearch = this.removeEventsSearch.bind(this);
 
     this.state = {
+      user: {
+        name: props.user ? props.user.name : "Loading..."
+      },
       isInFullScreen: false,
       searchKeyword: ""
     };
   }
+
+  componentWillMount = () => {
+    this.props.checkAuth()
+  }
+
+  componentDidMount = () => {
+  }
+
   isInFullScreen = () => {
     return (
       (document.fullscreenElement && document.fullscreenElement !== null) ||
@@ -82,14 +89,14 @@ class TopNav extends Component {
       this.search();
     }
   };
-  addEventsSearch() {
+  addEventsSearch = () => {
     document.addEventListener("click", this.handleDocumentClickSearch, true);
   }
-  removeEventsSearch() {
+  removeEventsSearch = () => {
     document.removeEventListener("click", this.handleDocumentClickSearch, true);
   }
 
-  handleDocumentClickSearch(e) {
+  handleDocumentClickSearch = (e) => {
     let isSearchClick = false;
     if (
       e.target &&
@@ -119,18 +126,18 @@ class TopNav extends Component {
     }
   }
 
-  handleSearchInputChange(e) {
+  handleSearchInputChange = (e) => {
     this.setState({
       searchKeyword: e.target.value
     });
   }
-  handleSearchInputKeyPress(e) {
+  handleSearchInputKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.search()
     }
   }
 
-  search() {
+  search = () => {
     this.props.history.push(searchPath+"/"+this.state.searchKeyword)
     this.setState({
       searchKeyword: ""
@@ -170,7 +177,7 @@ class TopNav extends Component {
     this.props.logoutUser(this.props.history);
   };
 
-  menuButtonClick(e, menuClickCount, containerClassnames) {
+  menuButtonClick = (e, menuClickCount, containerClassnames) => {
     e.preventDefault();
 
     setTimeout(() => {
@@ -180,12 +187,21 @@ class TopNav extends Component {
     }, 350);
     this.props.setContainerClassnames(++menuClickCount, containerClassnames);
   }
-  mobileMenuButtonClick(e, containerClassnames) {
+  mobileMenuButtonClick = (e, containerClassnames) => {
     e.preventDefault();
     this.props.clickOnMobileMenu(containerClassnames);
   }
 
   render() {
+    // authenticate
+    if (!this.props.authenticated) {
+      return (<Redirect
+        to={{
+          pathname: '/login',
+          state: { from: this.props.location }
+        }}
+      />)
+    }
     const { containerClassnames, menuClickCount } = this.props;
     const {messages} = this.props.intl;
 
@@ -376,7 +392,7 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+                <span className="name mr-1"> {this.props.user ? this.props.user.name : this.state.user.name} </span>
                 <span>
                   <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
                 </span>
@@ -399,13 +415,14 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings }) => {
+const mapStateToProps = ({ menu, settings, authUser }) => {
   const { containerClassnames, menuClickCount } = menu;
   const { locale } = settings;
+  const { authenticated, user } = authUser;
 
-  return { containerClassnames, menuClickCount,locale };
+  return { containerClassnames, menuClickCount,locale, authenticated, user };
 };
 export default injectIntl(connect(
   mapStateToProps,
-  { setContainerClassnames, clickOnMobileMenu, logoutUser,changeLocale }
+  { setContainerClassnames, clickOnMobileMenu, logoutUser,changeLocale, checkAuth }
 )(TopNav));

@@ -26,10 +26,16 @@ Route::group([ 'prefix' => 'auth' ], function () {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::resource('customers', 'CustomerController');
-Route::delete('customers/delete/multiple', 'CustomerController@delete');
-// Route::get('customer_services', 'CustomerController@customer_services');
-Route::resource('services', 'ServiceController');
-Route::delete('services/delete/multiple', 'ServiceController@delete');
-Route::resource('customer_services', 'CustomerServiceController');
-Route::resource('service-metas', 'ServiceMetaController');
+
+Route::group([ 'middleware' => 'auth:api' ], function() {
+  Route::get('users/current', 'UserController@current');
+  Route::resource('customers', 'CustomerController');
+  Route::delete('customers/delete/multiple', 'CustomerController@delete');
+  // Route::get('customer_services', 'CustomerController@customer_services');
+  Route::resource('services', 'ServiceController');
+  Route::delete('services/delete/multiple', 'ServiceController@delete');
+  Route::resource('customer_services', 'CustomerServiceController');
+  Route::resource('service-metas', 'ServiceMetaController');
+  Route::resource('users', 'UserController');
+
+});

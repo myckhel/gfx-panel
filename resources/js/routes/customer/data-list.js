@@ -22,9 +22,12 @@ function collect(props) {
   return { data: props.data };
 }
 
-import createNotification from '../../Components/ReactNotifications/alerts';
+// import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
+
+import Http from '../../util/Http'
+import formToObj from '../../helpers/formToObj'
 
 class DataListLayout extends Component {
     constructor(props) {
@@ -51,9 +54,10 @@ class DataListLayout extends Component {
           {column: "firstname",label: "Firstname"},
           {column: "lastname",label: "Lastname"},
           {column: "phone",label: "Phone"},
-          {column: "email",label: "Email"}
+          {column: "email",label: "Email"},
+          {column: "created_at",label: "Latest"}
         ],
-        selectedOrderOption:  {column: "firstname",label: "Firstname"},
+        selectedOrderOption:  {column: "created_at",label: "Latest"},
         dropdownSplitOpen: false,
         modalOpen: false,
         currentPage: 1,
@@ -217,11 +221,9 @@ class DataListLayout extends Component {
       this.setState({
         isLoading:false
       }, () => {
-        axios.get(`/api/customers?pageSize=${selectedPageSize}&page=${currentPage}
+        Http.get(`/api/customers?pageSize=${selectedPageSize}&page=${currentPage}
           &orderBy=${selectedOrderOption.column}&search=${search}`)
-        .then(res => {
-          return res.data
-        }).then(data=>{
+        .then(res => res.data).then(data=>{
           this.setState({
             totalPage: data.last_page,
             items: data.data,
@@ -244,14 +246,15 @@ class DataListLayout extends Component {
       // delete items
       if (confirm('Are you sure you wish to delete selected customers?')) {
         this.setState({isLoading: false}, () => {
-          $.ajax({url: `/api/customers/delete/multiple`, data: {_token, ids: items}, type: 'DELETE'})
-          .done((res) => {
-            console.log(res.text);
+          Http({url: `/api/customers/delete/multiple`, data: {ids: items}, method: 'DELETE'})
+          .then((res) => res.data)
+          .then((res) => {
+            swal("Success!", res.text ? '' : `${res.text.length} could not be deleted`, "success");
             this.dataListRender()
           })
-          .fail((err) => {
+          .catch((err) => {
+            swal('Oooops!', 'Internal Server Error', 'error');
             this.dataListRender()
-            console.log(err)
           })
         })
       }
@@ -263,22 +266,22 @@ class DataListLayout extends Component {
       event.persist()
       event.preventDefault();
       this.setState({isLoading: false}, () => {
-        $.post('/api/customers', $(form).serializeArray())
-        .done((res) => {
+        Http.post('/api/customers', formToObj($(form).serializeArray()))
+        .then((res) => res.data)
+        .then((res) => {
           if (res.status) {
             $(form).trigger('reset')
             // alert success
-            this.dataListRender()
-            alert(res.status)
-            createNotification('success', 'True')
+            swal('Success', `${res.customer.firstname} Added Successfully`, 'success')
+            // createNotification('success', 'True')
           } else {
             // alert warning
-            alert(res.text)
+            swal('Ooops', res.text, 'error')
           }
+          this.dataListRender()
         })
-        .fail((err) => {
-          alert(err)
-          console.log(err);
+        .catch((err) => {
+          swal('Ooops', 'Internal Server Error', 'error')
         })
       })
     }

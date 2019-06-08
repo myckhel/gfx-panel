@@ -63,8 +63,9 @@ class AuthController extends Controller
 
         if(!Auth::attempt($credentials))
             return response()->json([
-                'message' => 'Unauthorized',
-            ], 401);
+                'message' => 'credentials does not match our records',
+                'status' => false,
+            ], 403);
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;

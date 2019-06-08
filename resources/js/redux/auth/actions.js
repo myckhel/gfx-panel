@@ -3,7 +3,9 @@ import {
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
   REGISTER_USER,
-  REGISTER_USER_SUCCESS
+  REGISTER_USER_SUCCESS,
+  CHECK_AUTH,
+  STORE_USER
 } from '../../Constants/actionTypes';
 
 export const loginUser = (user, history) => ({
@@ -28,3 +30,13 @@ export const logoutUser = (history) => ({
   type: LOGOUT_USER,
   payload : {history}
 });
+
+export const checkAuth = () => ({
+  type: CHECK_AUTH,
+  payload: null
+});
+
+export const storeUser = (user) => ({
+  type: STORE_USER,
+  payload: user
+})

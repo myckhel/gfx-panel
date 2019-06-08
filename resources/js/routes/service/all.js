@@ -18,11 +18,14 @@ import Pagination from "../../Components/List/Pagination";
 function collect(props) {
   return { data: props.data };
 }
-import createNotification from '../../Components/ReactNotifications/alerts';
+// import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
 import ServiceType from './ServiceType';
 import Service from './Service';
+
+import Http from '../../util/Http'
+import formToObj from '../../helpers/formToObj'
 
 class All extends Component {
   constructor(props){
@@ -45,8 +48,9 @@ class All extends Component {
       selectedPageSize: 10,
       orderOptions:[
         {column: "name",label: "Name"},
+        {column: "created_at",label: "Latest"}
       ],
-      selectedOrderOption:  {column: "name",label: "Name"},
+      selectedOrderOption:  {column: "created_at",label: "Latest"},
       dropdownSplitOpen: false,
       modalOpen: false,
       currentPage: 1,
@@ -235,7 +239,8 @@ class All extends Component {
     this.setState({
       isLoading:false
     }, () => {
-      axios.get(`/api/services?pageSize=${selectedPageSize}&page=${currentPage}
+      // console.log();
+      Http.get(`/api/services?pageSize=${selectedPageSize}&page=${currentPage}
         &orderBy=${selectedOrderOption.column}&search=${search}`)
       .then(res => {
         return res.data
@@ -262,14 +267,17 @@ class All extends Component {
     // delete items
     if (confirm('Are you sure you wish to delete selected services?')) {
       this.setState({isLoading: false}, () => {
-        $.ajax({url: `/api/services/delete/multiple`, data: {_token, ids: items}, type: 'DELETE'})
-        .done((res) => {
-          console.log(res.text);
+        Http({url: `/api/services/delete/multiple`, data: {ids: items}, method: 'DELETE'})
+        .then((res) => {
+          return res.data
+        })
+        .then((res) => {
+          swal("Success!", res.text ? '' : `${res.text.length} could not be deleted`, "success");
           this.dataListRender()
         })
-        .fail((err) => {
+        .catch((err) => {
+          swal("Oops", "Internal Server Error", "error");
           this.dataListRender()
-          console.log(err)
         })
       })
     }
@@ -297,11 +305,10 @@ class All extends Component {
     this.setState({
       isLoading:false
     }, () => {
-      $.get(`/api/services?pagenate=${false}&search=${keys}`)
-      .done((res) => {      })
-      .fail((err) => console.log(err))
-    }
-    )
+      Http.get(`/api/services?pagenate=${false}&search=${keys}`)
+      .then((res) => {      })
+      .catch((err) => console.log(err))
+    })
   }
 
   // form submit
@@ -312,8 +319,14 @@ class All extends Component {
     const slug = this.state.form.state === 'type' ? '/api/service-metas' : '/api/services';
     const callback = this.state.form.state === 'type' ? false : this.toggleFormState;
     this.setState({isLoading: false}, () => {
-      $.post(slug, $(form).serializeArray())
-      .done((res) => {
+      const formData = formToObj($(form).serializeArray());
+      // application/x-www-form-urlencoded; charset=UTF-8
+      // charset=utf-8 boundary=${Math.random().toString().substr(2)}
+      Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
+      .then((res) => {
+        return res.data
+      })
+      .then((res) => {
         if (res.status) {
           $(form).trigger('reset')
 
@@ -326,20 +339,21 @@ class All extends Component {
             this.toggleFormState()
           }
 
-          this.dataListRender()
           if (callback) {
             callback()
           }
-          alert(res.status)
-          createNotification('success', 'True')
+          swal('Success', res.errors, 'success')
+          // createNotification('success', 'True')
         } else {
           // alert warning
-          alert(res.text)
+          swal('Ooooops!', res.errors, 'error')
+          // alert(res.text)
         }
+        this.dataListRender()
       })
-      .fail((err) => {
-        alert(err)
-        console.log(err);
+      .catch((err) => {
+        this.dataListRender()
+        swal('Ooooops!', 'Internal Server Error', 'error')
       })
     })
   }

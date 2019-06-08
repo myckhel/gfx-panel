@@ -1,3 +1,4 @@
+import Http from '../util/Http'
 import {_token} from '../Constants/defaultValues';
 // import
 export default class {
@@ -10,18 +11,8 @@ export default class {
       return
     }
 
-    return $.post('/api/auth/login', {email, password, _token})
-    // .done((res) => {
-    //   if (true) {
-    //
-    //   } else {
-    //
-    //   }
-    //   console.log(res);
-    // })
-    // .fail((err) => {
-    //   console.log(err);
-    // })
+    return Http.post('/api/auth/login', {email, password})
+    // $.post('/api/auth/login', {email, password, _token})
   }
 
   static createUserWithEmailAndPassword = async (name, email, password, password_confirmation) => {
@@ -30,6 +21,15 @@ export default class {
     }
     console.log(email, password, password_confirmation, name, _token);
 
-    return $.post('/api/auth/signup', {name, email, password, password_confirmation, _token})
+    return Http.post('/api/auth/signup', {name, email, password, password_confirmation})
+    // $.post('/api/auth/signup', {name, email, password, password_confirmation, _token})
+  }
+
+  static logout = async (access_token) => {
+    return Http.get('/api/auth/logout')
+  }
+
+  static checkAuth = async () => {
+    return Http.get('/api/users/current')
   }
 }

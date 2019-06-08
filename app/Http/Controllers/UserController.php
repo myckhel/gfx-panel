@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\ServiceMeta;
 
-class ServiceMetaController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,34 +35,7 @@ class ServiceMetaController extends Controller
      */
     public function store(Request $request)
     {
-      $errors = '';
-      $status = true;
-      $serviceMetas = [];
-      $size = sizeof($request->name);
-      // check unique name
-      for ($i=0; $i < $size; $i++) {
-        $price = $request->price[$i];
-        $name = $request->name[$i];
-        if (ServiceMeta::where('name', $name)->where('service_id', $request->service_id)->first()) {
-          $errors .= $name .' Service Type Exists<br/>';
-        } else {
-          try {
-            $serviceMeta = ServiceMeta::create([
-              'service_id' => $request->service_id,
-              'name' => $name,
-              'price' => $price,
-            ]);
-            $serviceMetas[] = $serviceMeta;
-          } catch (\Exception $e) {
-            if (!$request->service_id) {
-              $status = false;
-            }
-            $errors .=  $e->getMessage().'<br />';
-          }
-        }
-      }
-
-      return ['status' => $status, 'errors' => $errors, 'serviceMetas' => $serviceMetas];
+        //
     }
 
     /**
@@ -109,5 +81,14 @@ class ServiceMetaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function current(Request $request)
+    {
+      $user = $request->user('api');
+      if ($user) {
+        return [ 'status' => true, 'user' => $user];
+      }
+      return [ 'status' => false, 'text' => 'No Authenticated User' ];
     }
 }

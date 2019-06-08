@@ -20,7 +20,7 @@ class ServiceController extends Controller
          $service = $service->where('name', 'LIKE', '%'.$search.'%');//->orWhere('lastname', 'LIKE', '%'.$search.'%')
          // ->orWhere('phone', 'LIKE', '%'.$search.'%')->orWhere('email', 'LIKE', '%'.$search.'%');
        }
-       return $service->orderBy(($request->orderBy ? $request->orderBy : 'name'))->paginate($request->pageSize);
+       return $service->orderBy(($request->orderBy ? $request->orderBy : 'created_at'), 'Desc')->paginate($request->pageSize);
      }
 
     /**
@@ -41,6 +41,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+      // dd($request);
       // check unique name
       if (Service::where('name', $request->name)->first()) {
         return ['status' => false, 'text' => 'Name Exists'];
@@ -118,6 +119,6 @@ class ServiceController extends Controller
          }
        }
 
-       return ['status' => true, 'failed' => $text];
+       return ['status' => true, 'text' => $text];
      }
 }

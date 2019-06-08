@@ -14,13 +14,15 @@ class CustomerController extends Controller
    */
    public function index(Request $request)
    {
+     // return ['user' => $request->user('api')];
+     // return ['user' => auth()->user('api')];
      $customer = Customer::with('customer_service.customer_service_metas');
      $search = $request->search;
      if ($search) {
        $customer = $customer->where('firstname', 'LIKE', '%'.$search.'%')->orWhere('lastname', 'LIKE', '%'.$search.'%')
        ->orWhere('phone', 'LIKE', '%'.$search.'%')->orWhere('email', 'LIKE', '%'.$search.'%');
      }
-     return $customer->orderBy(($request->orderBy ? $request->orderBy : 'firstname'))->paginate($request->pageSize);
+     return $customer->orderBy(($request->orderBy ? $request->orderBy : 'created_at'), 'DESC')->paginate($request->pageSize);
    }
    /**
     * Show the form for creating a new resource.
@@ -124,7 +126,6 @@ class CustomerController extends Controller
          $text[] = $id;
        }
      }
-
-     return ['status' => true, 'failed' => $text];
+     return ['status' => true, 'text' => $text];
    }
 }
