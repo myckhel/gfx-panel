@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\Notifications\SignupActivate;
+use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
@@ -24,20 +25,44 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string|confirmed',
+            'password_confirmation' => 'required|string|min:6'
+        ], [
+            'password.confirmed' => 'The password does not match.'
         ]);
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+
+        // try {
+          $user = $this->create($request->all());
+          $user->notify(new SignupActivate($user));
+
+          return response()->json([
+              'message' => 'Successfully created user!',
+              'user' => $user
+          ], 201);
+        // } catch (\Exception $e) {
+          // return response()->json([
+          //     "status" => false,
+          //     "error" => "invalid_credentials",
+          //     "message" => "The user credentials were incorrect.",
+          //     "debug" => ['message' => $e->getMessage(), 'code' => $e->getCode(), 'trace' => $e->getTrace()]
+          // ], 422);
+        // }
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
             'activation_token' => str_random(60)
         ]);
-        $user->save();
-        $user->notify(new SignupActivate($user));
-        return response()->json([
-            'message' => 'Successfully created user!',
-            'user' => $user
-        ], 201);
     }
 
     /**
@@ -66,6 +91,7 @@ class AuthController extends Controller
                 'message' => 'credentials does not match our records',
                 'status' => false,
             ], 403);
+
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;

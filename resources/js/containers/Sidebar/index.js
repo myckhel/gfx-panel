@@ -7,6 +7,7 @@ import classnames from "classnames";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { withRouter } from "react-router-dom";
 
+
 import { connect } from "react-redux";
 import {
   setContainerClassnames,
@@ -380,7 +381,7 @@ class Sidebar extends Component {
                 data-parent="message"
               >
                 <NavItem>
-                  <NavLink to="/email">
+                  <NavLink to="/messaging/email">
                     <i className="simple-icon-envelope-letter" />{" "}
                     Email
                   </NavLink>
@@ -394,7 +395,7 @@ class Sidebar extends Component {
                 data-parent="message"
               >
                 <NavItem>
-                  <NavLink to="/sms">
+                  <NavLink to="/messaging/sms">
                     <i className="simple-icon-screen-smartphone" />{" "}
                     SMS
                   </NavLink>

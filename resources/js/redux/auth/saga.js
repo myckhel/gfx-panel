@@ -58,22 +58,20 @@ const checkAuthAsync = async () =>
 
 function* checkAuth () {
   const access_token = localStorage.getItem('access_token');
-
-  if (access_token !== "undefined") {
+  if (access_token){
     Http.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-  }
-  try {
-      const authUser = yield call(checkAuthAsync);
-      console.log(authUser);
-      if (authUser.data.status) {
-          yield put(storeUser(authUser.data.user));
-      } else {
-          // catch throw
-          console.log('Auth failed :', authUser.data.text)
-      }
-  } catch (error) {
-      // catch throw
-      console.log('Auth error : ', error)
+    try {
+        const authUser = yield call(checkAuthAsync);
+        if (authUser.data.status) {
+            yield put(storeUser(authUser.data.user));
+        } else {
+            // catch throw
+            console.log('Auth failed :', authUser.data.text)
+        }
+    } catch (error) {
+        // catch throw
+        console.log('Auth error : ', error)
+    }
   }
 }
 
@@ -101,7 +99,7 @@ function* registerWithEmailPassword({ payload }) {
 const logoutAsync = async (history) => {
     await auth.logout().then(authUser => authUser).catch(error => error);
     // window.location.push('/')
-    window.location.reload()
+    // window.location.reload()
     // history.push('/')
 }
 

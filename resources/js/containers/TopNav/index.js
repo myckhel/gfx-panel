@@ -194,14 +194,14 @@ class TopNav extends Component {
 
   render() {
     // authenticate
-    if (!this.props.authenticated) {
-      return (<Redirect
-        to={{
-          pathname: '/login',
-          state: { from: this.props.location }
-        }}
-      />)
-    }
+    // if (!this.props.authenticated) {
+    //   return (<Redirect
+    //     to={{
+    //       pathname: '/login',
+    //       state: { from: this.props.location }
+    //     }}
+    //   />)
+    // }
     const { containerClassnames, menuClickCount } = this.props;
     const {messages} = this.props.intl;
 

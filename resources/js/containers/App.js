@@ -57,13 +57,13 @@ class App extends Component {
 	render() {
 		const { location, match, authenticated, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
-		if (location.pathname === '/' ) {
+		if (location.pathname === '/' && authenticated) {
 			return (<Redirect to={defaultStartPath} />);
 		}
-		// else if (location.pathname === '/login' || location.pathname === '/register'
-		// || location.pathname === '/forgot-password' && user) {
-		// 	return (<Redirect to='/' />);
-		// }
+		if ((location.pathname === '/login' || location.pathname === '/register'
+		|| location.pathname === '/forgot-password') && authenticated) {
+			return (<Redirect to='/' />);
+		}
 
 		return (
 				<Fragment>

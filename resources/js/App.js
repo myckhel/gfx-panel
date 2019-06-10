@@ -6,7 +6,11 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import App from './containers/App';
+
 import { configureStore } from './Redux/store';
+import { checkAuth } from './Redux/actions';
+
+configureStore().dispatch(checkAuth())
 
 const MainApp = () => (
 	<Provider store={configureStore()}>

@@ -6,6 +6,7 @@ import Sidebar from '../Containers/Sidebar';
 
 // import dashboard from './dashboard';
 import customer from './customer';
+import messaging from './messaging';
 import service from './service';
 import { connect } from 'react-redux';
 
@@ -26,7 +27,7 @@ class MainApp extends Component {
 						<Switch>
 							<Route path={`${match.url}customers`} component={customer} />
 							<Route path={`${match.url}services`} component={service} />
-							<Route path={`${match.url}messaging`} component={customer} />
+							<Route path={`${match.url}messaging`} component={messaging} />
 							<Route path={`${match.url}settings`} component={customer} />
 							<Redirect to="/error" />
 						</Switch>

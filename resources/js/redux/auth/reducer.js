@@ -12,8 +12,8 @@ import Http from '../../util/Http'
 const INIT_STATE = {
   user: null,
   loading: false,
-  access_token: localStorage.getItem("access_token") === "undefined" ? null : localStorage.getItem("access_token"),
-  authenticated: localStorage.getItem("access_token") === "undefined" ? false : true,
+  access_token: localStorage.getItem("access_token"), //=== "undefined" ? null : localStorage.getItem("access_token"),
+  authenticated: !!localStorage.getItem("access_token") //=== "undefined" ? false : true,
 };
 
 const merge = (state, newState) => {
@@ -26,7 +26,7 @@ export default (state = INIT_STATE, action) => {
       return { ...state, loading: true };
     case LOGIN_USER_SUCCESS:
       //notify.success('Login Success');
-      return { ...state, loading: false, user: action.payload };
+      return { ...state, authenticated: true, loading: false, user: action.payload };
     case REGISTER_USER:
       return { ...state, loading: true };
     case REGISTER_USER_SUCCESS:
@@ -43,7 +43,7 @@ export default (state = INIT_STATE, action) => {
       }
       return state;
     case STORE_USER:
-		return merge(state, { user: action.payload} );
+		  return merge(state, { user: action.payload, authenticated: true} );
     default:
       return { ...state };
   }
