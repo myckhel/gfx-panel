@@ -29,9 +29,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-              "laravel/passport",
-            ]
+            "dont-discover": []
         }
     },
     "autoload": {
