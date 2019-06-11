@@ -23,21 +23,37 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed',
-            'password_confirmation' => 'required|string|min:6'
+            'name' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
+            // 'password_confirmation' => 'required|min:6|confirmed:password'
         ], [
             'password.confirmed' => 'The password does not match.'
         ]);
 
         // try {
           $user = $this->create($request->all());
-          $user->notify(new SignupActivate($user));
+          try {
+            $user->notify(new SignupActivate($user));
+          } catch (\Exception $e) {
+            // $user->active = 1;
+            // $user->save();
+          }
+
+          $tokenResult = $user->createToken('Personal Access Token');
+          $token = $tokenResult->token;
+          if ($request->remember_me)
+              $token->expires_at = Carbon::now()->addWeeks(1);
+          $token->save();
 
           return response()->json([
               'message' => 'Successfully created user!',
-              'user' => $user
+              'user' => $user,
+              'access_token' => $tokenResult->accessToken,
+              'token_type' => 'Bearer',
+              'expires_at' => Carbon::parse(
+                  $tokenResult->token->expires_at
+              )->toDateTimeString()
           ], 201);
         // } catch (\Exception $e) {
           // return response()->json([
@@ -78,7 +94,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'email' => 'required|email',
             'password' => 'required|string',
             'remember_me' => 'boolean'
         ]);
@@ -90,7 +106,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'credentials does not match our records',
                 'status' => false,
-            ], 403);
+            ], 401);
 
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');

@@ -41,6 +41,14 @@ class CustomerController extends Controller
     */
    public function store(Request $request)
    {
+     $request->validate([
+       'firstname' => 'required|string|max:30|min:3',
+       'lastname' => 'string|max:30|min:3',
+       'phone' => 'unique:customers|string|max:20|min:8',
+       'email' => 'string|email|unique:customers',
+     ], [
+     ]);
+
      // check unique email
      if (Customer::where('email', $request->email)->first()) {
        return ['status' => false, 'text' => 'Email Exists'];
@@ -128,4 +136,15 @@ class CustomerController extends Controller
      }
      return ['status' => true, 'text' => $text];
    }
+
+   // public function validate (Request $request){
+   //   return $request->validate([
+   //       // 'name' => 'required|string',
+   //       'email' => 'required|string|email|unique:users',
+   //       // 'password' => 'required|string|confirmed',
+   //       // 'password_confirmation' => 'required|string|min:6'
+   //   ], [
+   //       // 'password.confirmed' => 'The password does not match.'
+   //   ]);
+   // }
 }

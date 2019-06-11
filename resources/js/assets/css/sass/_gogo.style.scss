@@ -3423,6 +3423,8 @@ div[data-notify="container"] {
   }
 }
 
+// form
+
 .form-inline {
   .form-group {
     @include respond-below(xs) {
@@ -3520,6 +3522,14 @@ select.form-control:not([size]):not([multiple]) {
 .custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before {
   background-color: $theme-color-1;
 }
+
+.remember-label {
+  .form-check-input {
+    margin-left: 0;
+  }
+}
+.remember-label { margin-left: 12px;}
+.invalid-feedback {display: block;}
 
 .custom-control-input:checked~.custom-control-label::before {
   background-color: $theme-color-1;
@@ -5983,6 +5993,18 @@ input:-webkit-autofill {
   z-index: 1;
 }
 
+.btn-loading {
+  color: white;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(255,255,255, 0.2);
+  border-radius: 50%;
+  border-top-color: $theme-color-1;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  z-index: 1;
+}
 @keyframes spin {
   to {
     -webkit-transform: rotate(360deg);

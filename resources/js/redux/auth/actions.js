@@ -1,11 +1,13 @@
 import {
   LOGIN_USER,
   LOGIN_USER_SUCCESS,
+  LOGIN_ERROR,
   LOGOUT_USER,
   REGISTER_USER,
   REGISTER_USER_SUCCESS,
+  REGISTER_ERROR,
   CHECK_AUTH,
-  STORE_USER
+  STORE_USER,
 } from '../../Constants/actionTypes';
 
 export const loginUser = (user, history) => ({
@@ -39,4 +41,14 @@ export const checkAuth = () => ({
 export const storeUser = (user) => ({
   type: STORE_USER,
   payload: user
+})
+
+export const loginError = (errors) => ({
+  type: LOGIN_ERROR,
+  payload: errors
+})
+
+export const registerError = (errors) => ({
+  type: REGISTER_ERROR,
+  payload: errors
 })

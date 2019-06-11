@@ -7,30 +7,66 @@ import { Colxx } from "../../Components/CustomBootstrap";
 
 import { connect } from "react-redux";
 import { registerUser } from "../../Redux/actions";
+import ReeValidate from 'ree-validate'
 
 class RegisterLayout extends Component {
   constructor(props) {
     super(props);
+
+    this.validator = new ReeValidate({
+      name: "required|min:3|max:30",
+      email: 'required|email',
+      password: 'required|min:6',
+      password_confirmation: "required|min:6"
+      // confirmed:password",
+    })
+
     this.state = {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
+      credentials: {
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+      },
+      errors: props.errors
     };
   }
   onUserRegister() {
-    if (this.state.email !== "" && this.state.password !== "") {
-      // This is for adding user to Firebase. Commented out for demo purpose.
-      this.props.registerUser(this.state, this.props.history);
-      // this.props.history.push("/");
+    if (this.state.credentials.email !== "" && this.state.credentials.password !== "") {
+      const { errors } = this.validator
+      const { credentials } = this.state
+
+      this.validator.validateAll(credentials)
+        .then((success) => {
+          if (success) {
+            this.props.registerUser(credentials, this.props.history);
+          } else {
+            this.setState({ errors })
+          }
+        })
     }
   }
 
-  handleInputChange = (e) => {
-    const name = e.target.name
-    const value = e.target.value
-    this.setState({[name]: value})
+  handleInputChange = ({ target }) => {
+    const {name, value} = target
+    const { errors } = this.validator
+
+    this.setState(prev => { return {credentials: {...prev.credentials, [name]: value}} })
+
+    errors.remove(name)
+    this.validator.validate(name, value)
+      .then(() => {
+        this.setState({ errors })
+      })
   }
+
+  componentWillReceiveProps(nextProps) {
+  if(this.props != nextProps) {
+    this.setState({
+      errors: nextProps.errors
+    });
+  }
+}
 
   componentDidMount() {
     document.body.classList.add("background");
@@ -66,32 +102,36 @@ class RegisterLayout extends Component {
                       <IntlMessages id="user.register" />
                     </CardTitle>
                     <Form>
+                    {this.state.errors.has('name') && <div className="invalid-feedback">{this.state.errors.first('name')}</div>}
                       <Label className="form-group has-float-label mb-4">
                         <Input
                           type="name" name="name" onChange={(e) => this.handleInputChange(e)}
-                          defaultValue={this.state.name}
+                          defaultValue={this.state.credentials.name}
                         />
                         <IntlMessages id="user.name" />
                       </Label>
+                      {this.state.errors.has('email') && <div className="invalid-feedback">{this.state.errors.first('email')}</div>}
                       <Label className="form-group has-float-label mb-4">
                         <Input
-                          type="email" name="email" defaultValue={this.state.email}
+                          type="email" name="email" defaultValue={this.state.credentials.email}
                           onChange={(e) => this.handleInputChange(e)}
                         />
                         <IntlMessages id="user.email" />
                       </Label>
+                      {this.state.errors.has('password') && <div className="invalid-feedback">{this.state.errors.first('password')}</div>}
                       <Label className="form-group has-float-label mb-4">
                         <Input type="password" name="password"
                            onChange={(e) => this.handleInputChange(e)}
                         />
                         <IntlMessages
                           id="user.password"
-                          defaultValue={this.state.password}
+                          defaultValue={this.state.credentials.password}
                         />
                       </Label>
+                      {this.state.errors.has('password_confirmation') && <div className="invalid-feedback">{this.state.errors.first('password_confirmation')}</div>}
                       <Label className="form-group has-float-label mb-4">
                         <Input type="password" name="password_confirmation"
-                          defaultValue={this.state.password_confirmation}
+                          defaultValue={this.state.credentials.password_confirmation}
                            onChange={(e) => this.handleInputChange(e)}
                         />
                         <IntlMessages
@@ -103,9 +143,12 @@ class RegisterLayout extends Component {
                           color="primary"
                           className="btn-shadow"
                           size="lg"
+                          disabled={this.state.errors.any() || this.props.loading}
                           onClick={() => this.onUserRegister()}
                         >
-                          <IntlMessages id="user.register-button" />
+                        {this.props.loading?
+                          <div className="btn-loading"></div>
+                       : <IntlMessages id="user.register-button" /> }
                         </Button>
                       </div>
                     </Form>
@@ -120,8 +163,8 @@ class RegisterLayout extends Component {
   }
 }
 const mapStateToProps = ({ authUser }) => {
-  const { user, loading } = authUser;
-  return { user, loading };
+  const { user, loading, errors } = authUser;
+  return { user, loading, errors };
 };
 
 export default connect(

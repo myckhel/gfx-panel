@@ -281,6 +281,7 @@ class DataListLayout extends Component {
           this.dataListRender()
         })
         .catch((err) => {
+          this.dataListRender()
           swal('Ooops', 'Internal Server Error', 'error')
         })
       })

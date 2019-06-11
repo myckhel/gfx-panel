@@ -26,6 +26,7 @@ module.exports = {
   "user.login-button": "LOGIN",
   "user.register-button": "REGISTER",
   "user.reset-password-button": "RESET",
+  "user.remember": "Remember Me",
 
   /* 03.Menu */
   "menu.app": "Home",

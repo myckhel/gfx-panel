@@ -6,12 +6,12 @@ export default class {
 
   }
 
-  static signInWithEmailAndPassword = async (email, password) => {
+  static signInWithEmailAndPassword = async (email, password, remember_me) => {
     if (!email || !password) {
       return
     }
 
-    return Http.post('/api/auth/login', {email, password})
+    return Http.post('/api/auth/login', {email, password, remember_me})
     // $.post('/api/auth/login', {email, password, _token})
   }
 
