@@ -24,14 +24,16 @@ Route::get('/db/migrate', function() {
 Route::get('/app/reset', function() {
   $output = [];
   // $output['inspire'] = Artisan::call('inspire');
-  // $output['freshDb'] = Artisan::call('migrate:fresh');
-  // $output['passportDb'] = Artisan::call('migrate', [
-  //   '--path' => 'vendor/laravel/passport/database/migrations', '--force' => true
-  // ]);
+  $output['freshDb'] = Artisan::call('migrate:fresh');
+  $output['passportDb'] = Artisan::call('migrate', [
+    '--path' => 'vendor/laravel/passport/database/migrations', '--force' => true
+  ]);
   // sleep(10);
-  $output['passportInstall'] = Artisan::call('passport:install');
+  $output['passportInstall'] = shell_exec('php ../artisan passport:install');
+  // $output['passportInstall'] = Artisan::call('passport:install');
   // sleep(3);
-  // $output['dbSeed'] = Artisan::call('db:seed');
+  $output['eventGen'] = Artisan::call('event:generate');
+  $output['dbSeed'] = Artisan::call('db:seed');
   // sleep(3);
   return $output;
 });
