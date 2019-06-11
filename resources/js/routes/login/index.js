@@ -49,13 +49,13 @@ class LoginLayout extends Component {
       const { errors } = this.validator
 
       this.validator.validateAll(credentials)
-        .then((success) => {
-          if (success) {
-            this.props.loginUser(credentials, this.props.history);
-          } else {
-            this.setState({ errors })
-          }
-        })
+      .then((success) => {
+        if (success) {
+          this.props.loginUser(credentials, this.props.history);
+        } else {
+          this.setState({ errors })
+        }
+      })
     }
   }
 

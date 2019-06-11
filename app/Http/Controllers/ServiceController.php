@@ -41,6 +41,9 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
+      $request->validate([
+        'name' => 'required|min:3|max:45'
+      ]);
       // dd($request);
       // check unique name
       if (Service::where('name', $request->name)->first()) {

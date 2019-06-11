@@ -26,12 +26,19 @@ import Service from './Service';
 
 import Http from '../../util/Http'
 import formToObj from '../../helpers/formToObj'
+import ReeValidate from 'ree-validate'
+import { removeErrors, addErrors } from '../../helpers/errors'
 
 class All extends Component {
   constructor(props){
     super(props)
 
+    this.validator = new ReeValidate({
+      name: 'required|min:3|max:45'
+    })
+
     this.state = {
+      errors: this.validator.errors,
       items: [],
       visible: true,
       serviceTypeRow: [],
@@ -110,7 +117,6 @@ class All extends Component {
   toggleModal = () => {
     this.setState({
       modalOpen: !this.state.modalOpen
-    }, () => {
     });
   }
 
@@ -316,45 +322,54 @@ class All extends Component {
     const form = $(event.target)
     event.persist()
     event.preventDefault();
+
+    const { errors } = this.validator
+    const formData = formToObj($(form).serializeArray());
     const slug = this.state.form.state === 'type' ? '/api/service-metas' : '/api/services';
     const callback = this.state.form.state === 'type' ? false : this.toggleFormState;
-    this.setState({isLoading: false}, () => {
-      const formData = formToObj($(form).serializeArray());
-      // application/x-www-form-urlencoded; charset=UTF-8
-      // charset=utf-8 boundary=${Math.random().toString().substr(2)}
-      Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
-      .then((res) => {
-        return res.data
-      })
-      .then((res) => {
-        if (res.status) {
-          $(form).trigger('reset')
 
-          if (this.state.form.state === 'service') {
-            const service = {name: res.service.name, value: res.service.id};
-            this.setState( (prev) => {
-              return {services: [ service ] }
-            }, () => this.selectService(service) )
-          } else {
-            this.toggleFormState()
-          }
+    this.setState(prev => {
+      return {errors: removeErrors(prev.errors)}
+    })
+    this.validator.validateAll(formData)
+    .then((success) => {
+      if (success) {
+        this.setState({isLoading: false}, () => {
+          Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
+          .then((res) => res.data )
+          .then((res) => {
+            if (res.status) {
+              $(form).trigger('reset')
 
-          if (callback) {
-            callback()
-          }
-          swal('Success', res.errors, 'success')
-          // createNotification('success', 'True')
-        } else {
-          // alert warning
-          swal('Ooooops!', res.errors, 'error')
-          // alert(res.text)
-        }
-        this.dataListRender()
-      })
-      .catch((err) => {
-        this.dataListRender()
-        swal('Ooooops!', 'Internal Server Error', 'error')
-      })
+              if (this.state.form.state === 'service') {
+                const service = {name: res.service.name, value: res.service.id};
+                this.setState( (prev) => {
+                  return {services: [ service ] }
+                }, () => this.selectService(service) )
+              } else {
+                this.toggleFormState()
+              }
+
+              if (callback) {
+                callback()
+              }
+              swal('Success', res.errors, 'success')
+              // createNotification('success', 'True')
+            } else {
+              // alert warning
+              swal('Ooooops!', res.errors, 'error')
+              // alert(res.text)
+            }
+            this.dataListRender()
+          })
+          .catch((err) => {
+            this.dataListRender()
+            swal('Ooooops!', 'Internal Server Error', 'error')
+          })
+        })
+      } else {
+        this.setState({ errors })
+      }
     })
   }
 
@@ -412,7 +427,7 @@ class All extends Component {
                       Add New Service +
                     </ModalHeader>
                     <ModalBody>
-                      {this.state.form.state === 'service' ? <Service />
+                      {this.state.form.state === 'service' ? <Service errors={this.state.errors} />
                       : <Fragment>
                         <Row id="add-service-type-row">
                           <Col sm="8" className="col-sm-offset-2">
@@ -423,7 +438,10 @@ class All extends Component {
                         {serviceType}
                         <Row id="add-service-type-row">
                           <Col xs="8" className="col-xs-offset-2">
-                            <Button color="info" onClick={() => {this.addServiceTypeRow()}}> <span aria-hidden > Add More Service Type</span> </Button>
+                            <Button
+                              color="info" onClick={() => {this.addServiceTypeRow()}}
+                            > <span aria-hidden > Add More Service Type</span>
+                            </Button>
                           </Col>
                         </Row>
                       </Fragment>}
@@ -436,8 +454,12 @@ class All extends Component {
                       >
                       {this.state.form.cancelName}
                       </Button>
-                      <Button type="submit" id="btn" color="primary" >
-                        {this.state.form.submitName}
+                      <Button
+                      disabled={this.state.errors.any() || this.state.loading}
+                      type="submit" id="btn" color="primary" >
+                      {this.state.loading?
+                        <div className="btn-loading"></div>
+                     : this.state.form.submitName}
                       </Button>{" "}
                     </ModalFooter>
                   </Form>

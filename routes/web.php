@@ -29,8 +29,8 @@ Route::get('/app/reset', function() {
     '--path' => 'vendor/laravel/passport/database/migrations', '--force' => true
   ]);
   // sleep(10);
-  $output['passportInstall'] = shell_exec('php ../artisan passport:install');
-  // $output['passportInstall'] = Artisan::call('passport:install');
+  // $output['passportInstall'] = shell_exec('php ../artisan passport:install');
+  $output['passportInstall'] = Artisan::call('passport:install');
   // sleep(3);
   $output['eventGen'] = Artisan::call('event:generate');
   $output['dbSeed'] = Artisan::call('db:seed');

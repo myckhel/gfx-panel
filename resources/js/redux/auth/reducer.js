@@ -11,8 +11,7 @@ import {
 } from "../../Constants/actionTypes";
 import Http from '../../util/Http'
 import ReeValidate from 'ree-validate'
-import _ from 'lodash'
-
+import { removeErrors, addErrors } from '../../helpers/errors'
 // const { errors } = new ReeValidate()
 
 const INIT_STATE = {
@@ -62,22 +61,3 @@ export default (state = INIT_STATE, action) => {
       return { ...state };
   }
 };
-
-const addErrors = (errors, payload) => {
-  // remove existing
-  _.forOwn(payload, (message, field) => {
-    errors.remove(field);
-  });
-  console.log(errors);
-  // add
-  _.forOwn(payload, (message, field) => {
-    errors.add(field, message);
-  });
-  return errors
-}
-
-const removeErrors = (errors) => {
-  _.forOwn(errors, (message, field) => {
-    errors.remove(field);
-  });
-}
