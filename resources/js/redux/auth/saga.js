@@ -67,7 +67,6 @@ function* registerWithEmailPassword({ payload }) {
     const { history } = payload
     try {
         const registerUser = yield call(registerWithEmailPasswordAsync, name, email, password,  password_confirmation);
-        console.log(registerUser);
         if (registerUser.status === 201) {
           // if (registerUser.message === "Successfully created user!") {
               Http.defaults.headers.common['Authorization'] = `Bearer ${registerUser.data.access_token}`;
@@ -126,7 +125,6 @@ const logoutAsync = async (history) => {
 }
 
 function* logout({payload}) {
-  console.log(payload);
     const { history } = payload
     try {
         yield call(logoutAsync,history);

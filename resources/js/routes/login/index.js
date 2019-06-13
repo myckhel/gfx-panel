@@ -33,7 +33,6 @@ class LoginLayout extends Component {
     const name = target.name
     const value = target.value
     const { errors } = this.validator
-
     this.setState(prev => { return {credentials: {...prev.credentials, [name]: value}} })
 
     errors.remove(name)
@@ -115,17 +114,6 @@ class LoginLayout extends Component {
                             defaultValue={this.state.credentials.password}
                           />
                         </Label>
-                        <Label className="remember-label form-group has-float-label mb-4">
-                          <Input type="checkbox" onChange={(e) => this.handleInputChange(e)}
-                            name='remember_me'
-                          />
-                          <div className="remember-label">
-                            <IntlMessages
-                              id="user.remember"
-                              defaultValue={this.state.credentials.remember_me}
-                            />
-                          </div>
-                        </Label>
                         <div className="d-flex justify-content-between align-items-center">
                           <NavLink to={`/forgot-password`}>
                             <IntlMessages id="user.forgot-password-question" />
@@ -166,3 +154,16 @@ export default connect(
     loginUser
   }
 )(LoginLayout);
+
+
+// <Label className="remember-label form-check-label form-group has-float-label mb-4">
+//   <Input type="checkbox"
+//     onChange={(e) => this.handleInputChange(e)}
+//     name='remember_me'
+//   />
+//   <div className="remember-label">
+//     <IntlMessages
+//       id="user.remember"
+//     />
+//   </div>
+// </Label>

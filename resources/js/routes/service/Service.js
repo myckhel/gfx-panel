@@ -6,13 +6,17 @@ export default class Service extends Component {
 		super(props);
 
 		this.state = {
-			errors: props.errors
+			errors: props.errors,
+			credentials: {name: props.name}
 		}
 	}
 
 	componentWillReceiveProps = (nextProps) => {
-		if (nextProps == this.props) {
-			this.setState({errors: nextProps.errors})
+		if (nextProps !== this.props) {
+			this.setState({
+				errors: nextProps.errors,
+				credentials: { name: nextProps.name }
+			});
 		}
 	}
 
@@ -24,6 +28,8 @@ export default class Service extends Component {
           Service Name
         </Label>
         <Input
+					value={this.state.credentials.name}
+					onChange={(e) => this.props.handleInputChange(e)}
           type="text" required name="name"
           id="name" placeholder="Service Name"
         />

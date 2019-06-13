@@ -44,6 +44,9 @@ class All extends Component {
       serviceTypeRow: [],
       services: [],//{name: 'James', value: 33},{name: 'Fake', value: 29}
       selectedService: {},
+      credentials: {
+        name: ''
+      },
       form: {
         name: '',
         submitName: 'Save',
@@ -317,6 +320,21 @@ class All extends Component {
     })
   }
 
+  // input change
+  handleInputChange = ({ target }) => {
+    const name = target.name
+    const value = target.value
+    const { errors } = this.validator
+
+    this.setState(prev => { return {credentials: {...prev.credentials, [name]: value}} })
+
+    errors.remove(name)
+    this.validator.validate(name, value)
+      .then(() => {
+        this.setState({ errors })
+      })
+  }
+
   // form submit
   submitForm = (event) => {
     const form = $(event.target)
@@ -427,7 +445,11 @@ class All extends Component {
                       Add New Service +
                     </ModalHeader>
                     <ModalBody>
-                      {this.state.form.state === 'service' ? <Service errors={this.state.errors} />
+                      {this.state.form.state === 'service'
+                      ? <Service
+                          name={this.state.credentials.name}
+                          handleInputChange={this.handleInputChange} errors={this.state.errors}
+                        />
                       : <Fragment>
                         <Row id="add-service-type-row">
                           <Col sm="8" className="col-sm-offset-2">

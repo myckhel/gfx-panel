@@ -3424,7 +3424,6 @@ div[data-notify="container"] {
 }
 
 // form
-
 .form-inline {
   .form-group {
     @include respond-below(xs) {
@@ -3528,7 +3527,7 @@ select.form-control:not([size]):not([multiple]) {
     margin-left: 0;
   }
 }
-.remember-label { margin-left: 12px;}
+.remember-label { margin-left: 18px;}
 .invalid-feedback {display: block;}
 
 .custom-control-input:checked~.custom-control-label::before {
@@ -4345,6 +4344,10 @@ select.form-control:not([size]):not([multiple]) {
   border: 1px solid $separator-color;
   background: $input-background;
   color: $primary-color;
+}
+
+.error-input, .error-input:focus {
+  border-color: #ff1717;
 }
 
 @keyframes autofill {

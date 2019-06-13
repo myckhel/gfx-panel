@@ -28,19 +28,39 @@ import {_token} from '../../Constants/defaultValues';
 
 import Http from '../../util/Http'
 import formToObj from '../../helpers/formToObj'
+import ReeValidate from 'ree-validate'
+import { removeErrors, addErrors } from '../../helpers/errors'
 
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
 
+      this.validator = new ReeValidate({
+        firstname: 'required|min:3|max:35',
+        lastname: 'required|min:3|max:35',
+        country_code: '',
+        phone: 'numeric|min:11|max:15',
+        email: 'email',
+        city: 'min:3|max:45',
+        state: 'min:3|max:45',
+        address: 'nullable',
+        country: ''
+      });
+
       this.state = {
+        errors: this.validator.errors,
         items: [],
         visible: true,
         form: {
           firstname: '',
           lastname: '',
+          country_code: '',
           phone: '',
           email: '',
+          city: '',
+          state: '',
+          address: '',
+          country: '',
         },
         displayMode: "list",
         pageSizes: [10, 20, 30, 50, 100],
@@ -75,6 +95,7 @@ class DataListLayout extends Component {
       this.setState({ visible: false });
     }
 
+    //  component section
     componentWillMount() {
       this.props.bindShortcut(["ctrl+a", "command+a"], () =>
         this.handleChangeSelectAll(false)
@@ -87,6 +108,7 @@ class DataListLayout extends Component {
       });
     }
 
+    // toggle section
     toggleModal = () => {
       this.setState({
         modalOpen: !this.state.modalOpen
@@ -103,6 +125,7 @@ class DataListLayout extends Component {
       }));
     }
 
+    // change section
     changeOrderBy = (column) => {
       this.setState(
         {
@@ -134,6 +157,7 @@ class DataListLayout extends Component {
       );
     }
 
+    // key event section
     handleSearchChange = (e) => {
       this.setState({ search: e.target.value.toLowerCase() })
     }
@@ -189,6 +213,22 @@ class DataListLayout extends Component {
       document.activeElement.blur();
     }
 
+    // input change
+    handleInputChange = ({ target }) => {
+      const name = target.name
+      const value = target.value
+      const { errors } = this.validator
+
+      this.setState(prev => { return {form: {...prev.form, [name]: value}} })
+
+      errors.remove(name)
+      this.validator.validate(name, value)
+        .then(() => {
+          this.setState({ errors })
+        })
+    }
+
+    // helper section
     getIndex = (value, arr, prop) => {
       for (var i = 0; i < arr.length; i++) {
         if (arr[i][prop] === value) {
@@ -212,10 +252,12 @@ class DataListLayout extends Component {
       document.activeElement.blur();
       return false;
     }
+
     componentDidMount() {
       this.dataListRender();
     }
 
+    // ajax section
     dataListRender = () => {
       const {selectedPageSize,currentPage,selectedOrderOption,search} = this.state;
       this.setState({
@@ -262,28 +304,42 @@ class DataListLayout extends Component {
 
     // form submit
     submitForm = (event) => {
-      const form = $(event.target)
+      const form = formToObj($(event.target).serializeArray())
       event.persist()
       event.preventDefault();
-      this.setState({isLoading: false}, () => {
-        Http.post('/api/customers', formToObj($(form).serializeArray()))
-        .then((res) => res.data)
-        .then((res) => {
-          if (res.status) {
-            $(form).trigger('reset')
-            // alert success
-            swal('Success', `${res.customer.firstname} Added Successfully`, 'success')
-            // createNotification('success', 'True')
-          } else {
-            // alert warning
-            swal('Ooops', res.text, 'error')
-          }
-          this.dataListRender()
-        })
-        .catch((err) => {
-          this.dataListRender()
-          swal('Ooops', 'Internal Server Error', 'error')
-        })
+
+      const { errors } = this.validator
+      this.setState(prev => {
+        return {errors: removeErrors(prev.errors)}
+      })
+
+      this.validator.validateAll(form)
+      .then((success) => {
+        if (success) {
+
+          this.setState({isLoading: false}, () => {
+            Http.post('/api/customers', form)
+            .then((res) => res.data)
+            .then((res) => {
+              if (res.status) {
+                $(form).trigger('reset')
+                // alert success
+                swal('Success', `${res.customer.firstname} Added Successfully`, 'success')
+                // createNotification('success', 'True')
+              } else {
+                // alert warning
+                swal('Ooops', res.text, 'error')
+              }
+              this.dataListRender()
+            })
+            .catch((err) => {
+              this.dataListRender()
+              swal('Ooops', 'Internal Server Error', 'error')
+            })
+          })
+        } else {
+          this.setState({ errors })
+        }
       })
     }
 
@@ -306,6 +362,7 @@ class DataListLayout extends Component {
       const startIndex= (this.state.currentPage-1)*this.state.selectedPageSize
       const endIndex= (this.state.currentPage)*this.state.selectedPageSize
       const {messages} = this.props.intl;
+      const errors = this.state.errors;
       return (
         !this.state.isLoading?
           <div className="loading"></div>
@@ -344,28 +401,44 @@ class DataListLayout extends Component {
                             <Label>
                               Firstname
                             </Label>
+                            {errors.has('firstname') && <div className="invalid-feedback">{errors.first('firstname')}</div>}
                             <Input
+                              className={errors.has('firstname') ? 'error-input' : ''}
+                              onChange={this.handleInputChange}
+                              value={this.state.form.firstname}
                               type="text" required name="firstname"
                               id="firstname" placeholder="Firstname"
                             />
                             <Label>
                               Lasstname
                             </Label>
+                            {errors.has('lastname') && <div className="invalid-feedback">{errors.first('lastname')}</div>}
                             <Input
+                            className={errors.has('lastname') ? 'error-input' : ''}
+                              onChange={this.handleInputChange}
+                              value={this.state.form.lastname}
                               type="lastname" name="lastname"
-                               id="lastname" placeholder="lastname"
+                              id="lastname" placeholder="lastname"
                             />
                             <Label>
                               Email
                             </Label>
+                            {errors.has('email') && <div className="invalid-feedback">{errors.first('email')}</div>}
                             <Input
+                              className={errors.has('email') ? 'error-input' : ''}
+                              onChange={this.handleInputChange}
+                              value={this.state.form.email}
                               type="email" name="email" id="email"
                               placeholder="Email"
                             />
                             <Label>
                               Phone
                             </Label>
+                            {errors.has('phone') && <div className="invalid-feedback">{errors.first('phone')}</div>}
                             <Input
+                            className={errors.has('phone') ? 'error-input' : ''}
+                              onChange={this.handleInputChange}
+                              value={this.state.form.phone}
                               type="text" name="phone"
                               id="phone" placeholder="phone"
                             />
@@ -378,7 +451,9 @@ class DataListLayout extends Component {
                           >
                             cancel
                           </Button>
-                          <Button type="submit" id="btn" color="primary" >
+                          <Button type="submit"
+                            disabled={this.state.errors.any() || this.props.loading}
+                            id="btn" color="primary" >
                             Submit
                           </Button>{" "}
                         </ModalFooter>
