@@ -4,10 +4,11 @@ import {
   Row, Card, CustomInput, Button, Modal, ModalHeader, ModalBody,
   ModalFooter, ButtonDropdown, UncontrolledDropdown, Collapse, DropdownMenu,
   DropdownToggle, DropdownItem, Input, CardBody, CardSubtitle, CardImg, Label,
-  CardText, Badge, Form, FormGroup, FormText
+  CardText, Badge, Form, FormGroup, FormText, Col
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import Select from "react-select";
+// import Select from "react-select-search";
 import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
@@ -31,6 +32,8 @@ import formToObj from '../../helpers/formToObj'
 import ReeValidate from 'ree-validate'
 import { removeErrors, addErrors } from '../../helpers/errors'
 
+import { getCountriesCode } from '../../helpers/data'
+
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
@@ -39,7 +42,7 @@ class DataListLayout extends Component {
         firstname: 'required|min:3|max:35',
         lastname: 'required|min:3|max:35',
         country_code: '',
-        phone: 'numeric|min:11|max:15',
+        phone: 'numeric|min:10|max:15',
         email: 'email',
         city: 'min:3|max:45',
         state: 'min:3|max:45',
@@ -48,7 +51,13 @@ class DataListLayout extends Component {
       });
 
       this.state = {
+        selected: { country_code: {label: 'NG +234', value: '+234'}},
         errors: this.validator.errors,
+        country_codes: (() => {
+          return getCountriesCode().map( (country) => {
+            return {label: `${country.code} ${country.dial_code}`, value: country.dial_code}
+          })
+        })(),
         items: [],
         visible: true,
         form: {
@@ -228,6 +237,22 @@ class DataListLayout extends Component {
         })
     }
 
+    handleSelectChange = ({label, value}, field) => {
+      const { errors } = this.validator
+
+      this.setState(prev => {
+        return { form: {...prev.form, [field]: value},
+          selected: {...prev.selected, [field]: {label, value}}
+        }
+      })
+
+      errors.remove(field)
+      this.validator.validate(field, value)
+        .then(() => {
+          this.setState({ errors })
+        })
+    }
+
     // helper section
     getIndex = (value, arr, prop) => {
       for (var i = 0; i < arr.length; i++) {
@@ -334,8 +359,12 @@ class DataListLayout extends Component {
               this.dataListRender()
             })
             .catch((err) => {
+              if (err.response.status === 422) {
+                this.setState(prev => addErrors(this.state.errors, err.response.data.errors))
+              } else {
+                swal('Ooops', 'Internal Server Error', 'error')
+              }
               this.dataListRender()
-              swal('Ooops', 'Internal Server Error', 'error')
             })
           })
         } else {
@@ -399,9 +428,7 @@ class DataListLayout extends Component {
                           Add New customer +
                         </ModalHeader>
                         <ModalBody>
-                            <Label>
-                              Firstname
-                            </Label>
+                            <Label> Firstname </Label>
                             {errors.has('firstname') && <div className="invalid-feedback">{errors.first('firstname')}</div>}
                             <Input
                               className={errors.has('firstname') ? 'error-input' : ''}
@@ -410,9 +437,7 @@ class DataListLayout extends Component {
                               type="text" required name="firstname"
                               id="firstname" placeholder="Firstname"
                             />
-                            <Label>
-                              Lasstname
-                            </Label>
+                            <Label> Lastname </Label>
                             {errors.has('lastname') && <div className="invalid-feedback">{errors.first('lastname')}</div>}
                             <Input
                             className={errors.has('lastname') ? 'error-input' : ''}
@@ -421,9 +446,7 @@ class DataListLayout extends Component {
                               type="lastname" name="lastname"
                               id="lastname" placeholder="lastname"
                             />
-                            <Label>
-                              Email
-                            </Label>
+                            <Label>Email</Label>
                             {errors.has('email') && <div className="invalid-feedback">{errors.first('email')}</div>}
                             <Input
                               className={errors.has('email') ? 'error-input' : ''}
@@ -432,17 +455,36 @@ class DataListLayout extends Component {
                               type="email" name="email" id="email"
                               placeholder="Email"
                             />
-                            <Label>
-                              Phone
-                            </Label>
-                            {errors.has('phone') && <div className="invalid-feedback">{errors.first('phone')}</div>}
+                            <Label> Country Code </Label>
+                            {errors.has('country_code') && <div className="invalid-feedback">{errors.first('country_code')}</div>}
                             <Input
-                            className={errors.has('phone') ? 'error-input' : ''}
+                              className={errors.has('country_code') ? 'error-input' : ''}
                               onChange={this.handleInputChange}
-                              value={this.state.form.phone}
-                              type="text" name="phone"
-                              id="phone" placeholder="phone"
+                              value={this.state.form.country_code}
+                              type="country_code" name="country_code"
+                              id="country_code" placeholder="Country Code"
                             />
+                            <Row>
+                              <Col sm="5" className="col-sm-offset-2">
+                                <Label> Country Code </Label>
+                                <Select
+                                  value={this.state.selected.country_code} name='country_code'
+                                  onChange={(e) => this.handleSelectChange(e, 'country_code')}
+                                  options={this.state.country_codes}
+                                ></Select>
+                              </Col>
+                              <Col sm="7" className="col-sm-offset-2">
+                                <Label> Phone </Label>
+                                {errors.has('phone') && <div className="invalid-feedback">{errors.first('phone')}</div>}
+                                <Input
+                                  className={errors.has('phone') ? 'error-input' : ''}
+                                  onChange={this.handleInputChange}
+                                  value={this.state.form.phone}
+                                  type="text" name="phone"
+                                  id="phone" placeholder="phone"
+                                />
+                              </Col>
+                            </Row>
                         </ModalBody>
                         <ModalFooter>
                           <Button

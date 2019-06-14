@@ -42,11 +42,15 @@ class CustomerController extends Controller
    public function store(Request $request)
    {
      $request->validate([
-       'firstname' => 'required|string|max:30|min:3',
-       'lastname' => 'string|max:30|min:3',
-       'phone' => 'unique:customers|string|max:20|min:8',
-       'email' => 'string|email|unique:customers',
-     ], [
+       'firstname' => 'required|max:35|min:3',
+       'lastname' => 'string|max:35|min:3',
+       'phone' => 'unique:customers|numeric|min:10|max:15',
+       'email' => 'email|unique:customers',
+       'country_code' => '',
+       'city' => 'min:3|max:45',
+       'state' => 'min:3|max:45',
+       'address' => 'nullable',
+       'country' => 'nullable'
      ]);
 
      // check unique email
