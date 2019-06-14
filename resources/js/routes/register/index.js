@@ -17,8 +17,8 @@ class RegisterLayout extends Component {
       name: "required|min:3|max:30",
       email: 'required|email',
       password: 'required|min:6',
-      password_confirmation: "required|min:6"
-      // confirmed:password",
+      password_confirmation: "required|min:6",
+      logo: '',
     })
 
     this.state = {

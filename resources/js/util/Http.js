@@ -21,7 +21,7 @@ axios.interceptors.response.use(
     console.log(error);
     if (error.response.status === 401 && window.location.pathname !== '/login') {
       // console.log()
-      configureStore().dispatch(logoutUser(window.location.history))
+      configureStore().dispatch(logoutUser())
     }
     return Promise.reject(error);
   });

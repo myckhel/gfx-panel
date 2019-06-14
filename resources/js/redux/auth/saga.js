@@ -34,7 +34,7 @@ function* loginWithEmailPassword({ payload }) {
               Http.defaults.headers.common['Authorization'] = `Bearer ${loginUser.data.access_token}`;
               localStorage.setItem('access_token', loginUser.data.access_token);
               yield put(loginUserSuccess(loginUser.data.user));
-              history.push('/');
+              // history.push('/');
           }
         } else {
           if (loginUser.response.status === 401) {
@@ -72,7 +72,7 @@ function* registerWithEmailPassword({ payload }) {
               Http.defaults.headers.common['Authorization'] = `Bearer ${registerUser.data.access_token}`;
               localStorage.setItem('access_token', registerUser.data.access_token);
               yield put(registerUserSuccess(registerUser.data.user));
-              history.push('/')
+              // history.push('/')
           // }
         } else {
           if (registerUser.response.status === 401) {
@@ -119,9 +119,12 @@ function* checkAuth () {
 
 const logoutAsync = async (history) => {
     await auth.logout().then(authUser => authUser).catch(error => error);
-    // window.location.push('/')
-    // window.location.reload()
-    // history.push('/')
+    if (history) {
+      history.push('/')
+    } else {
+      window.location.push('/login')
+      // window.location.reload()
+    }
 }
 
 function* logout({payload}) {
