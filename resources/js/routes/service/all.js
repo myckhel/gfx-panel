@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { injectIntl} from 'react-intl';
 import { NavLink } from "react-router-dom";
 import mouseTrap from "react-mousetrap";
-import Select from "react-select-search";
+// import Select from "react-select-search";
+import Select from "react-select";
 import "react-select-search/style.css";
 import classnames from "classnames";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
@@ -24,6 +25,7 @@ import {_token} from '../../Constants/defaultValues';
 import ServiceType from './ServiceType';
 import Service from './Service';
 
+import { selectable } from '../../helpers/data'
 import Http from '../../util/Http'
 import formToObj from '../../helpers/formToObj'
 import ReeValidate from 'ree-validate'
@@ -42,7 +44,7 @@ class All extends Component {
       items: [],
       visible: true,
       serviceTypeRow: [],
-      services: [],//{name: 'James', value: 33},{name: 'Fake', value: 29}
+      services: [],//{label: 'James', value: 33},{name: 'Fake', value: 29}
       selectedService: {},
       credentials: {
         name: ''
@@ -259,7 +261,8 @@ class All extends Component {
           items: data.data,
           selectedItems:[],
           totalItemCount : data.total,
-          isLoading:true
+          isLoading:true,
+          services: selectable(data.data, ['name', 'id'])
         });
       // axios.get(`${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}
       // &orderBy=${selectedOrderOption.column}&search=${search}`)
@@ -293,7 +296,7 @@ class All extends Component {
   }
 
   selectService = (service) => {
-    this.setState({ selectedService: service  })
+    this.setState({ selectedService: {label: service, value: service }  })
   }
 
   toggleFormState = () => {
@@ -360,7 +363,7 @@ class All extends Component {
               $(form).trigger('reset')
 
               if (this.state.form.state === 'service') {
-                const service = {name: res.service.name, value: res.service.id};
+                const service = {label: res.service.name, value: res.service.id};
                 this.setState( (prev) => {
                   return {services: [ service ] }
                 }, () => this.selectService(service) )
@@ -453,8 +456,12 @@ class All extends Component {
                       : <Fragment>
                         <Row id="add-service-type-row">
                           <Col sm="8" className="col-sm-offset-2">
-                            <Select value={this.state.selectedService.value} name='service_id' onChange={this.selectService}
-                              options={this.state.services} onKeyUp={console.log}></Select>
+                            <Select
+                              onChange={(e) => this.selectService(e, 'country_code')}
+                              value={this.state.selectedService.value}
+                              name='service_id'
+                              options={this.state.services}
+                              onKeyUp={(e)=>console.log(e)}></Select>
                           </Col>
                         </Row>
                         {serviceType}

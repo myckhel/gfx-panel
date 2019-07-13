@@ -42,24 +42,24 @@ class CustomerController extends Controller
    public function store(Request $request)
    {
      $request->validate([
-       'firstname' => 'required|max:35|min:3',
-       'lastname' => 'string|max:35|min:3',
-       'phone' => 'unique:customers|numeric|min:10|max:15',
-       'email' => 'email|unique:customers',
+       'firstname'    => 'required|max:35|min:3',
+       'lastname'     => 'string|max:35|min:3',
+       'phone'        => 'unique:customers|numeric|min:6',//|max:15',
+       'email'        => 'email|unique:customers',
        'country_code' => '',
-       'city' => 'min:3|max:45',
-       'state' => 'min:3|max:45',
-       'address' => 'nullable',
-       'country' => 'nullable'
+       'city'         => 'min:3|max:45',
+       'state'        => 'min:3|max:45',
+       'address'      => 'nullable',
+       'country'      => 'nullable'
      ]);
 
      // check unique email
      if (Customer::where('email', $request->email)->first()) {
-       return ['status' => false, 'text' => 'Email Exists'];
+       return ['status' => false, 'message' => 'Email Exists'];
      }
      // check unique phone
      if (Customer::where('phone', $request->phone)->first()) {
-       return ['status' => false, 'text' => 'Phone Exists'];
+       return ['status' => false, 'message' => 'Phone Exists'];
      }
      $lastIndex = Customer::latest()->first();
      try {
@@ -70,9 +70,9 @@ class CustomerController extends Controller
          'email' => $request->email,
          'phone' => $request->phone,
        ]);
-       return ['status' => true, 'customer' => $customer];
+       return ['status' => true, 'message' => 'Customer Added Successfully', 'customer' => $customer];
      } catch (\Exception $e) {
-       return ['status' => false, 'text' => $e->getMessage()];
+       return ['status' => false, 'message' => $e->getMessage()];
      }
    }
    /**
@@ -129,16 +129,22 @@ class CustomerController extends Controller
 
    public function delete(Request $request)
    {
-     //
+     $request->validate([
+      'ids' => 'required'
+     ]);
+
      $text = [];  $ids = $request->ids;
-     foreach ($ids as $id) {
-       if ($customer = Customer::find($id) ) {
-         $customer->delete();
-       } else {
-         $text[] = $id;
+     if ($ids) {
+       foreach ($ids as $id) {
+         if ($customer = Customer::find($id) ) {
+           $customer->delete();
+         } else {
+           $text[] = $id;
+         }
        }
+       return ['status' => true, 'message' => $text];
      }
-     return ['status' => true, 'text' => $text];
+     return ['status' => false, 'message' => 'Invalid Request Data'];
    }
 
    // public function validate (Request $request){

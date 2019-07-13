@@ -12,6 +12,8 @@ import Select from "react-select";
 import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
+import { Instructions } from '../../Components/common/Ui';
+
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
 
@@ -32,7 +34,8 @@ import formToObj from '../../helpers/formToObj'
 import ReeValidate from 'ree-validate'
 import { removeErrors, addErrors } from '../../helpers/errors'
 
-import { getCountriesCode } from '../../helpers/data'
+import { getCountriesCode, selectable } from '../../helpers/data'
+import { fetchCustomers, addCustomers, deleteCustomers } from '../../helpers/ajax/customer'
 
 class DataListLayout extends Component {
     constructor(props) {
@@ -53,11 +56,7 @@ class DataListLayout extends Component {
       this.state = {
         selected: { country_code: {label: 'NG +234', value: '+234'}},
         errors: this.validator.errors,
-        country_codes: (() => {
-          return getCountriesCode().map( (country) => {
-            return {label: `${country.code} ${country.dial_code}`, value: country.dial_code}
-          })
-        })(),
+        country_codes: selectable(getCountriesCode(), [], 'country'),
         items: [],
         visible: true,
         form: {
@@ -284,25 +283,23 @@ class DataListLayout extends Component {
     }
 
     // ajax section
-    dataListRender = () => {
-      const {selectedPageSize,currentPage,selectedOrderOption,search} = this.state;
-      this.setState({
-        isLoading:false
-      }, () => {
-        Http.get(`/api/customers?pageSize=${selectedPageSize}&page=${currentPage}
-          &orderBy=${selectedOrderOption.column}&search=${search}`)
-        .then(res => res.data).then(data=>{
-          this.setState({
-            totalPage: data.last_page,
-            items: data.data,
-            selectedItems:[],
-            totalItemCount : data.total,
-            isLoading:true
-          });
-        // axios.get(`${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}
-        // &orderBy=${selectedOrderOption.column}&search=${search}`)
-        })
-      });
+    dataListRender = async () => {
+      await this.setState({ isLoading:false })
+      try {
+        const data = await fetchCustomers(this.state)
+        await this.setState({
+          totalPage: data.last_page,
+          items: data.data,
+          selectedItems:[],
+          totalItemCount : data.total,
+          isLoading:true,
+        });
+      } catch (e) {
+        // toast
+        console.log(e);
+      } finally {
+        await this.setState({ isLoading: true })
+      }
     }
 
     // delete
@@ -313,23 +310,21 @@ class DataListLayout extends Component {
       }
       // delete items
       if (confirm('Are you sure you wish to delete selected customers?')) {
-        this.setState({isLoading: false}, () => {
-          Http({url: `/api/customers/delete/multiple`, data: {ids: items}, method: 'DELETE'})
-          .then((res) => res.data)
-          .then((res) => {
-            swal("Success!", res.text ? '' : `${res.text.length} could not be deleted`, "success");
-            this.dataListRender()
-          })
-          .catch((err) => {
-            swal('Oooops!', 'Internal Server Error', 'error');
-            this.dataListRender()
-          })
-        })
+        await this.setState({isLoading: false})
+        try {
+          const res = await deleteCustomers(items)
+          swal("Success!", res.text ? '' : `${res.text.length} could not be deleted`, "success");
+        } catch (e) {
+          swal('Oooops!', 'Internal Server Error', 'error');
+        } finally {
+          this.dataListRender()
+        }
       }
     }
 
     // form submit
     submitForm = (event) => {
+      const formNode = $(event.target)
       const form = formToObj($(event.target).serializeArray())
       event.persist()
       event.preventDefault();
@@ -340,33 +335,29 @@ class DataListLayout extends Component {
       })
 
       this.validator.validateAll(form)
-      .then((success) => {
+      .then( async (success) => {
         if (success) {
-
-          this.setState({isLoading: false}, () => {
-            Http.post('/api/customers', form)
-            .then((res) => res.data)
-            .then((res) => {
-              if (res.status) {
-                $(form).trigger('reset')
-                // alert success
-                swal('Success', `${res.customer.firstname} Added Successfully`, 'success')
-                // createNotification('success', 'True')
-              } else {
-                // alert warning
-                swal('Ooops', res.text, 'error')
-              }
-              this.dataListRender()
-            })
-            .catch((err) => {
-              if (err.response.status === 422) {
-                this.setState(prev => addErrors(this.state.errors, err.response.data.errors))
-              } else {
-                swal('Ooops', 'Internal Server Error', 'error')
-              }
-              this.dataListRender()
-            })
-          })
+          await this.setState({isLoading: false})
+          try {
+            const res = await addCustomers(form)
+            if (res.status) {
+              $(formNode).trigger('reset')
+              swal('Success', `${res.customer.firstname} As ${res.message}`, 'success')
+              // createNotification('success', 'True')
+            } else {
+              // alert warning
+              swal('Ooops', res.message, 'error')
+            }
+          } catch (err) {
+            if (err.response.status === 422) {
+              this.setState(prev => addErrors(this.state.errors, err.response.data.errors))
+            } else {
+              swal('Ooops', 'Internal Server Error', 'error')
+            }
+          } finally {
+            await this.dataListRender()
+            this.setState({isLoading: true})
+          }
         } else {
           this.setState({ errors })
         }
@@ -425,45 +416,53 @@ class DataListLayout extends Component {
                     >
                       <Form id={'customer-form'} onSubmit={(e) => {this.submitForm(e)}}>
                         <ModalHeader toggle={this.toggleModal}>
-                          Add New customer +
+                          <Instructions
+                            head={'Add New Customer'}
+                            text={'coming soon'} />
                         </ModalHeader>
                         <ModalBody>
-                            <Label> Firstname </Label>
-                            {errors.has('firstname') && <div className="invalid-feedback">{errors.first('firstname')}</div>}
-                            <Input
-                              className={errors.has('firstname') ? 'error-input' : ''}
-                              onChange={this.handleInputChange}
-                              value={this.state.form.firstname}
-                              type="text" required name="firstname"
-                              id="firstname" placeholder="Firstname"
-                            />
-                            <Label> Lastname </Label>
-                            {errors.has('lastname') && <div className="invalid-feedback">{errors.first('lastname')}</div>}
-                            <Input
-                            className={errors.has('lastname') ? 'error-input' : ''}
-                              onChange={this.handleInputChange}
-                              value={this.state.form.lastname}
-                              type="lastname" name="lastname"
-                              id="lastname" placeholder="lastname"
-                            />
-                            <Label>Email</Label>
-                            {errors.has('email') && <div className="invalid-feedback">{errors.first('email')}</div>}
-                            <Input
-                              className={errors.has('email') ? 'error-input' : ''}
-                              onChange={this.handleInputChange}
-                              value={this.state.form.email}
-                              type="email" name="email" id="email"
-                              placeholder="Email"
-                            />
-                            <Label> Country Code </Label>
-                            {errors.has('country_code') && <div className="invalid-feedback">{errors.first('country_code')}</div>}
-                            <Input
-                              className={errors.has('country_code') ? 'error-input' : ''}
-                              onChange={this.handleInputChange}
-                              value={this.state.form.country_code}
-                              type="country_code" name="country_code"
-                              id="country_code" placeholder="Country Code"
-                            />
+                          <Row>
+                            <Col sm="6" className="col-sm-offset-2">
+                              <Label> Firstname </Label>
+                              {errors.has('firstname') && <div className="invalid-feedback">{errors.first('firstname')}</div>}
+                              <Input
+                                className={errors.has('firstname') ? 'error-input' : ''}
+                                onChange={this.handleInputChange}
+                                value={this.state.form.firstname}
+                                type="text" required name="firstname"
+                                id="firstname" placeholder="Firstname"
+                              />
+                            </Col>
+                            <Col sm="6" className="col-sm-offset-2">
+                              <Label> Lastname </Label>
+                              {errors.has('lastname') && <div className="invalid-feedback">{errors.first('lastname')}</div>}
+                              <Input
+                              className={errors.has('lastname') ? 'error-input' : ''}
+                                onChange={this.handleInputChange}
+                                value={this.state.form.lastname}
+                                type="lastname" name="lastname"
+                                id="lastname" placeholder="lastname"
+                              />
+                            </Col>
+                          </Row>
+                          <Label>Email</Label>
+                          {errors.has('email') && <div className="invalid-feedback">{errors.first('email')}</div>}
+                          <Input
+                            className={errors.has('email') ? 'error-input' : ''}
+                            onChange={this.handleInputChange}
+                            value={this.state.form.email}
+                            type="email" name="email" id="email"
+                            placeholder="Email"
+                          />
+                          {/*<Label> Country Code </Label>
+                          {errors.has('country_code') && <div className="invalid-feedback">{errors.first('country_code')}</div>}
+                          <Input
+                            className={errors.has('country_code') ? 'error-input' : ''}
+                            onChange={this.handleInputChange}
+                            value={this.state.form.country_code}
+                            type="country_code" name="country_code"
+                            id="country_code" placeholder="Country Code"
+                          />*/}
                             <Row>
                               <Col sm="5" className="col-sm-offset-2">
                                 <Label> Country Code </Label>
