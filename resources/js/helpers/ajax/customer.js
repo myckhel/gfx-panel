@@ -1,0 +1,63 @@
+import Http from '../../util/Http'
+
+export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption,search}) => {
+  return new Promise((resolve, reject) => {
+    Http.get(`/api/customers?pageSize=${selectedPageSize}&page=${currentPage}
+      &orderBy=${selectedOrderOption.column}&search=${search}`)
+    .then(res => res.data).then(data=>{
+      resolve(data)
+    })
+    .catch((err) => {
+      reject(data)
+    })
+  });
+}
+
+export const deleteCustomers = (ids) => {
+  let data = new URLSearchParams();
+  data.append("ids", ids);
+
+  return new Promise( async function(resolve, reject) {
+    Http.delete(`/api/customers/delete/multiple`, data.toString())
+    .then((res) => res.data)
+    .then((data) => {
+      resolve(data)
+    })
+    .catch((err) => {
+      resolve(err)
+    })
+  });
+}
+
+export const addCustomers = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await Http.post(`api/customers`, data)
+      resolve(res.data)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+export const viewCustomers = (id) => {
+  return new Promise( async (resolve, reject) => {
+    try {
+      const res = await Http.get(`api/customers/${id}`)
+      resolve(res.data)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+export const searchCustomers = (query) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await Http.get(`api/customers?${query}`)
+      resolve(res.data)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
