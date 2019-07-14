@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Customer;
+use App\Payment;
 
-class CustomerTableSeeder extends Seeder
+class PaymentTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,7 @@ class CustomerTableSeeder extends Seeder
     public function run()
     {
       //
-      factory(Customer::class, 500)->create()->each(function ($customer){
+      factory(Payment::class, 500)->create()->each(function ($customer){
         $customer->save();
       });
     }
