@@ -16,6 +16,10 @@ Route::get('/clear-cache', function() {
     // return what you want
 });
 
+Route::get('/test', function(){
+  return App\Service::all()->count();
+});
+
 // migrate db
 Route::get('/db/migrate', function() {
     return Artisan::call('migrate');

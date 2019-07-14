@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\Service;
 use App\Customer;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
@@ -33,11 +34,18 @@ $factory->define(App\Customer::class, function (Faker $faker) {
         'firstname' => $faker->firstname,
         'lastname' => $faker->lastname,
         'phone' => $faker->unique()->phoneNumber,
+        'country_code' => '+'.$faker->randomNumber(3),
+        'city' => $faker->city,
+        'state' => $faker->state,
+        'country' => $faker->country,
+        'address' => $faker->streetAddress,
     ];
 });
 
 $factory->define(App\Service::class, function (Faker $faker) {
     return [
-        'name' => $faker->unique()->word,
+      'name' => $faker->unique()->name,
+      'price' => $faker->randomNumber(5),
+      'parent' => (App\Service::all()->count() > 5) ? (App\Service::inRandomOrder()->first())->id : NULL,
     ];
 });

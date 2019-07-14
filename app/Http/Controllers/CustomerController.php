@@ -54,22 +54,15 @@ class CustomerController extends Controller
      ]);
 
      // check unique email
-     if (Customer::where('email', $request->email)->first()) {
+     if (Customer::checkUnique('email', $request)) {
        return ['status' => false, 'message' => 'Email Exists'];
      }
      // check unique phone
-     if (Customer::where('phone', $request->phone)->first()) {
+     if (Customer::checkUnique('phone', $request)) {
        return ['status' => false, 'message' => 'Phone Exists'];
      }
-     $lastIndex = Customer::latest()->first();
      try {
-       $customer = Customer::create([
-         'gfx_id' => $lastIndex ? (int) $lastIndex->gfx_id+ 1 : 50001,
-         'firstname' => $request->firstname,
-         'lastname' => $request->lastname,
-         'email' => $request->email,
-         'phone' => $request->phone,
-       ]);
+       $customer = Customer::addNew($request);
        return ['status' => true, 'message' => 'Customer Added Successfully', 'customer' => $customer];
      } catch (\Exception $e) {
        return ['status' => false, 'message' => $e->getMessage()];
@@ -83,7 +76,6 @@ class CustomerController extends Controller
     */
    public function show($id)
    {
-     //
      return Customer::find($id);
    }
    /**

@@ -46,11 +46,11 @@ class ServiceController extends Controller
       ]);
       // dd($request);
       // check unique name
-      if (Service::where('name', $request->name)->first()) {
+      if (Service::checkUnique('name', $request)) {
         return ['status' => false, 'text' => 'Name Exists'];
       }
       try {
-        $service = Service::create([ 'name' => $request->name ]);
+        $service = Service::addNew($request);
         return ['status' => true, 'service' => $service];
       } catch (\Exception $e) {
         return ['status' => false, 'text' => $e->getMessage()];

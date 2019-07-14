@@ -17,7 +17,8 @@ class CreateServiceMetasTable extends Migration
          $table->bigIncrements('id');
          $table->bigInteger('service_id')->unsigned();
          $table->string('name');
-         $table->float('price', 10, 2);
+         $table->string('value');
+         $table->string('charge')->nullable();
          $table->timestamps();
        });
 

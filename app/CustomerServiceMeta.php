@@ -13,4 +13,7 @@ class CustomerServiceMeta extends Model
     public function customer_service(){
       return $this->belongsTo(CustomerService::class);
     }
+    public function jobs(){
+      return $this->hasMany(Job::class);
+    }
 }

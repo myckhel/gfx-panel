@@ -12,7 +12,7 @@ class ServiceTableSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Service::class, 22)->create()->each(function ($service){
+        factory(App\Service::class, 30)->create()->each(function ($service){
           $service->save();
         });
     }

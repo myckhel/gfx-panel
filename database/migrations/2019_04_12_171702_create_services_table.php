@@ -13,11 +13,18 @@ class CreateServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
-          $table->bigIncrements('id');
-          $table->string('name', 40)->unique();
-          $table->timestamps();
-        });//
+      Schema::create('services', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->bigInteger('parent')->unsigned()->nullable();
+        $table->string('name', 40)->unique();
+        $table->float('price', 10, 2)->nullable();
+        $table->string('logo')->nullable();
+        $table->timestamps();
+      });//
+
+     Schema::table('services', function (Blueprint $table) {
+       $table->foreign('parent')->references('id')->on('services')->onDelete('cascade');
+     });
     }
 
     /**
