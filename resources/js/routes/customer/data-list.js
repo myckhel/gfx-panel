@@ -4,10 +4,10 @@ import {
   Row, Card, CustomInput, Button, Modal, ModalHeader, ModalBody,
   ModalFooter, ButtonDropdown, UncontrolledDropdown, Collapse, DropdownMenu,
   DropdownToggle, DropdownItem, Input, CardBody, CardSubtitle, CardImg, Label,
-  CardText, Badge, Form, FormGroup, FormText, Col
+  CardText, Badge, Col
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import Select from "react-select";
+// import Select from "react-select";
 // import Select from "react-select-search";
 import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
@@ -29,47 +29,18 @@ function collect(props) {
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
 
-import Http from '../../util/Http'
-import formToObj from '../../helpers/formToObj'
-import ReeValidate from 'ree-validate'
-import { removeErrors, addErrors } from '../../helpers/errors'
+// import { getCountriesCode, selectable } from '../../helpers/data'
+import { fetchCustomers, deleteCustomers } from '../../helpers/ajax/customer'
 
-import { getCountriesCode, selectable } from '../../helpers/data'
-import { fetchCustomers, addCustomers, deleteCustomers } from '../../helpers/ajax/customer'
+import CustomerForm from './components/CustomerForm'
 
 class DataListLayout extends Component {
     constructor(props) {
       super(props);
 
-      this.validator = new ReeValidate({
-        firstname: 'required|min:3|max:35',
-        lastname: 'required|min:3|max:35',
-        country_code: '',
-        phone: 'numeric|min:10|max:15',
-        email: 'email',
-        city: 'min:3|max:45',
-        state: 'min:3|max:45',
-        address: 'nullable',
-        country: ''
-      });
-
       this.state = {
-        selected: { country_code: {label: 'NG +234', value: '+234'}},
-        errors: this.validator.errors,
-        country_codes: selectable(getCountriesCode(), [], 'country'),
         items: [],
         visible: true,
-        form: {
-          firstname: '',
-          lastname: '',
-          country_code: '',
-          phone: '',
-          email: '',
-          city: '',
-          state: '',
-          address: '',
-          country: '',
-        },
         displayMode: "list",
         pageSizes: [10, 20, 30, 50, 100],
         selectedPageSize: 10,
@@ -221,37 +192,6 @@ class DataListLayout extends Component {
       document.activeElement.blur();
     }
 
-    // input change
-    handleInputChange = ({ target }) => {
-      const name = target.name
-      const value = target.value
-      const { errors } = this.validator
-
-      this.setState(prev => { return {form: {...prev.form, [name]: value}} })
-
-      errors.remove(name)
-      this.validator.validate(name, value)
-        .then(() => {
-          this.setState({ errors })
-        })
-    }
-
-    handleSelectChange = ({label, value}, field) => {
-      const { errors } = this.validator
-
-      this.setState(prev => {
-        return { form: {...prev.form, [field]: value},
-          selected: {...prev.selected, [field]: {label, value}}
-        }
-      })
-
-      errors.remove(field)
-      this.validator.validate(field, value)
-        .then(() => {
-          this.setState({ errors })
-        })
-    }
-
     // helper section
     getIndex = (value, arr, prop) => {
       for (var i = 0; i < arr.length; i++) {
@@ -322,48 +262,6 @@ class DataListLayout extends Component {
       }
     }
 
-    // form submit
-    submitForm = (event) => {
-      const formNode = $(event.target)
-      const form = formToObj($(event.target).serializeArray())
-      event.persist()
-      event.preventDefault();
-
-      const { errors } = this.validator
-      this.setState(prev => {
-        return {errors: removeErrors(prev.errors)}
-      })
-
-      this.validator.validateAll(form)
-      .then( async (success) => {
-        if (success) {
-          await this.setState({isLoading: false})
-          try {
-            const res = await addCustomers(form)
-            if (res.status) {
-              $(formNode).trigger('reset')
-              swal('Success', `${res.customer.firstname} As ${res.message}`, 'success')
-              // createNotification('success', 'True')
-            } else {
-              // alert warning
-              swal('Ooops', res.message, 'error')
-            }
-          } catch (err) {
-            if (err.response.status === 422) {
-              this.setState(prev => addErrors(this.state.errors, err.response.data.errors))
-            } else {
-              swal('Ooops', 'Internal Server Error', 'error')
-            }
-          } finally {
-            await this.dataListRender()
-            this.setState({isLoading: true})
-          }
-        } else {
-          this.setState({ errors })
-        }
-      })
-    }
-
     onContextMenuClick = (e, data, target) => {
       console.log("onContextMenuClick - selected items",this.state.selectedItems)
       console.log("onContextMenuClick - action : ", data.action);
@@ -414,92 +312,15 @@ class DataListLayout extends Component {
                       wrapClassName="modal-right"
                       backdrop="static"
                     >
-                      <Form id={'customer-form'} onSubmit={(e) => {this.submitForm(e)}}>
-                        <ModalHeader toggle={this.toggleModal}>
-                          <Instructions
-                            head={'Add New Customer'}
-                            text={'coming soon'} />
-                        </ModalHeader>
-                        <ModalBody>
-                          <Row>
-                            <Col sm="6" className="col-sm-offset-2">
-                              <Label> Firstname </Label>
-                              {errors.has('firstname') && <div className="invalid-feedback">{errors.first('firstname')}</div>}
-                              <Input
-                                className={errors.has('firstname') ? 'error-input' : ''}
-                                onChange={this.handleInputChange}
-                                value={this.state.form.firstname}
-                                type="text" required name="firstname"
-                                id="firstname" placeholder="Firstname"
-                              />
-                            </Col>
-                            <Col sm="6" className="col-sm-offset-2">
-                              <Label> Lastname </Label>
-                              {errors.has('lastname') && <div className="invalid-feedback">{errors.first('lastname')}</div>}
-                              <Input
-                              className={errors.has('lastname') ? 'error-input' : ''}
-                                onChange={this.handleInputChange}
-                                value={this.state.form.lastname}
-                                type="lastname" name="lastname"
-                                id="lastname" placeholder="lastname"
-                              />
-                            </Col>
-                          </Row>
-                          <Label>Email</Label>
-                          {errors.has('email') && <div className="invalid-feedback">{errors.first('email')}</div>}
-                          <Input
-                            className={errors.has('email') ? 'error-input' : ''}
-                            onChange={this.handleInputChange}
-                            value={this.state.form.email}
-                            type="email" name="email" id="email"
-                            placeholder="Email"
-                          />
-                          {/*<Label> Country Code </Label>
-                          {errors.has('country_code') && <div className="invalid-feedback">{errors.first('country_code')}</div>}
-                          <Input
-                            className={errors.has('country_code') ? 'error-input' : ''}
-                            onChange={this.handleInputChange}
-                            value={this.state.form.country_code}
-                            type="country_code" name="country_code"
-                            id="country_code" placeholder="Country Code"
-                          />*/}
-                            <Row>
-                              <Col sm="5" className="col-sm-offset-2">
-                                <Label> Country Code </Label>
-                                <Select
-                                  value={this.state.selected.country_code} name='country_code'
-                                  onChange={(e) => this.handleSelectChange(e, 'country_code')}
-                                  options={this.state.country_codes}
-                                ></Select>
-                              </Col>
-                              <Col sm="7" className="col-sm-offset-2">
-                                <Label> Phone </Label>
-                                {errors.has('phone') && <div className="invalid-feedback">{errors.first('phone')}</div>}
-                                <Input
-                                  className={errors.has('phone') ? 'error-input' : ''}
-                                  onChange={this.handleInputChange}
-                                  value={this.state.form.phone}
-                                  type="text" name="phone"
-                                  id="phone" placeholder="phone"
-                                />
-                              </Col>
-                            </Row>
-                        </ModalBody>
-                        <ModalFooter>
-                          <Button
-                            color="secondary"
-                            outline
-                            onClick={this.toggleModal}
-                          >
-                            cancel
-                          </Button>
-                          <Button type="submit"
-                            disabled={this.state.errors.any() || this.props.loading}
-                            id="btn" color="primary" >
-                            Submit
-                          </Button>{" "}
-                        </ModalFooter>
-                      </Form>
+                    <ModalHeader toggle={this.toggleModal}>
+                      <Instructions
+                        head={'Add New Customer'}
+                        text={'coming soon'} />
+                    </ModalHeader>
+                    <CustomerForm
+                      toggleModal={() => this.toggleModal()}
+                      beforeSubmit={() => this.setState({isLoading: false})}
+                      afterSubmit={() => {this.setState({isLoading: true}); this.dataListRender(); }} />
                     </Modal>
                     <ButtonDropdown
                       isOpen={this.state.dropdownSplitOpen}
@@ -661,7 +482,9 @@ class DataListLayout extends Component {
               </Colxx>
             </Row>
             <Row>
-              {!this.state.items.length > 0 ? <EmptyRow /> : this.state.items.map(product => {
+              {!this.state.items.length > 0
+                ? <EmptyRow />
+                : this.state.items.map(product => {
                 if (this.state.displayMode === "imagelist") {
                   return (
                     <Colxx

@@ -47,8 +47,8 @@ class CustomerController extends Controller
        'phone'        => 'unique:customers|numeric|min:6',//|max:15',
        'email'        => 'email|unique:customers',
        'country_code' => '',
-       'city'         => 'min:3|max:45',
-       'state'        => 'min:3|max:45',
+       'city'         => 'max:45',
+       'state'        => 'max:45',
        'address'      => 'nullable',
        'country'      => 'nullable'
      ]);

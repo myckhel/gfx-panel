@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     //
-  protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone' ];
+  protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
 
   // relationship
   public function customer_service(){
@@ -30,6 +30,10 @@ class Customer extends Model
       'lastname' => $request->lastname,
       'email' => $request->email,
       'phone' => $request->phone,
+      'state' => $request->state,
+      'city' => $request->city,
+      'address' => $request->address,
+      'country' => $request->country,
     ]);
   }
 

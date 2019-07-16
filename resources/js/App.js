@@ -9,7 +9,13 @@ import App from './containers/App';
 
 import { configureStore } from './Redux/store';
 import { checkAuth } from './Redux/actions';
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
+toast.configure({
+	autoClose: 8000,
+	draggable: false,
+})
 configureStore().dispatch(checkAuth())
 
 const MainApp = () => (
