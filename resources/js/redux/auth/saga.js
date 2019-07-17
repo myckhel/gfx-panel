@@ -118,12 +118,12 @@ function* checkAuth () {
 }
 
 const logoutAsync = async (history) => {
-    await auth.logout().then(authUser => authUser).catch(error => error);
     if (history) {
+      await auth.logout().then(authUser => authUser).catch(error => error);
       history.push('/')
     } else {
-      window.location.push('/login')
-      // window.location.reload()
+      // window.location.push('/login')
+      window.location.reload()
     }
 }
 

@@ -8,7 +8,7 @@ export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption
       resolve(data)
     })
     .catch((err) => {
-      reject(data)
+      reject(err)
     })
   });
 }

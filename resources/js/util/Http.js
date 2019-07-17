@@ -2,6 +2,7 @@
 import axios from 'axios'
 import {configureStore} from '../Redux/store'
 import { logoutUser } from '../Redux/auth/actions'
+import {toast} from 'react-toastify'
 
 const version = 'v1'
 const API_URL = (process.env.NODE_ENV === 'test') ?
@@ -19,9 +20,17 @@ axios.interceptors.response.use(
   response => response,
   (error) => {
     console.log(error);
-    if (error.response.status === 401 && window.location.pathname !== '/login') {
-      // console.log()
-      configureStore().dispatch(logoutUser())
+    if (error.response) {
+      if (error.response.status === 401 && window.location.pathname !== '/login') {
+        configureStore().dispatch(logoutUser())
+        toast.warning('Unauthorized. Not Logged In')
+      } else if (error.response.status === 500) {
+        toast.error(error.message)
+      } else {
+        toast.error(error.message)
+      }
+    } else {
+      toast.error(`${error.message}. Please Try Again`)
     }
     return Promise.reject(error);
   });
