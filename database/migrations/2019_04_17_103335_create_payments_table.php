@@ -15,7 +15,7 @@ class CreatePaymentsTable extends Migration
      {
        Schema::create('payments', function (Blueprint $table) {
          $table->bigIncrements('id');
-         $table->bigInteger('customer_id')->unsigned();
+         // $table->bigInteger('customer_id')->unsigned();
          $table->bigInteger('customer_services_id')->unsigned();
          $table->float('paid', 10, 2)->nullable();
          $table->enum('status', ['processing', 'on hold', 'pending', 'completed', 'canceled', 'failed'])->default('pending');
@@ -27,7 +27,7 @@ class CreatePaymentsTable extends Migration
        });
 
        Schema::table('payments', function (Blueprint $table) {
-         $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+         // $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
          $table->foreign('customer_services_id')->references('id')->on('customer_services')->onDelete('cascade');
        });
      }

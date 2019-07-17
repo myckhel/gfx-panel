@@ -8,9 +8,9 @@ use Faker\Generator as Faker;
 
 $factory->define(ServiceMeta::class, function (Faker $faker) {
     return [
-      'service_id' => Service::inRandomOrder()->first()->id,
+      // 'service_id' => Service::inRandomOrder()->first()->id,
       'name' => $faker->word(5,10),
-      'value' => $faker->randomNumber(5),
-      'charge' => '+'.$faker->randomNumber(3),
+      'rule' => 'required|min:3|max:70|string',
+      // 'charge' => '+'.$faker->randomNumber(3),
     ];
 });

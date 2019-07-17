@@ -3,19 +3,23 @@
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
 use App\Service;
+use App\ServiceMeta;
 use Faker\Generator as Faker;
 
 $factory->define(Service::class, function (Faker $faker) {
   return [
-    'name' => $faker->unique()->word(10),
-    'price' => $faker->randomNumber(5),
     'parent' => $faker->randomElement((function(){
       if (App\Service::all()->count() > 5) {
         return App\Service::pluck('id')->toArray();
       } else {
         return [NULL];
       }
-    })())
+    })()),
+    'service_metas_id' => ServiceMeta::inRandomOrder()->first()->id,
+    'name' => $faker->unique()->word(10),
+    'price' => $faker->randomNumber(5),
+    'charge' => '+'.$faker->randomNumber(3),
+    'logo' => $faker->word(10),
     // (App\Service::all()->count() > 5) ? App\Service::inRandomOrder()->first()->id : NULL,
   ];
 });
