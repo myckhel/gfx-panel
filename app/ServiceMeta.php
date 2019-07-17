@@ -8,7 +8,10 @@ class ServiceMeta extends Model
 {
   protected $fillable = [ 'service_id', 'name', 'price' ];
   //
-  public function service(){
-    return $this->belongsTo(Service::class);
+  public function services(){
+    return $this->hasMany(Service::class);
+  }
+  public function customer_service_meta(){
+    return $this->hasMany(Service::class);
   }
 }

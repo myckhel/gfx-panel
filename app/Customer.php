@@ -9,19 +9,6 @@ class Customer extends Model
     //
   protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
 
-  // relationship
-  public function customer_service(){
-    return $this->hasMany(CustomerService::class);
-  }
-
-  public function payments(){
-    return $this->hasMany(Payment::class);
-  }
-
-  public function jobs(){
-    return $this->hasMany(Job::class);
-  }
-
   public static function addNew($request){
     $lastIndex = self::latest()->first();
     return self::create([
@@ -40,4 +27,20 @@ class Customer extends Model
   public static function checkUnique($field, $request){
     return self::where($field, $request->$field)->first();
   }
+
+  // relationship
+  public function customer_services(){
+    return $this->hasMany(CustomerService::class);
+  }
+  public function customer_service_meta(){
+    return $this->hasMany(CustomerServiceMeta::class);
+  }
+  //
+  // public function payments(){
+  //   return $this->hasMany(Payment::class);
+  // }
+  //
+  // public function jobs(){
+  //   return $this->hasMany(Job::class);
+  // }
 }
