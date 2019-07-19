@@ -2590,7 +2590,7 @@ button {
 /* 15.Main*/
 main {
   margin-left: $sub-menu-width + $main-menu-width + $main-margin;
-  margin-top: $navbar-height + $main-margin - 15;
+  margin-top: $navbar-height + $main-margin - 60;//15;
   margin-right: $main-margin;
   margin-bottom: $main-margin - 20;
   transition: margin-left $menu-collapse-time;
@@ -2653,7 +2653,8 @@ main {
     &.sub-hidden main,
     &.menu-sub-hidden main,
     &.menu-hidden main {
-      margin-left: $main-menu-width-lg + $main-margin-lg;
+      margin-left: $main-menu-width-lg + 20
+      // $main-margin-lg;
     }
 
     &.main-hidden main,
