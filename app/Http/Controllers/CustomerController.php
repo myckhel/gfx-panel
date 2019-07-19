@@ -16,7 +16,7 @@ class CustomerController extends Controller
    {
      // return ['user' => $request->user('api')];
      // return ['user' => auth()->user('api')];
-     $customer = Customer::with('customer_service.customer_service_metas');
+     $customer = Customer::with('customer_services.customer_service_metas');
      $search = $request->search;
      if ($search) {
        $customer = $customer->where('firstname', 'LIKE', '%'.$search.'%')->orWhere('lastname', 'LIKE', '%'.$search.'%')
