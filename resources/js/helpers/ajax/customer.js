@@ -13,20 +13,18 @@ export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption
   });
 }
 
+
+
 export const deleteCustomers = (ids) => {
   // let data = new URLSearchParams();
   // data.append("ids", ids);
   return new Promise( async function(resolve, reject) {
-    Http.delete(`/api/customers/delete/multiple`,
-      {params:{ids}})
-      // data.toString())
-    .then((res) => res.data)
-    .then((data) => {
-      resolve(data)
-    })
-    .catch((err) => {
-      resolve(err)
-    })
+    try {
+      const res = await Http.delete(`/api/customers/delete/multiple`, {params:{ids}})
+      resolve(res.data)
+    } catch (e) {
+      reject(e)
+    }
   });
 }
 

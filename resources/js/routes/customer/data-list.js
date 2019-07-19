@@ -13,6 +13,7 @@ import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
 import { Instructions } from '../../Components/common/Ui';
+import Trow from '../../Components/List/Trow';
 
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
@@ -42,7 +43,7 @@ class DataListLayout extends Component {
         items: [],
         visible: true,
         displayMode: "list",
-        pageSizes: [10, 20, 30, 50, 100],
+        pageSizes: [10, 20, 30, 50, 100, 1000],
         selectedPageSize: 10,
         categories:  [
           {label:'Cakes',value:'Cakes',key:0},
@@ -124,13 +125,13 @@ class DataListLayout extends Component {
         () => this.dataListRender()
       );
     }
-    changeDisplayMode(mode) {
+    changeDisplayMode = (mode) => {
       this.setState({
         displayMode: mode
       });
       return false;
     }
-    onChangePage(page) {
+    onChangePage = (page) => {
       this.setState({ currentPage: page },
         () => this.dataListRender()
       );
@@ -150,7 +151,7 @@ class DataListLayout extends Component {
       }
     }
 
-    handleCheckChange(event, id) {
+    handleCheckChange = (event, id) => {
       if (
         event.target.tagName == "A" ||
         (event.target.parentElement &&
@@ -171,7 +172,7 @@ class DataListLayout extends Component {
         selectedItems.push(id);
       }
       this.setState({
-        selectedItems
+        selectedItems: [...selectedItems]
       });
 
       if (event.shiftKey) {
@@ -201,6 +202,7 @@ class DataListLayout extends Component {
       }
       return -1;
     }
+
     handleChangeSelectAll(isToggle) {
       if (this.state.selectedItems.length >= this.state.items.length) {
         if (isToggle) {
@@ -253,9 +255,9 @@ class DataListLayout extends Component {
         await this.setState({isLoading: false})
         try {
           const res = await deleteCustomers(items)
-          swal("Success!", res.text ? '' : `${res.text.length} could not be deleted`, "success");
+          swal("Success!", res.message.length > 0 ? `${res.message.length} could not be deleted` : '', "success");
         } catch (e) {
-          swal('Oooops!', 'Internal Server Error', 'error');
+          swal('Oooops!', e.message, 'error');
         } finally {
           this.dataListRender()
         }
@@ -281,7 +283,7 @@ class DataListLayout extends Component {
       const startIndex= (this.state.currentPage-1)*this.state.selectedPageSize
       const endIndex= (this.state.currentPage)*this.state.selectedPageSize
       const {messages} = this.props.intl;
-      const errors = this.state.errors;
+      const {errors, currentPage, totalItemCount, totalPage} = this.state;
       return (
         !this.state.isLoading?
           <div className="loading"></div>
@@ -305,7 +307,6 @@ class DataListLayout extends Component {
                       Add New Customer
                     </Button>
                     {"  "}
-
                     <Modal
                       isOpen={this.state.modalOpen}
                       toggle={this.toggleModal}
@@ -481,7 +482,19 @@ class DataListLayout extends Component {
                 <Separator className="mb-5" />
               </Colxx>
             </Row>
-            <Row>
+            <Trow
+              selectedItems={this.state.selectedItems}
+              handleCheckChange={this.handleCheckChange}
+              displayMode={this.state.displayMode}
+              onChangePage={this.onChangePage}
+              items={this.state.items}
+              selectedPageSize={this.state.selectedPageSize}
+              currentPage={currentPage}
+              totalItemCount={totalItemCount}
+              totalPage={totalPage}
+              dataListRender={this.dataListRender}
+            />
+            {/*<Row>
               {!this.state.items.length > 0
                 ? <EmptyRow />
                 : this.state.items.map(product => {
@@ -698,7 +711,7 @@ class DataListLayout extends Component {
                 totalPage={this.state.totalPage}
                 onChangePage={i => this.onChangePage(i)}
               />
-            </Row>
+            </Row>*/}
           </div>
 
           <ContextMenu

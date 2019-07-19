@@ -19,7 +19,7 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.interceptors.response.use(
   response => response,
   (error) => {
-    console.log(error);
+    console.log({err: error});
     if (error.response) {
       if (error.response.status === 401 && window.location.pathname !== '/login') {
         configureStore().dispatch(logoutUser())

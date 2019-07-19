@@ -11,7 +11,7 @@ import formToObj from '../../../helpers/formToObj'
 import { getCountriesCode, selectable } from '../../../helpers/data'
 import { addCustomers } from '../../../helpers/ajax/customer'
 import {toast} from 'react-toastify'
-import csc from 'country-state-city'
+// import csc from 'country-state-city'
 
 
 export default class extends Component {

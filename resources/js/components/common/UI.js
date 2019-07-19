@@ -23,6 +23,18 @@ export const Instructions = ({ text, head }) => {
   )
 }
 
+export const Thead = ({ cols }) => {
+  return (
+    <div className={'row'}>
+      {cols.map((col, i) => (
+        <div key={i} className={'col text-primary text-lg'}>
+          <h3 className={'text-center'}>{col}</h3>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const styles = {
   container: {
     maxHeight: '100px',
