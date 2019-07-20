@@ -9,7 +9,7 @@ export default ({ match }) => {
   return (
     <Switch>
         <Route exact path={`${match.url}`} component={dataList} />
-        <Route exact path={`${match.url}/:id`} render={props => <View {...props} id={props.id} />} />
+        <Route exact path={`${match.url}/:id`} render={props => <View {...props} params={props.match.params} />} />
         <Redirect to="/error" />
     </Switch>
 )};

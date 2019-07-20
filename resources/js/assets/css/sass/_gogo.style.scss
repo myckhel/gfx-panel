@@ -39,6 +39,7 @@ Table of Contents
 34.Floating Label
 35.Loading
 36.Context Menu
+37.Appends
 */
 
 /* 00.Variables and Imports */
@@ -7412,4 +7413,19 @@ input:-webkit-autofill {
       left: 15px;
     }
   }
+}
+
+// Appends
+// customer profile
+.row {
+  &.center {
+    justify-content: center;
+    align-items: center;
+  }
+  // &.media-object {
+  //       width: 200px;
+  //       height: 200px;
+  //       background-color: grey;
+  // }
+
 }

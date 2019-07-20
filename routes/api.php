@@ -37,5 +37,6 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
   Route::resource('customer_services', 'CustomerServiceController');
   Route::resource('service-metas', 'ServiceMetaController');
   Route::resource('users', 'UserController');
+  Route::get('customers/profile/{id}', 'CustomerController@profile');
 
 });

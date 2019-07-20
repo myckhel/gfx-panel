@@ -15,10 +15,10 @@ class CustomerService extends Model
     return $this->belongsTo(CustomerServiceMeta::class);
   }
   public function job(){
-    return $this->hasOne(Payment::class);
+    return $this->hasOne(Job::class);
   }
   public function payment(){
-    return $this->hasOne(Payment::class);
+    return $this->hasOne(Payment::class, 'customer_services_id');
   }
   public function service(){
     return $this->hasOne(Service::class);

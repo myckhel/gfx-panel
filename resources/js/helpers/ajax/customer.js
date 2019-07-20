@@ -13,7 +13,22 @@ export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption
   });
 }
 
+export const request = (route, data = null, method = 'get') => {
+  return new Promise(async function(resolve, reject) {
+    try {
+      data = data ? (method === 'post') ? data : {params: {data}} : null
+      const res = await Http[method](route, data)
+      console.log(res);
+      resolve(res.data)
+    } catch (e) {
+      reject(e)
+    }
+  });
+}
 
+export const customerProfile = (id) => {
+  return request(`/api/customers/profile/${parseInt(id)}`);
+}
 
 export const deleteCustomers = (ids) => {
   // let data = new URLSearchParams();

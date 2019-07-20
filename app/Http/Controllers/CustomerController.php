@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Job;
+use App\User;
+use App\Payment;
 use App\Customer;
 
 class CustomerController extends Controller
@@ -16,7 +19,7 @@ class CustomerController extends Controller
    {
      // return ['user' => $request->user('api')];
      // return ['user' => auth()->user('api')];
-     $customer = Customer::with('customer_services.customer_service_metas');
+     $customer = Customer::with('customer_services.customer_service_metas')->withCount(['customer_services', 'customer_service_metas']);
      $search = $request->search;
      if ($search) {
        $customer = $customer->where('firstname', 'LIKE', '%'.$search.'%')->orWhere('lastname', 'LIKE', '%'.$search.'%')
@@ -139,14 +142,12 @@ class CustomerController extends Controller
      return ['status' => false, 'message' => 'Invalid Request Data'];
    }
 
-   // public function validate (Request $request){
-   //   return $request->validate([
-   //       // 'name' => 'required|string',
-   //       'email' => 'required|string|email|unique:users',
-   //       // 'password' => 'required|string|confirmed',
-   //       // 'password_confirmation' => 'required|string|min:6'
-   //   ], [
-   //       // 'password.confirmed' => 'The password does not match.'
-   //   ]);
-   // }
+   public function profile($id){
+     $customer = Customer::where('id', $id)->withCount(['customer_services', 'customer_service_metas'])->firstOrFail();
+     $customer_services = $customer->customer_services->pluck('id');
+     $customer->completed_jobs_count = Job::where('status', 'completed')->whereIn('customer_service_id', $customer_services)->count();
+     $customer->completed_payments_count = Payment::where('status', 'completed')->whereIn('customer_services_id', $customer_services)->count();
+
+     return ['profile' => $customer];
+   }
 }
