@@ -8,6 +8,10 @@ use App\Customer;
 class CustomerServiceMeta extends Model
 {
     //
+    public static function getCredantials(Customer $customer){
+      return self::where('customer_id', $customer->id)->groupBy('service_metas_id', 'id', 'customer_id', 'value', 'created_at', 'updated_at')->get();
+    }
+
     public function service_metas(){
       return $this->belongsTo(ServiceMeta::class);
     }

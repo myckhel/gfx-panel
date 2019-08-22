@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Job;
 use App\User;
 use App\Payment;
+use App\Service;
 use App\Customer;
+use App\CustomerServiceMeta;
 
 class CustomerController extends Controller
 {
@@ -143,11 +145,9 @@ class CustomerController extends Controller
    }
 
    public function profile($id){
-     $customer = Customer::where('id', $id)->withCount(['customer_services', 'customer_service_metas'])->firstOrFail();
-     $customer_services = $customer->customer_services->pluck('id');
-     $customer->completed_jobs_count = Job::where('status', 'completed')->whereIn('customer_service_id', $customer_services)->count();
-     $customer->completed_payments_count = Payment::where('status', 'completed')->whereIn('customer_services_id', $customer_services)->count();
-
-     return ['profile' => $customer];
+     $customer = Customer::findOrFail($id);
+     $profile = $customer->getProfile();
+     return ['profile' => $profile];
    }
+
 }

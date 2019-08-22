@@ -22,9 +22,12 @@ class Service extends Model
   public function service_metas(){
     return $this->belongsTo(ServiceMeta::class);
   }
-  // public function services(){
-  //   return $this->hasMany(Service::class);
-  // }
+  public function services(){
+    return $this->hasMany(Service::class, 'parent');
+  }
+  public function service(){
+    return $this->belongsTo(Service::class, 'id');
+  }
   // public function customer_service_metas(){
   //   return $this->belongsToMany(CustomerServiceMeta::class);
   // }

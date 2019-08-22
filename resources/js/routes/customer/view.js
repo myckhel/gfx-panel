@@ -13,6 +13,7 @@ export default class extends Component {
       params: props.params,
       isLoading: true,
       profile: {},
+      // status: null,
     }
   }
 
@@ -28,7 +29,7 @@ export default class extends Component {
         }
       }
     } finally {
-      if (!this.state.status === 404) {
+      if (this.state.status !== 404) {
         this.setState({isLoading: false})
       }
     }
@@ -60,8 +61,12 @@ export default class extends Component {
             <Row className="center">
               <Media style={styles.img} object src="/assets/img/default-service.png" />
             </Row>
-            <Row>
-              <h1 style={styles.head}>fghkj{this.state.profile.firstname}</h1>
+            <Row style={styles.head}>
+              <h1 style={styles.head}>{`${this.state.profile.firstname} ${this.state.profile.lastname}`}</h1>
+            </Row>
+            <Row style={styles.body}>
+              <Colxx xxs="12">
+              </Colxx>
             </Row>
           </Col>
         </Row>
@@ -82,6 +87,11 @@ const styles = {
   head: {
     justifyContent: 'center',
     alignItems: 'center',
-
+  },
+  body: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '500px',
+    backgroundColor: 'rgba(251,65,02,0.5)'
   }
 }
