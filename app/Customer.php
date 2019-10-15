@@ -15,17 +15,17 @@ class Customer extends Model
   protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
 
   public static function addNew($request){
-    $lastIndex = self::latest()->first();
+    // $lastIndex = self::latest()->first();
     return self::create([
       // 'gfx_id' => $lastIndex ? (int) $lastIndex->gfx_id+ 1 : 50001,
-      'firstname' => $request->firstname,
-      'lastname' => $request->lastname,
-      'email' => $request->email,
-      'phone' => $request->phone,
-      'state' => $request->state,
-      'city' => $request->city,
-      'address' => $request->address,
-      'country' => $request->country,
+      'firstname'   => $request->firstname,
+      'lastname'    => $request->lastname,
+      'email'       => $request->email,
+      'phone'       => $request->phone,
+      'state'       => $request->state,
+      'city'        => $request->city,
+      'address'     => $request->address,
+      'country'     => $request->country,
     ]);
   }
 
@@ -55,23 +55,19 @@ class Customer extends Model
     if ($credentials) {
       $metas = ServiceMeta::whereIn('id', $credentials->pluck('id'))->with('services')->get();
       if ($metas) {
-        $i=0;
-        foreach ($metas as $meta) {
-          $services[$meta->services[0]->name] = [$meta->name => $credentials[$i]->value];
-          $i++;
-        }
+        $metas->map(function($meta, $i) use(&$services, $credentials) {
+          $service = $meta->services->first();
+          if ($service) {
+            $services[] = [
+              $service->name => []
+            ];
+            $services[sizeof($services)-1][$service->name][] = [
+              $meta->name => $credentials[$i]->value
+            ];
+          }
+        });
       }
-
-      // $services = ServiceMeta::whereIn('id', $credentials->pluck('id'))->with('services')->get();
     }
     return $services;
   }
-  //
-  // public function payments(){
-  //   return $this->hasMany(Payment::class);
-  // }
-  //
-  // public function jobs(){
-  //   return $this->hasMany(Job::class);
-  // }
 }

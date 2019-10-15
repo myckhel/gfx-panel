@@ -2,10 +2,10 @@
 
 namespace Illuminate\Queue\Jobs;
 
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\InteractsWithTime;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\ManuallyFailedException;
+use Illuminate\Support\InteractsWithTime;
 
 abstract class Job
 {
@@ -48,6 +48,8 @@ abstract class Job
 
     /**
      * The name of the connection the job belongs to.
+     *
+     * @var string
      */
     protected $connectionName;
 
@@ -211,6 +213,16 @@ abstract class Job
     protected function resolve($class)
     {
         return $this->container->make($class);
+    }
+
+    /**
+     * Get the resolved job handler instance.
+     *
+     * @return mixed
+     */
+    public function getResolvedJob()
+    {
+        return $this->instance;
     }
 
     /**

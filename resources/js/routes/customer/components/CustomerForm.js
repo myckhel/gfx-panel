@@ -1,4 +1,4 @@
-import React, {Component, PureComponent} from 'react'
+import React, {Component} from 'react'
 import {
   Row, Button, ModalHeader, ModalBody,
   ModalFooter, Input, Label, Form, Col

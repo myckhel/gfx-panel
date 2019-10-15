@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { Input, Label } from "reactstrap";
 
-export default class Service extends Component {
+export default class Service extends PureComponent {
 	constructor(props) {
 		super(props);
 

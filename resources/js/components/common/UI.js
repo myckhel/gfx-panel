@@ -1,5 +1,5 @@
 import React from 'react'
-import { color } from '../../Constants/theme'
+import { color } from '../../constants/theme'
 
 export const Instructions = ({ text, head }) => {
   return (
@@ -22,6 +22,10 @@ export const Instructions = ({ text, head }) => {
     </div>
   )
 }
+
+export const Text = ({className, style, children, size}) => (
+  <p className={className} style={style}>{children}</p>
+)
 
 export const Thead = ({ cols }) => {
   return (

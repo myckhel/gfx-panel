@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import App from './containers/App';
 
-import { configureStore } from './Redux/store';
+import { store } from './Redux/store';
 import { checkAuth } from './Redux/actions';
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -16,10 +16,11 @@ toast.configure({
 	autoClose: 8000,
 	draggable: false,
 })
-configureStore().dispatch(checkAuth())
+
+store.dispatch(checkAuth())
 
 const MainApp = () => (
-	<Provider store={configureStore()}>
+	<Provider store={store}>
 			<Router>
 				<Switch>
 					<Route path="/" component={App} />

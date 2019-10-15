@@ -1,24 +1,24 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { Col, Row, Card, CardBody, CardTitle, Button, Jumbotron } from "reactstrap";
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import BreadcrumbContainer from "../../Components/BreadcrumbContainer";
-import Http from '../../util/Http'
 import { Media } from 'reactstrap'
 import { Redirect } from 'react-router-dom';
 import { customerProfile } from '../../helpers/ajax/customer'
-export default class extends Component {
+import { Text } from "../../components/common/UI"
+
+export default class extends PureComponent {
   constructor(props){
     super(props)
     this.state = {
       params: props.params,
       isLoading: true,
       profile: {},
-      // status: null,
+      status: null,
     }
   }
 
-  componentWillMount = async () => {
-    this.setState({isLoading: true})
+  componentDidMount = async () => {
     try {
       const data = await customerProfile(this.state.params.id)
       this.setState({profile: data.profile})
@@ -42,9 +42,12 @@ export default class extends Component {
         state: { from: this.props.location }
       }} />
     }
+
+    const { firstname, lastname, completed_jobs_count, completed_payments_count, credentialServices } = this.state.profile
+
     return (
       this.state.isLoading ?
-        <div className="loading"></div>
+        <div className="loading">Profile</div>
      :
       <Fragment>
         <Row>
@@ -62,10 +65,32 @@ export default class extends Component {
               <Media style={styles.img} object src="/assets/img/default-service.png" />
             </Row>
             <Row style={styles.head}>
-              <h1 style={styles.head}>{`${this.state.profile.firstname} ${this.state.profile.lastname}`}</h1>
+              <h1 style={styles.head}>{`${firstname} ${lastname}`}</h1>
             </Row>
             <Row style={styles.body}>
               <Colxx xxs="12">
+                <Row>
+                  <Text size={2}>Completed Jobs</Text>
+                  <Text>{completed_jobs_count}</Text>
+                </Row>
+                <Row>
+                  <Text size={2}>Completed Payments</Text>
+                  <Text>{completed_payments_count}</Text>
+                </Row>
+                <Row>
+                  <Text size={2}>Credential Services</Text>
+                  {credentialServices.map((cred, i) => (
+                  <Row key={i}>
+                    <Text>Airtime: </Text>
+                    {cred.Airtime.map((serv, name) => (
+                      <Row key={name}>
+                        <Text>{name}</Text>
+                        <Text>{serv.Phone}</Text>
+                      </Row>
+                    ))}
+                  </Row>
+                  ))}
+                </Row>
               </Colxx>
             </Row>
           </Col>

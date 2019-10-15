@@ -146,6 +146,7 @@ class CustomerController extends Controller
 
    public function profile($id){
      $customer = Customer::findOrFail($id);
+     // dd($customer);
      $profile = $customer->getProfile();
      return ['profile' => $profile];
    }

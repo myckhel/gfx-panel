@@ -12,7 +12,7 @@ import { NavLink } from "react-router-dom";
 import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
-import { Instructions } from '../../Components/common/Ui';
+import { Instructions } from '../../components/common/UI';
 import Trow from '../../Components/List/Trow';
 
 import { Colxx, Separator } from "../../Components/CustomBootstrap";

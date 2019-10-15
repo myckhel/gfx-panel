@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { injectIntl} from 'react-intl';
 import { NavLink } from "react-router-dom";
 import mouseTrap from "react-mousetrap";
@@ -22,39 +22,40 @@ function collect(props) {
 // import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
-import ServiceType from './ServiceType';
-import Service from './Service';
+// import ServiceType from './ServiceType';
+// import Service from './Service';
+import ServiceForm from './components/ServiceForm';
 
 import { selectable } from '../../helpers/data'
 import Http from '../../util/Http'
 import formToObj from '../../helpers/formToObj'
-import ReeValidate from 'ree-validate'
-import { removeErrors, addErrors } from '../../helpers/errors'
+// import ReeValidate from 'ree-validate'
+// import { removeErrors, addErrors } from '../../helpers/errors'
 
-class All extends Component {
+class All extends PureComponent {
   constructor(props){
     super(props)
 
-    this.validator = new ReeValidate({
-      name: 'required|min:3|max:45'
-    })
+    // this.validator = new ReeValidate({
+    //   name: 'required|min:3|max:45'
+    // })
 
     this.state = {
-      errors: this.validator.errors,
+      // errors: this.validator.errors,
       items: [],
       visible: true,
-      serviceTypeRow: [],
+      // serviceTypeRow: [],
       services: [],//{label: 'James', value: 33},{name: 'Fake', value: 29}
-      selectedService: {},
-      credentials: {
-        name: ''
-      },
-      form: {
-        name: '',
-        submitName: 'Save',
-        cancelName: 'Cancel',
-        state: 'service'
-      },
+      // selectedService: {},
+      // credentials: {
+      //   name: ''
+      // },
+      // form: {
+      //   name: '',
+      //   submitName: 'Save',
+      //   cancelName: 'Cancel',
+      //   state: 'service'
+      // },
       displayMode: "imagelist",
       pageSizes: [10, 20, 30, 50, 100],
       selectedPageSize: 10,
@@ -74,7 +75,7 @@ class All extends Component {
       displayOptionsIsOpen: false,
       isLoading:false
     };
-    this.state.serviceTypeRow[0] = <ServiceType remove={this.removeServiceTypeRow} key={0} index={0} />;
+    // this.state.serviceTypeRow[0] = <ServiceType remove={this.removeServiceTypeRow} key={0} index={0} />;
   }
 
   onDismiss = () => {
@@ -91,32 +92,6 @@ class All extends Component {
       });
       return false;
     });
-  }
-
-  removeServiceTypeRow = (key) => {
-    this.setState((prev) => {
-      let row = [];
-      prev.serviceTypeRow.map((v, i) => {
-        if (i !== key) {
-          row[i] = v;
-        }
-      });
-      return {serviceTypeRow: row}
-    })
-  }
-
-  addServiceTypeRow = () => {
-    this.setState((prev) => {
-      let last = 0;
-      prev.serviceTypeRow.map( (v, key) => {
-        last = key
-      })
-      let row = [...prev.serviceTypeRow];
-      row[last+1] = <ServiceType remove={this.removeServiceTypeRow}
-        key={last+1} index={last+1} />
-
-      return { serviceTypeRow: row }
-    })
   }
 
   toggleModal = () => {
@@ -295,19 +270,6 @@ class All extends Component {
     }
   }
 
-  selectService = (service) => {
-    this.setState({ selectedService: {label: service, value: service }  })
-  }
-
-  toggleFormState = () => {
-    const state = this.state.form.state === 'service' ? 'type' : 'service';
-    this.setState((prev) => {
-      return {form: {...prev.form, state}}
-    }, () => {
-      // this.selectService(this.state.selectedService);
-    })
-  }
-
   handleKeyUp = (keys) => {
     console.log(keys);
     if (keys.length >! 2) {
@@ -320,77 +282,6 @@ class All extends Component {
       Http.get(`/api/services?pagenate=${false}&search=${keys}`)
       .then((res) => {      })
       .catch((err) => console.log(err))
-    })
-  }
-
-  // input change
-  handleInputChange = ({ target }) => {
-    const name = target.name
-    const value = target.value
-    const { errors } = this.validator
-
-    this.setState(prev => { return {credentials: {...prev.credentials, [name]: value}} })
-
-    errors.remove(name)
-    this.validator.validate(name, value)
-      .then(() => {
-        this.setState({ errors })
-      })
-  }
-
-  // form submit
-  submitForm = (event) => {
-    const form = $(event.target)
-    event.persist()
-    event.preventDefault();
-
-    const { errors } = this.validator
-    const formData = formToObj($(form).serializeArray());
-    const slug = this.state.form.state === 'type' ? '/api/service-metas' : '/api/services';
-    const callback = this.state.form.state === 'type' ? false : this.toggleFormState;
-
-    this.setState(prev => {
-      return {errors: removeErrors(prev.errors)}
-    })
-    this.validator.validateAll(formData)
-    .then((success) => {
-      if (success) {
-        this.setState({isLoading: false}, () => {
-          Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
-          .then((res) => res.data )
-          .then((res) => {
-            if (res.status) {
-              $(form).trigger('reset')
-
-              if (this.state.form.state === 'service') {
-                const service = {label: res.service.name, value: res.service.id};
-                this.setState( (prev) => {
-                  return {services: [ service ] }
-                }, () => this.selectService(service) )
-              } else {
-                this.toggleFormState()
-              }
-
-              if (callback) {
-                callback()
-              }
-              swal('Success', res.errors, 'success')
-              // createNotification('success', 'True')
-            } else {
-              // alert warning
-              swal('Ooooops!', res.errors, 'error')
-              // alert(res.text)
-            }
-            this.dataListRender()
-          })
-          .catch((err) => {
-            this.dataListRender()
-            swal('Ooooops!', 'Internal Server Error', 'error')
-          })
-        })
-      } else {
-        this.setState({ errors })
-      }
     })
   }
 
@@ -443,7 +334,8 @@ class All extends Component {
                   wrapClassName="modal-right"
                   backdrop="static"
                 >
-                  <Form id={'service-form'} onSubmit={(e) => {this.submitForm(e)}}>
+                  <ServiceForm dataListRender={this.dataListRender} toggleModal={this.toggleModal} services={this.state.services} />
+                  {/*<Form id={'service-form'} onSubmit={(e) => {this.submitForm(e)}}>
                     <ModalHeader toggle={this.toggleModal}>
                       Add New Service +
                     </ModalHeader>
@@ -491,7 +383,7 @@ class All extends Component {
                      : this.state.form.submitName}
                       </Button>{" "}
                     </ModalFooter>
-                  </Form>
+                  </Form>*/}
                 </Modal>
                 <ButtonDropdown
                   isOpen={this.state.dropdownSplitOpen}
