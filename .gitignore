@@ -3,8 +3,10 @@
 /public/storage
 /storage/*.key
 /public
+/vendor
 .env
-.phpunit.result.cache
+.env.backup
+phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
