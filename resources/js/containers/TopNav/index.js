@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { injectIntl} from 'react-intl';
 import { Redirect } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ import { menuHiddenBreakpoint,searchPath,localeOptions } from "../../Constants/d
 import "../../assets/js/vendor/sweetalert.min.js";
 import "../../assets/css/vendor/sweetalert.css";
 
-class TopNav extends Component {
+class TopNav extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -42,11 +42,8 @@ class TopNav extends Component {
     };
   }
 
-  componentWillMount = () => {
-    this.props.checkAuth()
-  }
-
   componentDidMount = () => {
+    this.props.checkAuth()
   }
 
   isInFullScreen = () => {

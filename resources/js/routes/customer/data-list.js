@@ -76,7 +76,7 @@ class DataListLayout extends Component {
     }
 
     //  component section
-    componentWillMount() {
+    componentDidMount = () => {
       this.props.bindShortcut(["ctrl+a", "command+a"], () =>
         this.handleChangeSelectAll(false)
       );
@@ -86,6 +86,7 @@ class DataListLayout extends Component {
         });
         return false;
       });
+      this.dataListRender();
     }
 
     // toggle section
@@ -217,11 +218,6 @@ class DataListLayout extends Component {
       }
       document.activeElement.blur();
       return false;
-    }
-
-    componentDidMount() {
-      // console.log(this.props);
-      this.dataListRender();
     }
 
     // ajax section

@@ -11,7 +11,7 @@ export default class Service extends PureComponent {
 		}
 	}
 
-	componentWillReceiveProps = (nextProps) => {
+	static getDerivedStatesFromProps = (nextProps) => {
 		if (nextProps !== this.props) {
 			this.setState({
 				errors: nextProps.errors,

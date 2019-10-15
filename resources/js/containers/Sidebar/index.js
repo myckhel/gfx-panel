@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import ReactDOM from "react-dom";
 import IntlMessages from "../../Util/IntlMessages";
 import { Nav, NavItem } from "reactstrap";
@@ -15,7 +15,7 @@ import {
   changeDefaultClassnames
 } from "../../Redux/actions";
 
-class Sidebar extends Component {
+class Sidebar extends PureComponent {
   constructor(props) {
     super(props);
     this.addEvents = this.addEvents.bind(this);

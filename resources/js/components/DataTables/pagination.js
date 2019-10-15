@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import {
   Pagination, PaginationItem, PaginationLink,
   UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem
@@ -10,7 +10,7 @@ const defaultButton = props => (
   </button>
 );
 
-export default class DataTablePagination extends Component {
+export default class DataTablePagination extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -22,14 +22,13 @@ export default class DataTablePagination extends Component {
     this.changePageSize = this.changePageSize.bind(this);
     this.renderPageJump = this.renderPageJump.bind(this);
 
-    console.log(props);
     this.state = {
       page: props.page,
       pageSize: this.props.defaultPageSize
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  sttic getDerivedStatesFromProps = (nextProps) => {
     this.setState({ page: nextProps.page });
   }
 

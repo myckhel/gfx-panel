@@ -1,16 +1,17 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { Row, Card, CardBody, CardTitle, Button, Jumbotron } from "reactstrap";
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import BreadcrumbContainer from "../../Components/BreadcrumbContainer";
 
-export default class extends Component {
+export default class extends PureComponent {
   constructor(props){
     super(props)
     this.state = {
       customers: []
     }
   }
-  componentWillMount = () => axios.get('/api/customer')
+
+  componentDidMount = () => axios.get('/api/customer')
     .then((res) => res.data.data ? this.setState({customers: res.data.data}) : console.log('no data') )
     .catch((error) => console.log('error fetching', error))
 

@@ -60,8 +60,8 @@ class RegisterLayout extends Component {
       })
   }
 
-  componentWillReceiveProps(nextProps) {
-  if(this.props != nextProps) {
+  static getDerivedStatesFromProps = (nextProps) => {
+  if(this.props.errors != nextProps.errors) {
     this.setState({
       errors: nextProps.errors
     });

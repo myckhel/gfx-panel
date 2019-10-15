@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
@@ -53,7 +53,7 @@ const UnAuthRoute = ({ component: Component,  authUser,...rest }) =>{
 				/>}
 	/>);}
 
-class App extends Component {
+class App extends PureComponent {
 	render() {
 		const { location, match, authenticated, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];

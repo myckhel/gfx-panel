@@ -82,7 +82,7 @@ class All extends PureComponent {
     this.setState({ visible: false });
   }
 
-  componentWillMount() {
+  componentDidMount = () => {
     this.props.bindShortcut(["ctrl+a", "command+a"], () =>
       this.handleChangeSelectAll(false)
     );
@@ -92,6 +92,7 @@ class All extends PureComponent {
       });
       return false;
     });
+    this.dataListRender();
   }
 
   toggleModal = () => {
@@ -215,9 +216,6 @@ class All extends PureComponent {
     }
     document.activeElement.blur();
     return false;
-  }
-  componentDidMount() {
-    this.dataListRender();
   }
 
   dataListRender = () => {

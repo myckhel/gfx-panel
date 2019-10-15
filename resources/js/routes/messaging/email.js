@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { Row, Card, CardBody, CardTitle, Button, Jumbotron } from "reactstrap";
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import BreadcrumbContainer from "../../Components/BreadcrumbContainer";
 
-export default class extends Component {
+export default class extends PureComponent {
   constructor(props){
     super(props)
     this.state = {

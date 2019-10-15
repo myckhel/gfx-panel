@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Route, withRouter, Switch,Redirect } from 'react-router-dom';
 
 import TopNav from '../Containers/TopNav'
@@ -11,7 +11,7 @@ import service from './service';
 import { connect } from 'react-redux';
 
 
-class MainApp extends Component {
+class MainApp extends PureComponent {
 	constructor(props) {
 		super(props);
 	}
@@ -40,7 +40,7 @@ class MainApp extends Component {
 const mapStateToProps = ({ menu }) => {
 	const { containerClassnames} = menu;
 	return { containerClassnames };
-  }
+}
 
-  export default withRouter(connect(mapStateToProps, {})(MainApp));
+export default withRouter(connect(mapStateToProps, {})(MainApp));
 	// <Route exact path={`${match.url}`} component={dashboard} />
