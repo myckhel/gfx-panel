@@ -250,20 +250,20 @@ class All extends PureComponent {
     }
   }
 
-  handleKeyUp = (keys) => {
-    console.log(keys);
-    if (keys.length >! 2) {
-      return;
-    }
-
-    this.setState({
-      isLoading:false
-    }, () => {
-      Http.get(`/api/services?pagenate=${false}&search=${keys}`)
-      .then((res) => {      })
-      .catch((err) => console.log(err))
-    })
-  }
+  // handleKeyUp = (keys) => {
+  //   console.log(keys);
+  //   if (keys.length >! 2) {
+  //     return;
+  //   }
+  //
+  //   this.setState({
+  //     isLoading:false
+  //   }, () => {
+  //     Http.get(`/api/services?pagenate=${false}&search=${keys}`)
+  //     .then((res) => {      })
+  //     .catch((err) => console.log(err))
+  //   })
+  // }
 
   onContextMenuClick = (e, data, target) => {
     console.log("onContextMenuClick - selected items",this.state.selectedItems)
@@ -287,7 +287,7 @@ class All extends PureComponent {
   }
 
   selectService = (service) => {
-    this.setState({ selectedService: {label: service, value: service }  })
+    this.setState({ selectedService: service})
   }
 
   render() {

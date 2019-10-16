@@ -3,7 +3,7 @@ import {
   Row, Button, ModalHeader, ModalBody,
   ModalFooter, Input, Label, Form, Col
 } from "reactstrap";
-import Select from "react-select";
+import Select from "react-select/async";
 
 import ReeValidate from 'ree-validate'
 import { removeErrors, addErrors } from '../../../helpers/errors'
@@ -145,6 +145,16 @@ export default class extends Component {
     this.props.toggleFormState()
   }
 
+  getServices = (input, callback) => this.handleKeyUp(input)
+
+  handleKeyUp = (input) => {
+    return new Promise((resolve, reject) => {
+      Http.get(`/api/services?pagenate=${false}&search=${input}`)
+      .then((res) => resolve(selectable(res.data.data, ['name', 'id'])) )
+      .catch((err) => reject(err))
+    });
+  }
+
   render = () => {
     const { toggleModal, services, selectedService } = this.props
     const { state } = this.state.form
@@ -167,11 +177,14 @@ export default class extends Component {
             <Row id="add-service-type-row">
               <Col sm="8" className="col-sm-offset-2">
                 <Select
-                  onChange={(e) => this.selectService(e, 'country_code')}
-                  value={selectedService.value}
+                  cacheOptions
+                  defaultOptions={services}
+                  onChange={this.selectService}
+                  defaultValue={selectedService}
                   name='service_id'
-                  options={services}
-                  onKeyUp={(e)=>console.log(e)}></Select>
+                  loadOptions={this.getServices}
+                  // options={services}
+                  ></Select>
               </Col>
             </Row>
             {serviceType}
