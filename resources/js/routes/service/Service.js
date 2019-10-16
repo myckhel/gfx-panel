@@ -11,13 +11,14 @@ export default class Service extends PureComponent {
 		}
 	}
 
-	static getDerivedStatesFromProps = (nextProps) => {
+	static getDerivedStateFromProps = (nextProps) => {
 		if (nextProps !== this.props) {
-			this.setState({
+			return {
 				errors: nextProps.errors,
 				credentials: { name: nextProps.name }
-			});
+			}
 		}
+		return null;
 	}
 
 	render() {
@@ -29,7 +30,7 @@ export default class Service extends PureComponent {
         </Label>
         <Input
 					value={this.state.credentials.name}
-					onChange={(e) => this.props.handleInputChange(e)}
+					onChange={this.props.handleInputChange}
           type="text" required name="name"
           id="name" placeholder="Service Name"
         />

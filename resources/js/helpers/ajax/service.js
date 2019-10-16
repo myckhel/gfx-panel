@@ -1,7 +1,7 @@
 import Http from '../../util/Http'
 
 export const fetchServices = (query) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.get(`customers${query}`)
       resolve(res)
@@ -12,7 +12,7 @@ export const fetchServices = (query) => {
 }
 
 export const deleteServices = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.delete(`services/delete/multiple`, {parans:{data}})
       resolve(res)
@@ -23,7 +23,7 @@ export const deleteServices = (data) => {
 }
 
 export const addServices = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.post(`services`, data)
       resolve(res)
@@ -33,7 +33,7 @@ export const addServices = (data) => {
   })
 }
 export const viewServices = (id) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.get(`services/${id}`)
       resolve(res)
@@ -44,7 +44,7 @@ export const viewServices = (id) => {
 }
 
 export const searchServices = (query) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.get(`services${query}`)
       resolve(res)
@@ -55,7 +55,7 @@ export const searchServices = (query) => {
 }
 
 export const addServiceMetas = (data) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const res = await Http.post(`service-metas`, data)
       resolve(res)

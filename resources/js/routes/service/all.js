@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from "react";
 import { injectIntl} from 'react-intl';
 import { NavLink } from "react-router-dom";
 import mouseTrap from "react-mousetrap";
-// import Select from "react-select-search";
 import Select from "react-select";
 import "react-select-search/style.css";
 import classnames from "classnames";
@@ -19,43 +18,26 @@ import Pagination from "../../Components/List/Pagination";
 function collect(props) {
   return { data: props.data };
 }
-// import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
-// import ServiceType from './ServiceType';
-// import Service from './Service';
 import ServiceForm from './components/ServiceForm';
 
 import { selectable } from '../../helpers/data'
 import Http from '../../util/Http'
 import formToObj from '../../helpers/formToObj'
-// import ReeValidate from 'ree-validate'
-// import { removeErrors, addErrors } from '../../helpers/errors'
 
 class All extends PureComponent {
   constructor(props){
     super(props)
 
-    // this.validator = new ReeValidate({
-    //   name: 'required|min:3|max:45'
-    // })
-
     this.state = {
       // errors: this.validator.errors,
       items: [],
       visible: true,
+      formState: 'service',
+      selectedService: {},
       // serviceTypeRow: [],
       services: [],//{label: 'James', value: 33},{name: 'Fake', value: 29}
-      // selectedService: {},
-      // credentials: {
-      //   name: ''
-      // },
-      // form: {
-      //   name: '',
-      //   submitName: 'Save',
-      //   cancelName: 'Cancel',
-      //   state: 'service'
-      // },
       displayMode: "imagelist",
       pageSizes: [10, 20, 30, 50, 100],
       selectedPageSize: 10,
@@ -298,11 +280,22 @@ class All extends PureComponent {
     return true;
   };
 
+  toggleFormState = () => {
+    this.setState((prev) => ({
+      formState: prev.formState === 'service' ? 'type' : 'service'
+    }))
+  }
+
+  selectService = (service) => {
+    this.setState({ selectedService: {label: service, value: service }  })
+  }
+
   render() {
     const startIndex= (this.state.currentPage-1)*this.state.selectedPageSize
     const endIndex= (this.state.currentPage)*this.state.selectedPageSize
     const {messages} = this.props.intl;
     const serviceType = this.state.serviceTypeRow;
+    const { formState, selectedService } = this.state
     return (
       !this.state.isLoading?
         <div className="loading"></div>
@@ -332,56 +325,7 @@ class All extends PureComponent {
                   wrapClassName="modal-right"
                   backdrop="static"
                 >
-                  <ServiceForm dataListRender={this.dataListRender} toggleModal={this.toggleModal} services={this.state.services} />
-                  {/*<Form id={'service-form'} onSubmit={(e) => {this.submitForm(e)}}>
-                    <ModalHeader toggle={this.toggleModal}>
-                      Add New Service +
-                    </ModalHeader>
-                    <ModalBody>
-                      {this.state.form.state === 'service'
-                      ? <Service
-                          name={this.state.credentials.name}
-                          handleInputChange={this.handleInputChange} errors={this.state.errors}
-                        />
-                      : <Fragment>
-                        <Row id="add-service-type-row">
-                          <Col sm="8" className="col-sm-offset-2">
-                            <Select
-                              onChange={(e) => this.selectService(e, 'country_code')}
-                              value={this.state.selectedService.value}
-                              name='service_id'
-                              options={this.state.services}
-                              onKeyUp={(e)=>console.log(e)}></Select>
-                          </Col>
-                        </Row>
-                        {serviceType}
-                        <Row id="add-service-type-row">
-                          <Col xs="8" className="col-xs-offset-2">
-                            <Button
-                              color="info" onClick={() => {this.addServiceTypeRow()}}
-                            > <span aria-hidden > Add More Service Type</span>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Fragment>}
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button
-                        color="secondary"
-                        outline
-                        onClick={this.toggleModal}
-                      >
-                      {this.state.form.cancelName}
-                      </Button>
-                      <Button
-                      disabled={this.state.errors.any() || this.state.loading}
-                      type="submit" id="btn" color="primary" >
-                      {this.state.loading?
-                        <div className="btn-loading"></div>
-                     : this.state.form.submitName}
-                      </Button>{" "}
-                    </ModalFooter>
-                  </Form>*/}
+                  <ServiceForm selectService={this.selectService} selectedService={selectedService} toggleFormState={this.toggleFormState} formState={formState} dataListRender={this.dataListRender} toggleModal={this.toggleModal} services={this.state.services} />
                 </Modal>
                 <ButtonDropdown
                   isOpen={this.state.dropdownSplitOpen}

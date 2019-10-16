@@ -9,7 +9,7 @@ import ReeValidate from 'ree-validate'
 import { removeErrors, addErrors } from '../../../helpers/errors'
 import formToObj from '../../../helpers/formToObj'
 import { getCountriesCode, selectable } from '../../../helpers/data'
-import { addCustomers } from '../../../helpers/ajax/customer'
+import { addServices } from '../../../helpers/ajax/service'
 import {toast} from 'react-toastify'
 import Http from '../../../util/Http'
 
@@ -26,19 +26,18 @@ export default class extends Component {
 
     this.state = {
       errors: this.validator.errors,
+      loading: false,
       credentials: {
         name: ''
       },
-      selectedService: {},
       form: {
         name: '',
         submitName: 'Save',
         cancelName: 'Cancel',
-        state: 'service'
+        state: props.formState
       },
-      serviceTypeRow: [],
+      serviceTypeRow: [<ServiceType remove={this.removeServiceTypeRow} key={0} index={0} />],
     }
-    this.state.serviceTypeRow[0] = <ServiceType remove={this.removeServiceTypeRow} key={0} index={0} />;
   }
 
   // form submit
@@ -55,21 +54,20 @@ export default class extends Component {
     this.setState(prev => ({
       errors: removeErrors(prev.errors)
     }))
+
     this.validator.validateAll(formData)
     .then((success) => {
       if (success) {
         this.setState({isLoading: false}, () => {
           Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
           .then((res) => res.data )
-          .then((res) => {
+          .then( async (res) => {
             if (res.status) {
               $(form).trigger('reset')
 
               if (this.state.form.state === 'service') {
                 const service = {label: res.service.name, value: res.service.id};
-                this.setState( (prev) => {
-                  return {services: [ service ] }
-                }, () => this.selectService(service) )
+                await this.setState( (prev) => ({services: [ service ] }), () => this.selectService(service) )
               } else {
                 this.toggleFormState()
               }
@@ -104,18 +102,17 @@ export default class extends Component {
     const value = target.value
     const { errors } = this.validator
 
-    this.setState(prev => { return {credentials: {...prev.credentials, [name]: value}} })
-
     errors.remove(name)
     this.validator.validate(name, value)
       .then(() => {
         this.setState({ errors })
       })
+      this.setState(prev => ({credentials: {...prev.credentials, [name]: value}}) )
   }
 
 
   addServiceTypeRow = () => {
-    this.setState((prev) => {
+    this.setState(prev => {
       let last = 0;
       prev.serviceTypeRow.map( (v, key) => {
         last = key
@@ -141,22 +138,17 @@ export default class extends Component {
   }
 
   selectService = (service) => {
-    this.setState({ selectedService: {label: service, value: service }  })
+    this.props.selectService(service)
   }
 
   toggleFormState = () => {
-    const state = this.state.form.state === 'service' ? 'type' : 'service';
-    this.setState((prev) => {
-      return {form: {...prev.form, state}}
-    }, () => {
-      // this.selectService(this.state.selectedService);
-    })
+    this.props.toggleFormState()
   }
 
   render = () => {
-    const { toggleModal, services } = this.props
+    const { toggleModal, services, selectedService } = this.props
     const { state } = this.state.form
-    const { credentials, errors, selectedService } = this.state
+    const { credentials, errors } = this.state
     const serviceType = this.state.serviceTypeRow;
 
     return (
@@ -168,7 +160,8 @@ export default class extends Component {
           {state === 'service'
           ? <Service
               name={credentials.name}
-              handleInputChange={this.handleInputChange} errors={errors}
+              handleInputChange={this.handleInputChange}
+              errors={errors}
             />
           : <Fragment>
             <Row id="add-service-type-row">
@@ -185,7 +178,7 @@ export default class extends Component {
             <Row id="add-service-type-row">
               <Col xs="8" className="col-xs-offset-2">
                 <Button
-                  color="info" onClick={() => {this.addServiceTypeRow}}
+                  color="info" onClick={this.addServiceTypeRow}
                 > <span aria-hidden > Add More Service Type</span>
                 </Button>
               </Col>
