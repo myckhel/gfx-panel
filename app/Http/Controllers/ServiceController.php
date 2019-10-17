@@ -42,13 +42,16 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
       $request->validate([
-        'name' => 'required|min:3|max:45'
+        'name' => 'required|min:3|max:45',
+        'parent' => 'numeric',
+        'charge' => 'string',
+        'price' => 'numeric',
+        'logo' => 'string',
       ]);
-      // dd($request);
       // check unique name
-      if (Service::checkUnique('name', $request)) {
-        return ['status' => false, 'text' => 'Name Exists'];
-      }
+      // if (Service::checkUnique('name', $request)) {
+      //   return ['status' => false, 'text' => 'Name Exists'];
+      // }
       try {
         $service = Service::addNew($request);
         return ['status' => true, 'service' => $service];

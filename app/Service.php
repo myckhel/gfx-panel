@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-  protected $fillable = [ 'name' ];
+  protected $fillable = [ 'name', 'price', 'charge', 'parent' ];
 
   public static function addNew($request){
-    return self::create([ 'name' => $request->name ]);
+    $create = [
+      'name' => $request->name,
+      'price' => $request->price,
+      'charge' => $request->charge,
+    ];
+
+    if ($parent = $request->parent) {
+      $service = self::findOrFail($parent);
+      return $service->services()->create($create);
+    }
+    return self::create($create);
   }
 
   public static function checkUnique($filed, $request){
@@ -25,9 +35,9 @@ class Service extends Model
   public function services(){
     return $this->hasMany(Service::class, 'parent');
   }
-  public function service(){
-    return $this->belongsTo(Service::class, 'id');
-  }
+  // public function service(){
+  //   return $this->belongsTo(Service::class, 'id');
+  // }
   // public function customer_service_metas(){
   //   return $this->belongsToMany(CustomerServiceMeta::class);
   // }

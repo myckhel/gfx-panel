@@ -21,7 +21,11 @@ export default class extends Component {
     super(props)
 
     this.validator = new ReeValidate({
-      name: 'required|min:3|max:45'
+      name: 'required|min:3|max:45',
+      parent: 'numeric',
+      charge: '',
+      price: 'numeric',
+      logo: '',
     })
 
     this.state = {
@@ -41,7 +45,6 @@ export default class extends Component {
     }
   }
 
-  // form submit
   submitForm = (event) => {
     const form = $(event.target)
     event.persist()
@@ -77,11 +80,8 @@ export default class extends Component {
                 callback()
               }
               swal('Success', res.errors, 'success')
-              // createNotification('success', 'True')
             } else {
-              // alert warning
               swal('Ooooops!', res.errors || res.text, 'error')
-              // alert(res.text)
             }
             this.props.dataListRender()
           })
@@ -99,8 +99,6 @@ export default class extends Component {
     })
   }
 
-
-  // input change
   handleInputChange = ({ target }) => {
     const name = target.name
     const value = target.value
@@ -160,10 +158,11 @@ export default class extends Component {
   }
 
   render = () => {
-    const { toggleModal, services, selectedService } = this.props
+    const { selectService, toggleModal, services, selectedService } = this.props
     const { state } = this.state.form
     const { credentials, errors } = this.state
     const serviceType = this.state.serviceTypeRow;
+    const { getServices } = this
 
     return (
       <Form id={'service-form'} onSubmit={this.submitForm}>
@@ -173,7 +172,11 @@ export default class extends Component {
         <ModalBody>
           {state === 'service'
           ? <Service
-              name={credentials.name}
+              services={services}
+              selectService={selectService}
+              selectedService={selectedService}
+              getServices={getServices}
+              credentials={credentials}
               handleInputChange={this.handleInputChange}
               errors={errors}
             />
@@ -183,12 +186,11 @@ export default class extends Component {
                 <Select
                   cacheOptions
                   defaultOptions={services}
-                  onChange={this.selectService}
+                  onChange={selectService}
                   defaultValue={selectedService}
                   name='service_id'
-                  loadOptions={this.getServices}
-                  // options={services}
-                  ></Select>
+                  loadOptions={getServices}
+                />
               </Col>
             </Row>
             {serviceType}
