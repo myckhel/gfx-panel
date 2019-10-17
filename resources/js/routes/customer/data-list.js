@@ -22,9 +22,6 @@ function collect(props) {
   return { data: props.data };
 }
 
-import {EmptyRow} from '../../Components/empty';
-import {_token} from '../../Constants/defaultValues';
-
 import { fetchCustomers, deleteCustomers } from '../../helpers/ajax/customer'
 
 import CustomerForm from './components/CustomerForm'
@@ -286,9 +283,7 @@ class DataListLayout extends Component {
             <Row>
               <Colxx xxs="12">
                 <div className="mb-2">
-                  <h1>
-                    Customers List
-                  </h1>
+                  <h1> Customers List </h1>
 
                   <div className="float-sm-right">
                     <Button
@@ -312,7 +307,7 @@ class DataListLayout extends Component {
                         text={'coming soon'} />
                     </ModalHeader>
                     <CustomerForm
-                      toggleModal={() => this.toggleModal()}
+                      toggleModal={this.toggleModal}
                       beforeSubmit={() => this.setState({isLoading: false})}
                       afterSubmit={() => {this.setState({isLoading: true}); this.dataListRender(); }} />
                     </Modal>
@@ -385,14 +380,20 @@ class DataListLayout extends Component {
               </Colxx>
             </Row>
             <Table
-              fields={['firstname', 'lastname', 'country_code phone ']}
+              def={product => ([
+                {name: product.id, key: true, route: '/customers/' },
+                {link: {to: `customers/${product.id}`}, name: product.firstname, },
+                {link: {to: `customers/${product.id}`}, name: product.lastname, },
+                {name: `${product.country_code} ${product.phone}`, badge: true},
+                {name: `${product.email}`},
+                {name: `${product.state}, ${product.country}`},
+              ])}
               selectedItems={this.state.selectedItems}
               handleCheckChange={this.handleCheckChange}
               displayMode={this.state.displayMode}
               onChangePage={this.onChangePage}
               items={this.state.items}
-              renderItem={({product}) => {}}
-              selectedPageSize={this.state.selectedPageSize}
+              selectedPageSize={selectedPageSize}
               currentPage={currentPage}
               totalItemCount={totalItemCount}
               totalPage={totalPage}

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {
   Row, Button, ModalHeader, ModalBody,
   ModalFooter, Input, Label, Form, Col
@@ -14,7 +14,7 @@ import {toast} from 'react-toastify'
 // import csc from 'country-state-city'
 
 
-export default class extends Component {
+export default class extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -31,9 +31,9 @@ export default class extends Component {
     });
 
     this.state = {
+      isLoading: false,
       selected: {
         country_code: {label: 'NG +234', value: '+234'},
-
       },
       errors: this.validator.errors,
       options: {
@@ -60,23 +60,21 @@ export default class extends Component {
     const value = target.value
     const { errors } = this.validator
 
-    this.setState(prev => { return {form: {...prev.form, [name]: value}} })
+    this.setState(prev => ({form: {...prev.form, [name]: value} }))
 
     errors.remove(name)
     this.validator.validate(name, value)
       .then(() => {
-        this.setState({ errors })
+        this.setState({ errors: {...errors} })
       })
   }
 
   handleSelectChange = async ({label, value, id}, field) => {
     const { errors } = this.validator
 
-    await this.setState(prev => {
-      return { form: {...prev.form, [field]: value},
+    await this.setState(prev => ({form: {...prev.form, [field]: value},
         selected: {...prev.selected, [field]: {label, value, id}}
-      }
-    })
+    }))
 
     const empty = {label: '', value: ''}
 
@@ -99,7 +97,7 @@ export default class extends Component {
     errors.remove(field)
     await this.validator.validate(field, value)
       .then(() => {
-        this.setState({ errors })
+        this.setState({ errors: {...errors} })
       })
   }
 
@@ -111,9 +109,10 @@ export default class extends Component {
     event.preventDefault();
 
     const { errors } = this.validator
-    this.setState(prev => {
-      return {errors: removeErrors(prev.errors)}
-    })
+    this.setState(prev => ({
+      errors: {...removeErrors(prev.errors)},
+      isLoading: true,
+    }))
 
     this.validator.validateAll(form)
     .then( async (success) => {
@@ -143,7 +142,7 @@ export default class extends Component {
           if (typeof this.props.afterSubmit === 'function') {
             await this.props.afterSubmit()
           }
-          // this.setState({isLoading: true})
+          this.setState({isLoading: false})
         }
       } else {
         this.setState({ errors })
@@ -294,9 +293,11 @@ export default class extends Component {
             cancel
           </Button>
           <Button type="submit"
-            disabled={this.state.errors.any() || this.props.loading}
+            disabled={this.state.errors.any() || this.state.isLoading}
             id="btn" color="primary" >
-            Submit
+            {this.state.isLoading?
+              <div className="btn-loading"></div>
+           : 'Submit'}
           </Button>{" "}
         </ModalFooter>
       </Form>

@@ -27,6 +27,7 @@ export default class extends Component {
     this.state = {
       errors: this.validator.errors,
       loading: false,
+      isLoading: false,
       credentials: {
         name: ''
       },
@@ -58,7 +59,7 @@ export default class extends Component {
     this.validator.validateAll(formData)
     .then((success) => {
       if (success) {
-        this.setState({isLoading: false}, () => {
+        this.setState({isLoading: true}, () => {
           Http.post(slug, formData)//, { headers: {'content-Type': `multipart/form-data; application/x-www-form-urlencoded; charset=UTF-8` } })//{url: slug, data: formData, config: { headers: {'content-Type': 'multipart/form-data'}}})
           .then((res) => res.data )
           .then( async (res) => {
@@ -87,6 +88,9 @@ export default class extends Component {
           .catch((err) => {
             this.props.dataListRender()
             swal('Ooooops!', 'Internal Server Error', 'error')
+          })
+          .finally(() => {
+            // this.setState({isLoading: false})
           })
         })
       } else {
@@ -207,9 +211,9 @@ export default class extends Component {
           {this.state.form.cancelName}
           </Button>
           <Button
-          disabled={this.state.errors.any() || this.state.loading}
+          disabled={this.state.errors.any() || this.state.isLoading}
           type="submit" id="btn" color="primary" >
-          {this.state.loading?
+          {this.state.isLoading?
             <div className="btn-loading"></div>
          : this.state.form.submitName}
           </Button>{" "}

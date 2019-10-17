@@ -37,13 +37,14 @@ export default class extends PureComponent {
   const {
     selectedItems, handleCheckChange, displayMode,
     onChangePage, selectedPageSize, items, totalPage,
-    currentPage, totalItemCount
+    currentPage, totalItemCount, def
   } = this.props
   return (
     <Row>
       {!items.length > 0
       ? <EmptyRow />
       : items.map((product, i) => <Trow key={i}
+          def={() => def(product)}
           product={product} displayMode={displayMode}
           selectedItems={selectedItems}
           handleCheckChange={handleCheckChange} />
@@ -58,16 +59,7 @@ export default class extends PureComponent {
   }
 }
 
-const def = product => ([
-  {name: product.id, key: true },
-  {link: {to: `customers/${product.id}`}, name: product.firstname, },
-  {link: {to: `customers/${product.id}`}, name: product.lastname, },
-  {name: `${product.country_code} ${product.phone}`, badge: true},
-  {name: `${product.email}`},
-  {name: `${product.state}, ${product.country}`},
-]);
-
-export const Trow = ({displayMode, product, selectedItems, handleCheckChange}) => {
+export const Trow = ({def, displayMode, product, selectedItems, handleCheckChange}) => {
   if (displayMode === "imagelist") {
     return <ImageList selectedItems={selectedItems} handleCheckChange={handleCheckChange}
       products={def(product)} />
@@ -161,7 +153,7 @@ export const List = ({products, handleCheckChange, selectedItems}) => (
         >
           <div className="position-relative">
             <NavLink
-              to={`/customers/${products[0]['name']}`}
+              to={`${products[0]['route']}${products[0]['name']}`}
               className="w-40 w-sm-100"
             >
               <CardImg
@@ -230,7 +222,7 @@ export const List = ({products, handleCheckChange, selectedItems}) => (
           })}
         >
           <NavLink
-            to={`/customers/${products[0]['name']}`}
+            to={`${products[0]['route']}${products[0]['name']}`}
             className="d-flex"
           >
             <img
@@ -244,7 +236,7 @@ export const List = ({products, handleCheckChange, selectedItems}) => (
             {products.map((product, i) => (
               !product.key && (product.link
               ? <NavLink key={i}
-                to={`/customers/${products[0]['name']}`}
+                to={`${product.link.to}`}
                 className="w-5 w-sm-100"
               >
                 <p className="list-item-heading mb-1 truncate">
