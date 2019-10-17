@@ -1,36 +1,30 @@
 import React, { Component, Fragment } from "react";
 import { injectIntl} from 'react-intl';
 import {
-  Row, Card, CustomInput, Button, Modal, ModalHeader, ModalBody,
-  ModalFooter, ButtonDropdown, UncontrolledDropdown, Collapse, DropdownMenu,
-  DropdownToggle, DropdownItem, Input, CardBody, CardSubtitle, CardImg, Label,
-  CardText, Badge, Col
+  Row, Button, Modal, ModalHeader,
+  ButtonDropdown, DropdownMenu,
+  DropdownToggle, DropdownItem, Input, Label,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
-// import Select from "react-select";
-// import Select from "react-select-search";
-import CustomSelectInput from "../../Components/CustomSelectInput";
 import classnames from "classnames";
 
 import { Instructions } from '../../components/common/UI';
-import Trow from '../../Components/List/Trow';
+import TableFilter from '../../components/List/TableFilter';
+
+import Table from '../../Components/List/Table';
 
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
 
-import Pagination from "../../Components/List/Pagination";
 import mouseTrap from "react-mousetrap";
 
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenu, MenuItem } from "react-contextmenu";
 function collect(props) {
   return { data: props.data };
 }
 
-// import createNotification from '../../Components/ReactNotifications/alerts';
 import {EmptyRow} from '../../Components/empty';
 import {_token} from '../../Constants/defaultValues';
 
-// import { getCountriesCode, selectable } from '../../helpers/data'
 import { fetchCustomers, deleteCustomers } from '../../helpers/ajax/customer'
 
 import CustomerForm from './components/CustomerForm'
@@ -107,35 +101,33 @@ class DataListLayout extends Component {
     }
 
     // change section
-    changeOrderBy = (column) => {
-      this.setState(
-        {
-          selectedOrderOption: this.state.orderOptions.find(
-            x => x.column === column
-          )
-        },
-        () => this.dataListRender()
+    changeOrderBy = async (column) => {
+      await this.setState({
+        selectedOrderOption: this.state.orderOptions.find(
+          x => x.column === column
+        )},
       );
+      this.dataListRender()
     }
-    changePageSize(size) {
-      this.setState(
-        {
-          selectedPageSize: size,
-          currentPage: 1
-        },
-        () => this.dataListRender()
-      );
+
+    changePageSize = async (size) => {
+      await this.setState({
+        selectedPageSize: size,
+        currentPage: 1
+      });
+      this.dataListRender()
     }
+
     changeDisplayMode = (mode) => {
       this.setState({
         displayMode: mode
       });
       return false;
     }
-    onChangePage = (page) => {
-      this.setState({ currentPage: page },
-        () => this.dataListRender()
-      );
+
+    onChangePage = async (page) => {
+      await this.setState({ currentPage: page });
+      this.dataListRender()
     }
 
     // key event section
@@ -143,12 +135,9 @@ class DataListLayout extends Component {
       this.setState({ search: e.target.value.toLowerCase() })
     }
 
-    handleKeyPress(e) {
+    handleKeyPress = (e) => {
       if (e.key === "Enter") {
-        // this.setState({ search: e.target.value.toLowerCase() },
-          // () =>
           this.dataListRender()
-        // );
       }
     }
 
@@ -279,7 +268,15 @@ class DataListLayout extends Component {
       const startIndex= (this.state.currentPage-1)*this.state.selectedPageSize
       const endIndex= (this.state.currentPage)*this.state.selectedPageSize
       const {messages} = this.props.intl;
-      const {errors, currentPage, totalItemCount, totalPage} = this.state;
+      const {errors, currentPage, totalItemCount, totalPage,
+        displayOptionsIsOpen, displayMode, selectedOrderOption, orderOptions, search,
+        selectedPageSize, pageSizes,
+      } = this.state;
+
+      const { toggleDisplayOptions, changeDisplayMode, handleSearchChange,
+        handleKeyPress, changeOrderBy, changePageSize
+      } = this
+
       return (
         !this.state.isLoading?
           <div className="loading"></div>
@@ -365,125 +362,36 @@ class DataListLayout extends Component {
 
                   <BreadcrumbItems match={this.props.match} />
                 </div>
-
-                <div className="mb-2">
-                  <Button
-                    color="empty"
-                    className="pt-0 pl-0 d-inline-block d-md-none"
-                    onClick={this.toggleDisplayOptions}
-                  >
-                    Display Options{" "}
-                    <i className="simple-icon-arrow-down align-middle" />
-                  </Button>
-                  <Collapse
-                    isOpen={this.state.displayOptionsIsOpen}
-                    className="d-md-block"
-                    id="displayOptions"
-                  >
-                   <span className="mr-3 mb-2 d-inline-block float-md-left">
-                    <a
-                      className={`mr-2 view-icon ${
-                        this.state.displayMode === "list" ? "active" : ""
-                        }`}
-                      onClick={() => this.changeDisplayMode("list")}
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 19">
-                    <path className="view-icon-svg" d="M17.5,3H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z" />
-                    <path className="view-icon-svg" d="M17.5,10H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z" />
-                    <path className="view-icon-svg" d="M17.5,17H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z" /></svg>
-                    </a>
-                    <a
-                      className={`mr-2 view-icon ${
-                        this.state.displayMode === "thumblist" ? "active" : ""
-                        }`}
-                      onClick={() => this.changeDisplayMode("thumblist")}
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 19">
-                    <path className="view-icon-svg" d="M17.5,3H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z" />
-                    <path className="view-icon-svg" d="M3,2V3H1V2H3m.12-1H.88A.87.87,0,0,0,0,1.88V3.12A.87.87,0,0,0,.88,4H3.12A.87.87,0,0,0,4,3.12V1.88A.87.87,0,0,0,3.12,1Z" />
-                    <path className="view-icon-svg" d="M3,9v1H1V9H3m.12-1H.88A.87.87,0,0,0,0,8.88v1.24A.87.87,0,0,0,.88,11H3.12A.87.87,0,0,0,4,10.12V8.88A.87.87,0,0,0,3.12,8Z" />
-                    <path className="view-icon-svg" d="M3,16v1H1V16H3m.12-1H.88a.87.87,0,0,0-.88.88v1.24A.87.87,0,0,0,.88,18H3.12A.87.87,0,0,0,4,17.12V15.88A.87.87,0,0,0,3.12,15Z" />
-                    <path className="view-icon-svg" d="M17.5,10H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z" />
-                    <path className="view-icon-svg" d="M17.5,17H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z" /></svg>
-                    </a>
-                    <a
-                      className={`mr-2 view-icon ${
-                        this.state.displayMode === "imagelist" ? "active" : ""
-                        }`}
-                      onClick={() => this.changeDisplayMode("imagelist")}
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 19">
-                    <path className="view-icon-svg" d="M7,2V8H1V2H7m.12-1H.88A.87.87,0,0,0,0,1.88V8.12A.87.87,0,0,0,.88,9H7.12A.87.87,0,0,0,8,8.12V1.88A.87.87,0,0,0,7.12,1Z" />
-                    <path className="view-icon-svg" d="M17,2V8H11V2h6m.12-1H10.88a.87.87,0,0,0-.88.88V8.12a.87.87,0,0,0,.88.88h6.24A.87.87,0,0,0,18,8.12V1.88A.87.87,0,0,0,17.12,1Z" />
-                    <path className="view-icon-svg" d="M7,12v6H1V12H7m.12-1H.88a.87.87,0,0,0-.88.88v6.24A.87.87,0,0,0,.88,19H7.12A.87.87,0,0,0,8,18.12V11.88A.87.87,0,0,0,7.12,11Z" />
-                    <path className="view-icon-svg" d="M17,12v6H11V12h6m.12-1H10.88a.87.87,0,0,0-.88.88v6.24a.87.87,0,0,0,.88.88h6.24a.87.87,0,0,0,.88-.88V11.88a.87.87,0,0,0-.88-.88Z" /></svg>
-                    </a>
-                  </span>
-
-                    <div className="d-block d-md-inline-block">
-                      <UncontrolledDropdown className="mr-1 float-md-left btn-group mb-1">
-                        <DropdownToggle caret color="outline-dark" size="xs">
-                          Order By
-                          {this.state.selectedOrderOption.label}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          {this.state.orderOptions.map((order, index) => {
-                            return (
-                              <DropdownItem
-                                key={index}
-                                onClick={() => this.changeOrderBy(order.column)}
-                              >
-                                {order.label}
-                              </DropdownItem>
-                            );
-                          })}
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                      <div className="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                        <input
-                          type="text"
-                          name="keyword"
-                          value={this.state.search}
-                          id="search"
-                          onChange={(e) => this.handleSearchChange(e)}
-                          placeholder={messages["menu.search"]}
-                          onKeyPress={e => this.handleKeyPress(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="float-md-right">
-                      <span className="text-muted text-small mr-1">{`${startIndex}-${endIndex} of ${
-                        this.state.totalItemCount
-                      } `}</span>
-                      <UncontrolledDropdown className="d-inline-block">
-                        <DropdownToggle caret color="outline-dark" size="xs">
-                          {this.state.selectedPageSize}
-                        </DropdownToggle>
-                        <DropdownMenu right>
-                          {this.state.pageSizes.map((size, index) => {
-                            return (
-                              <DropdownItem
-                                key={index}
-                                onClick={() => this.changePageSize(size)}
-                              >
-                                {size}
-                              </DropdownItem>
-                            );
-                          })}
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </div>
-                  </Collapse>
-                </div>
+                <TableFilter
+                  toggleDisplayOptions={toggleDisplayOptions}
+                  displayOptionsIsOpen={displayOptionsIsOpen}
+                  changeDisplayMode={changeDisplayMode}
+                  displayMode={displayMode}
+                  selectedOrderOption={selectedOrderOption}
+                  orderOptions={orderOptions}
+                  changeOrderBy={changeOrderBy}
+                  search={search}
+                  handleSearchChange={handleSearchChange}
+                  handleKeyPress={handleKeyPress}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  messages={messages}
+                  totalItemCount={totalItemCount}
+                  selectedPageSize={selectedPageSize}
+                  pageSizes={pageSizes}
+                  changePageSize={changePageSize}
+                />
                 <Separator className="mb-5" />
               </Colxx>
             </Row>
-            <Trow
+            <Table
+              fields={['firstname', 'lastname', 'country_code phone ']}
               selectedItems={this.state.selectedItems}
               handleCheckChange={this.handleCheckChange}
               displayMode={this.state.displayMode}
               onChangePage={this.onChangePage}
               items={this.state.items}
+              renderItem={({product}) => {}}
               selectedPageSize={this.state.selectedPageSize}
               currentPage={currentPage}
               totalItemCount={totalItemCount}

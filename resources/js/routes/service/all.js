@@ -5,9 +5,9 @@ import mouseTrap from "react-mousetrap";
 import Select from "react-select";
 import "react-select-search/style.css";
 import classnames from "classnames";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import { Row, Card, CustomInput, Button, Modal, ModalHeader, ModalBody,
-ModalFooter, ButtonDropdown, UncontrolledDropdown, Collapse, DropdownMenu,
+import { ContextMenuTrigger } from "react-contextmenu";
+import { Row, Card, CustomInput, Button, Modal, ModalHeader,
+ButtonDropdown, UncontrolledDropdown, Collapse, DropdownMenu,
 DropdownToggle, DropdownItem, Input, CardBody, CardSubtitle, CardImg, Label,
 CardText, Badge, Form, FormGroup, FormText, Col } from "reactstrap";
 

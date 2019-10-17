@@ -28,11 +28,11 @@ export default class DataTablePagination extends PureComponent {
     };
   }
 
-  sttic getDerivedStatesFromProps = (nextProps) => {
+  static getDerivedStateFromProps = (nextProps) => {
     this.setState({ page: nextProps.page });
   }
 
-  getSafePage(page) {
+  getSafePage = (page) => {
     if (Number.isNaN(page)) {
       page = this.props.page;
     }
