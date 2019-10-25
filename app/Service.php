@@ -30,7 +30,7 @@ class Service extends Model
   //   return $this->hasMany(CustomerServiceMeta::class);
   // }
   public function service_metas(){
-    return $this->belongsTo(ServiceMeta::class);
+    return $this->hasMany(ServiceMeta::class);
   }
   public function services(){
     return $this->hasMany(Service::class, 'parent');

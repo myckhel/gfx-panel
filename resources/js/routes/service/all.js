@@ -31,7 +31,7 @@ class All extends PureComponent {
     this.state = {
       // errors: this.validator.errors,
       items: [],
-      visible: true,
+      // visible: true,
       formState: 'service',
       selectedService: {},
       // serviceTypeRow: [],
@@ -57,9 +57,9 @@ class All extends PureComponent {
     };
   }
 
-  onDismiss = () => {
-    this.setState({ visible: false });
-  }
+  // onDismiss = () => {
+  //   this.setState({ visible: false });
+  // }
 
   componentDidMount = () => {
     this.props.bindShortcut(["ctrl+a", "command+a"], () =>
@@ -76,10 +76,10 @@ class All extends PureComponent {
   }
 
   toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen,
-      formState: 'service'
-    });
+    this.setState(prev => ({
+      modalOpen: !prev.modalOpen,
+      formState: prev.modalOpen ? 'service' : prev.formState
+    }));
   }
 
   toggleDisplayOptions = () => {
@@ -282,14 +282,17 @@ class All extends PureComponent {
     const serviceType = this.state.serviceTypeRow;
     const { formState, selectedService, errors, currentPage, totalItemCount, totalPage,
       displayOptionsIsOpen, displayMode, selectedOrderOption, orderOptions, search,
-      selectedPageSize, pageSizes, } = this.state
+      selectedPageSize, pageSizes, isLoading} = this.state
     const { toggleDisplayOptions, changeDisplayMode, handleSearchChange,
       handleKeyPress, changeOrderBy, changePageSize
     } = this
     return (
-      !this.state.isLoading?
+      <Fragment>
+      {!isLoading &&
         <div className="loading"></div>
-     :
+      }
+
+      {isLoading &&
       <Fragment>
         <Row>
           <Colxx xxs="12">
@@ -409,6 +412,7 @@ class All extends PureComponent {
           totalPage={totalPage}
           dataListRender={this.dataListRender}
         />
+      </Fragment>}
       </Fragment>
     );
   }

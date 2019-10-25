@@ -7,10 +7,10 @@ use App\CustomerServiceMeta;
 
 class ServiceMeta extends Model
 {
-  protected $fillable = [ 'service_id', 'name', 'price' ];
+  protected $fillable = [ 'service_id', 'name', 'rule' ];
   //
   public function services(){
-    return $this->hasMany(Service::class, 'service_metas_id');
+    return $this->belongsTo(Service::class, 'service_metas_id');
   }
   public function customer_service_metas(){
     return $this->hasMany(CustomerServiceMetaService::class);

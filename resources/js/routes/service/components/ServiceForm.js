@@ -14,7 +14,8 @@ import {toast} from 'react-toastify'
 import Http from '../../../util/Http'
 
 import Service from '../Service';
-import ServiceType from '../ServiceType';
+import ServiceProp from '../ServiceProp';
+import ServiceProps from './ServiceProps';
 
 export default class extends Component {
   constructor(props) {
@@ -41,7 +42,6 @@ export default class extends Component {
         cancelName: 'Cancel',
         state: props.formState
       },
-      serviceTypeRow: [<ServiceType remove={this.removeServiceTypeRow} key={0} index={0} />],
     }
   }
 
@@ -55,6 +55,8 @@ export default class extends Component {
     const slug = this.state.form.state === 'type' ? '/api/service-metas' : '/api/services';
     const callback = this.state.form.state === 'type' ? false : this.toggleFormState;
 
+    console.log(formData);
+    // return
     this.setState(prev => ({
       errors: removeErrors(prev.errors)
     }))
@@ -67,7 +69,7 @@ export default class extends Component {
           .then((res) => res.data )
           .then( async (res) => {
             if (res.status) {
-              $(form).trigger('reset')
+              // $(form).trigger('reset')
 
               if (this.state.form.state === 'service') {
                 const service = {label: res.service.name, value: res.service.id};
@@ -112,33 +114,6 @@ export default class extends Component {
       this.setState(prev => ({credentials: {...prev.credentials, [name]: value}}) )
   }
 
-
-  addServiceTypeRow = () => {
-    this.setState(prev => {
-      let last = 0;
-      prev.serviceTypeRow.map( (v, key) => {
-        last = key
-      })
-      let row = [...prev.serviceTypeRow];
-      row[last+1] = <ServiceType remove={this.removeServiceTypeRow}
-        key={last+1} index={last+1} />
-
-      return { serviceTypeRow: row }
-    })
-  }
-
-  removeServiceTypeRow = (key) => {
-    this.setState((prev) => {
-      let row = [];
-      prev.serviceTypeRow.map((v, i) => {
-        if (i !== key) {
-          row[i] = v;
-        }
-      });
-      return {serviceTypeRow: row}
-    })
-  }
-
   selectService = (service) => {
     this.props.selectService(service)
   }
@@ -180,29 +155,11 @@ export default class extends Component {
               handleInputChange={this.handleInputChange}
               errors={errors}
             />
-          : <Fragment>
-            <Row id="add-service-type-row">
-              <Col sm="8" className="col-sm-offset-2">
-                <Select
-                  cacheOptions
-                  defaultOptions={services}
-                  onChange={selectService}
-                  defaultValue={selectedService}
-                  name='service_id'
-                  loadOptions={getServices}
-                />
-              </Col>
-            </Row>
-            {serviceType}
-            <Row id="add-service-type-row">
-              <Col xs="8" className="col-xs-offset-2">
-                <Button
-                  color="info" onClick={this.addServiceTypeRow}
-                > <span aria-hidden > Add More Service Type</span>
-                </Button>
-              </Col>
-            </Row>
-          </Fragment>}
+          : <ServiceProps services={services}
+              selectService={selectService}
+              selectedService={selectedService}
+              getServices={getServices} />
+          }
         </ModalBody>
         <ModalFooter>
           <Button
@@ -224,3 +181,27 @@ export default class extends Component {
     )
   }
 }
+
+/*<Fragment>
+  <Row id="add-service-type-row">
+    <Col sm="8" className="col-sm-offset-2">
+      <Select
+        cacheOptions
+        defaultOptions={services}
+        onChange={selectService}
+        defaultValue={selectedService}
+        name='service_id'
+        loadOptions={getServices}
+      />
+    </Col>
+  </Row>
+  {serviceType}
+  <Row id="add-service-type-row">
+    <Col xs="8" className="col-xs-offset-2">
+      <Button
+        color="info" onClick={this.addServiceTypeRow}
+      > <span aria-hidden > Add More Service Type</span>
+      </Button>
+    </Col>
+  </Row>
+</Fragment>*/
