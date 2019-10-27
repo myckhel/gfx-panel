@@ -6,6 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
+  public function getProfile(){
+    $this->loadCount([
+      // 'services',
+      'jobs as jobs_completed' => function($q){
+        $q->where('status', 'completed');
+      },
+      'jobs as jobs_pending' => function($q){
+        $q->where('status', 'pending');
+      },
+      'jobs as jobs_on_hold' => function($q){
+        $q->where('status', 'on hold');
+      },
+      'jobs as jobs_failed' => function($q){
+        $q->where('status', 'failed');
+      }
+    ])->load(['services', 'service_metas']);
+    // $this->completed_jobs_count = Job::countCompletedCustomerService($this);
+    // $this->completed_payments_count = Payment::countCompletedCustomerService($this);
+    // $this->credentialServices = $this->credentialsWithServices();
+    return $this;
+  }
+
   protected $fillable = [ 'name', 'price', 'charge', 'parent' ];
 
   public static function addNew($request){
@@ -44,7 +66,8 @@ class Service extends Model
   public function customer_service(){
     return $this->belongsTo(CustomerService::class);
   }
-  // public function jobs(){
-  //   return $this->hasMany(Job::class);
-  // }
+
+  public function jobs(){
+    return $this->hasManyThrough(Job::class, CustomerService::class);
+  }
 }

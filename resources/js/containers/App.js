@@ -5,6 +5,8 @@ import { IntlProvider } from 'react-intl';
 import { NotificationContainer } from "../Components/ReactNotifications";
 import { defaultStartPath } from '../Constants/defaultValues'
 
+import { store } from '../Redux/store';
+import { checkAuth } from '../Redux/actions';
 
 import AppLocale from '../lang';
 import MainRoute from '../Routes';
@@ -16,14 +18,6 @@ import forgotPassword from '../Routes/forgot-password'
 import '../Assets/css/vendor/bootstrap.min.css'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import '../Assets/css/sass/themes/gogo.light.purple.scss';
-/*
-color options :
-	 'light.purple'		'dark.purple'
-	 'light.blue'		'dark.blue'
-	 'light.green'		'dark.green'
-	 'light.orange'		'dark.orange'
-	 'light.red'		'dark.red'
-*/
 
 const InitialPath = ({ component: Component,  authUser,...rest }) =>{
 	return (<Route
@@ -54,6 +48,12 @@ const UnAuthRoute = ({ component: Component,  authUser,...rest }) =>{
 	/>);}
 
 class App extends PureComponent {
+	constructor(props){
+		super(props)
+
+		props.checkAuth()
+	}
+
 	render() {
 		const { location, match, authenticated, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
@@ -98,5 +98,5 @@ const mapStateToProps = ({ authUser, settings }) => {
 	return { authenticated, locale };
 };
 
-export default connect(mapStateToProps,{  })(App);
+export default connect(mapStateToProps,{ checkAuth })(App);
 // || location.pathname === '/app' || location.pathname === '/app/'

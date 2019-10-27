@@ -98,26 +98,25 @@ class ServiceMetaController extends Controller
       $errors = '';
       $status = true;
       $serviceMetas = [];
-      // $size = count($request->name);
+      $creates = [];
       foreach ($names as $i => $name) {
-      // for ($i=0; $i < $size; $i++) {
         $rule = "rule_$i";
         $rules = $request->$rule;
-        // foreach ($rules as $key => $rule) {
         $ruleString = $this->ruleToString($rules, $i, $request);
-        // }
-        try {
-          $serviceMeta = $service->service_metas()->create([
-            'name' => $name,
-            'rule' => $ruleString,
-          ]);
-          $serviceMetas[] = $serviceMeta;
-        } catch (\Exception $e) {
-          if (!$request->service_id) {
-            $status = false;
-          }
-          $errors .=  $e->getMessage().'<br />';
+
+        $creates[] = [
+          'name' => $name,
+          'rule' => $ruleString,
+        ];
+      }
+      try {
+        $serviceMeta = $service->service_metas()->createMany($creates);
+        $serviceMetas[] = $serviceMeta;
+      } catch (\Exception $e) {
+        if (!$request->service_id) {
+          $status = false;
         }
+        $errors .=  $e->getMessage().'<br />';
       }
 
         return ['status' => $status, 'errors' => $errors, 'serviceMetas' => $serviceMetas];

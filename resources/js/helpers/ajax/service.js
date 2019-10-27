@@ -1,4 +1,5 @@
 import Http from '../../util/Http'
+import request from './request'
 
 export const fetchServices = (query) => {
   return new Promise(async (resolve, reject) => {
@@ -32,16 +33,8 @@ export const addServices = (data) => {
     }
   })
 }
-export const viewServices = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const res = await Http.get(`services/${id}`)
-      resolve(res)
-    } catch (e) {
-      reject(e)
-    }
-  })
-}
+
+export const viewService = (id) => request(`services/${id}`)
 
 export const searchServices = (query) => {
   return new Promise(async (resolve, reject) => {

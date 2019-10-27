@@ -3,12 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import App from './containers/App';
 
 import { store } from './Redux/store';
-import { checkAuth } from './Redux/actions';
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -17,15 +16,11 @@ toast.configure({
 	draggable: false,
 })
 
-store.dispatch(checkAuth())
-
 const MainApp = () => (
 	<Provider store={store}>
-			<Router>
-				<Switch>
-					<Route path="/" component={App} />
-				</Switch>
-			</Router>
+		<Router>
+			<Route path="/" component={App} />
+		</Router>
 	</Provider>
 );
 

@@ -41,10 +41,15 @@ module.exports = {
   "menu.todo": "Todo",
   "menu.search": "Search",
   "menu.customers": "Customers",
+  "menu.services": "Services",
+  "menu.services.list": "Services List",
 
   /* 04.Error Page */
   "layouts.error-title": "Ooops... looks like an error occurred!",
   "layouts.error-code": "Error code",
   "layouts.go-back-home": "GO BACK HOME",
+
+  /* 05 general */
+  "sub-categories": "Sub Categories",
 
 };

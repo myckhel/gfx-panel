@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import All from './all';
-// import View from './view';
+import View from './view';
 
 export default ({ match }) => {
   return (

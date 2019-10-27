@@ -3,17 +3,12 @@ import { injectIntl} from 'react-intl';
 import mouseTrap from "react-mousetrap";
 import Select from "react-select";
 // import "react-select-search/style.css";
-import classnames from "classnames";
 import { Row, Button, Modal, ModalHeader,
 ButtonDropdown, DropdownMenu,
 DropdownToggle, DropdownItem, Input, Label } from "reactstrap";
 
 import { Colxx, Separator } from "../../Components/CustomBootstrap";
 import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
-
-function collect(props) {
-  return { data: props.data };
-}
 
 import ServiceForm from './components/ServiceForm';
 import TableFilter from '../../components/List/TableFilter';
