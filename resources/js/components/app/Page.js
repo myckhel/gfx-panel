@@ -10,6 +10,8 @@ export { Colxx, Separator }
 export { Row as View, Button, Input, Label}
 export { Table, Tr, Td, THead, TBody, TFoot, Title } from "../CustomBootstrap";
 
+import { Redirect } from 'react-router-dom';
+
 export const Text = (props) => <p {...props}>{props.children}</p>
 export const IText = (props) => <IntlMessages id={props.id} />
 
@@ -26,21 +28,30 @@ class Page extends PureComponent {
 
   Template = ({children, pageName, right}) => {
     const {isLoading} = this.state
+    if (this.state.status === 404) {
+      return <Redirect to={{
+        pathname: '/error',
+        state: { from: this.props.location }
+      }} />
+    }
+
     return (
       <Row>
         <Colxx xxs="12">
           <BreadcrumbContainer
-            heading={pageName}
+            heading={pageName || 'Page'}
             match={this.props.match}
           />
 
           <Row className="float-sm-right">
-            {right()}
+            {right && right()}
           </Row>
         </Colxx>
         <Colxx xxs="12"><Separator className="mb-5" /></Colxx>
+        <Colxx xxs="12">
         {isLoading && <div className="loading"></div>}
         {!isLoading && children}
+        </Colxx>
       </Row>
     )
   }

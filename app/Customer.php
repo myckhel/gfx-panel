@@ -33,18 +33,25 @@ class Customer extends Model
     return self::where($field, $request->$field)->first();
   }
 
-  // relationship
-  public function customer_services(){
-    return $this->hasMany(CustomerService::class);
-  }
-  public function customer_service_metas(){
-    return $this->hasMany(CustomerServiceMeta::class);
-  }
-
   public function getProfile(){
-    $this->withCount(['customer_services', 'customer_service_metas']);
-    $this->completed_jobs_count = Job::countCompletedCustomerService($this);
-    $this->completed_payments_count = Payment::countCompletedCustomerService($this);
+    $this->loadCount([
+      'customer_services', 'customer_service_metas',
+      // 'services',
+      'jobs as jobs_completed' => function($q){
+        $q->where('status', 'completed');
+      },
+      'jobs as jobs_pending' => function($q){
+        $q->where('status', 'pending');
+      },
+      'jobs as jobs_on_hold' => function($q){
+        $q->where('status', 'on hold');
+      },
+      'jobs as jobs_failed' => function($q){
+        $q->where('status', 'failed');
+      }
+    ]);
+    // $this->completed_jobs_count = Job::countCompletedCustomerService($this);
+    // $this->completed_payments_count = Payment::countCompletedCustomerService($this);
     $this->credentialServices = $this->credentialsWithServices();
     return $this;
   }
@@ -53,10 +60,10 @@ class Customer extends Model
     $services = [];
     $credentials = CustomerServiceMeta::getCredantials($this);
     if ($credentials) {
-      $metas = ServiceMeta::whereIn('id', $credentials->pluck('id'))->with('services')->get();
+      $metas = ServiceMeta::with('services')->whereIn('id', $credentials->pluck('id'))->with('services')->get();
       if ($metas) {
         $metas->map(function($meta, $i) use(&$services, $credentials) {
-          $service = $meta->services->first();
+          $service = $meta->services;
           if ($service) {
             $services[] = [
               $service->name => []
@@ -69,5 +76,16 @@ class Customer extends Model
       }
     }
     return $services;
+  }
+
+  // relationship
+  public function customer_services(){
+    return $this->hasMany(CustomerService::class);
+  }
+  public function customer_service_metas(){
+    return $this->hasMany(CustomerServiceMeta::class);
+  }
+  public function jobs(){
+    return $this->hasManyThrough(Job::class, CustomerService::class);
   }
 }

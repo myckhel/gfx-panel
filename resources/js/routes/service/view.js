@@ -1,15 +1,15 @@
 import React from 'react';
-import Page, { View, Button, Input, Label, Colxx, Text,
-	Table, Tr, Td, THead, TBody, TFoot, Title, IText
+
+import ViewAble from '../../Components/app/ViewAble'
+import { View, Button, Colxx, Text,
+	IText
 } from '../../Components/app/Page'
 import { injectIntl} from 'react-intl';
 import mouseTrap from "react-mousetrap";
 import classnames from "classnames";
 import { viewService } from '../../helpers/ajax/service'
 
-import {Badge} from "reactstrap";
-
-class ViewService extends Page {
+class ViewService extends ViewAble {
 	constructor(props) {
 		super(props);
 
@@ -19,70 +19,12 @@ class ViewService extends Page {
 		}
 	}
 
-	componentDidMount = async () => {
-    try {
-			const id = this.props.match.params.id
-    	const service = await viewService(id)
-			this.setState({service})
-    } catch (e) {
-			console.log({e});
-    } finally {
-			this.setState({isLoading: false})
-    }
+	name="service"
+	viewAsync = (id) => viewService(id)
+
+	componentDidMount = () => {
+    this.initAsync()
   }
-
-	right = () => (
-		<View className="col">
-			<Button color="danger"
-			size="lg"
-			className="top-right-button col-md-6"
-			onClick={this.function} >Delete</Button>
-			<Button color="warning"
-			size="lg"
-			className="top-right-button col-md-6"
-			onClick={this.function} >Modify</Button>
-		</View>
-	)
-
-	TableActions = ({data, onView}) => (
-		<View className="row">
-			<Button color="danger"
-					size="xs" className="col-md-4"
-					onClick={this.function}>Delete</Button>
-			<Button color="warning"
-					size="xs" className="col-md-4"
-					onClick={this.function}>Edit</Button>
-			<Button color="success"
-					size="xs" className="col-md-4"
-					onClick={onView}>View</Button>
-		</View>
-	)
-
-	Table = ({data, config, title}) => (
-		<View className="col-md-6 text-center">
-			<Title>{title}</Title>
-			<Table>
-				<THead>
-					<Tr>
-						{config.heads.map((head, i) => <Td key={i}>{head}</Td>)}
-					</Tr>
-				</THead>
-				<TBody>
-					{data && data.map((dt) =>
-					<Tr key={`${dt[config.key]}`}>
-						{config.fields.map((field, i) =>
-							<Td key={i}>{typeof field === 'function' ? field(dt) : dt[field]}</Td>
-						)}
-					</Tr>)}
-				</TBody>
-			</Table>
-		</View>
-	)
-
-	Status = ({status, hd, bg, head}) => <Colxx  className={classnames({[`bg-${bg}`]: !!bg})} sm={3}>
-			{hd ? <Text className="text-center text-light text-large">{head}</Text>
-			: <Text className="text-center text-light text-large">{status}</Text>}
-		</Colxx>
 
 	render = () => {
 		const { service } = this.state
@@ -128,15 +70,3 @@ class ViewService extends Page {
 }
 
 export default injectIntl(mouseTrap(ViewService))
-
-// export default class View extends PureComponent {
-// 	constructor(props) {
-// 		super(props);
-// 	}
-//
-// 	render() {
-// 		return (
-// 			<div></div>
-// 		);
-// 	}
-// }
