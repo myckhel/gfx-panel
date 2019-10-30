@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from "react";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
-import { Colxx } from "../../Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
 import { connect } from "react-redux";
-import { registerUser } from "../../Redux/actions";
+import { registerUser } from "../../redux/actions";
 import ReeValidate from 'ree-validate'
 
 class RegisterLayout extends Component {

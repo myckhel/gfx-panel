@@ -1,9 +1,9 @@
 import React from 'react';
 
-import ViewAble from '../../Components/app/ViewAble'
+import ViewAble from '../../components/app/ViewAble'
 import { View, Button, Colxx, Text,
 	IText
-} from '../../Components/app/Page'
+} from '../../components/app/Page'
 import { injectIntl} from 'react-intl';
 import mouseTrap from "react-mousetrap";
 import classnames from "classnames";

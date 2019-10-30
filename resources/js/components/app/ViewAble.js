@@ -1,7 +1,7 @@
 import React from 'react';
 import Page, { View, Button, Input, Label, Colxx, Text,
 	Table, Tr, Td, THead, TBody, Title
-} from '../../Components/app/Page'
+} from '../../components/app/Page'
 import classnames from "classnames";
 
 class ViewAble extends Page {

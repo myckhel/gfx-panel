@@ -4,9 +4,9 @@ import {
 	MENU_CONTAINER_ADD_CLASSNAME,
 	MENU_CLICK_MOBILE_MENU,
 	MENU_CHANGE_DEFAULT_CLASSES
-} from '../../Constants/actionTypes';
+} from '../../constants/actionTypes';
 
-import {defaultMenuType, subHiddenBreakpoint, menuHiddenBreakpoint } from '../../Constants/defaultValues'
+import {defaultMenuType, subHiddenBreakpoint, menuHiddenBreakpoint } from '../../constants/defaultValues'
 
 
 const INIT_STATE = {

@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import App from './containers/App';
 
-import { store } from './Redux/store';
+import { store } from './redux/store';
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 

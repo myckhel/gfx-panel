@@ -1,9 +1,9 @@
 import React, { PureComponent, Fragment } from "react";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
-import { Colxx } from "../../Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
 class ForgotPasswordLayout extends PureComponent {
   constructor(props) {

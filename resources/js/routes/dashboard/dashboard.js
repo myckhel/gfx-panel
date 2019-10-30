@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import {
   Row,
   Card,
@@ -15,20 +15,20 @@ import {
   Form,
   Input
 } from "reactstrap";
-import BreadcrumbContainer from "../../Components/BreadcrumbContainer";
-import { Colxx, Separator } from "../../Components/CustomBootstrap";
+import BreadcrumbContainer from "../../components/BreadcrumbContainer";
+import { Colxx, Separator } from "../../components/CustomBootstrap";
 import { NavLink } from "react-router-dom";
-import ReactSiemaCarousel from "../../Components/ReactSiema/ReactSiemaCarousel";
+import ReactSiemaCarousel from "../../components/ReactSiema/ReactSiemaCarousel";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ReactTable from "react-table";
-import DataTablePagination from "../../Components/DataTables/pagination";
+import DataTablePagination from "../../components/DataTables/pagination";
 import CircularProgressbar from "react-circular-progressbar";
 import Select from "react-select";
-import CustomSelectInput from "../../Components/CustomSelectInput";
+import CustomSelectInput from "../../components/CustomSelectInput";
 
-import commentsData from "../../Data/comments.json";
-import productsData from "../../Data/products.json";
-import cakeData from "../../Data/dashboard.cakes.json";
+import commentsData from "../../data/comments.json";
+import productsData from "../../data/products.json";
+import cakeData from "../../data/dashboard.cakes.json";
 
 const comments = commentsData.data;
 const dataTableData = productsData.data;

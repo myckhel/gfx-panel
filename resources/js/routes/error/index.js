@@ -1,9 +1,9 @@
 import React, { PureComponent, Fragment } from "react";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import { Row, Card, CardTitle, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
-import { Colxx } from "../../Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
 class Error404 extends PureComponent {
   constructor(props) {

@@ -10,10 +10,10 @@ import classnames from "classnames";
 import { Instructions } from '../../components/common/UI';
 import TableFilter from '../../components/List/TableFilter';
 
-import Table from '../../Components/List/Table';
+import Table from '../../components/List/Table';
 
-import { Colxx, Separator } from "../../Components/CustomBootstrap";
-import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
+import { Colxx, Separator } from "../../components/CustomBootstrap";
+import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
 
 import mouseTrap from "react-mousetrap";
 

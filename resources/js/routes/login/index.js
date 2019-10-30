@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from "react";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import ReeValidate from 'ree-validate'
 
-import { Colxx } from "../../Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
 import { connect } from "react-redux";
-import { loginUser } from "../../Redux/actions";
+import { loginUser } from "../../redux/actions";
 
 class LoginLayout extends Component {
   constructor(props) {

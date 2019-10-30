@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import { Row, Card, CardBody, CardTitle, Button, Jumbotron } from "reactstrap";
-import { Colxx, Separator } from "../../Components/CustomBootstrap";
-import BreadcrumbContainer from "../../Components/BreadcrumbContainer";
+import { Colxx, Separator } from "../../components/CustomBootstrap";
+import BreadcrumbContainer from "../../components/BreadcrumbContainer";
 
 export default class extends PureComponent {
   constructor(props){

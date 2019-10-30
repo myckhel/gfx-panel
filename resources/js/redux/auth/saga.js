@@ -6,7 +6,7 @@ import {
     REGISTER_USER,
     LOGOUT_USER,
     CHECK_AUTH
-} from '../../Constants/actionTypes';
+} from '../../constants/actionTypes';
 
 import {auth} from '../../helpers'
 

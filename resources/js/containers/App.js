@@ -2,22 +2,22 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import { NotificationContainer } from "../Components/ReactNotifications";
-import { defaultStartPath } from '../Constants/defaultValues'
+import { NotificationContainer } from "../components/ReactNotifications";
+import { defaultStartPath } from '../constants/defaultValues'
 
-import { store } from '../Redux/store';
-import { checkAuth } from '../Redux/actions';
+import { store } from '../redux/store';
+import { checkAuth } from '../redux/actions';
 
 import AppLocale from '../lang';
-import MainRoute from '../Routes';
-import login from '../Routes/login'
-import register from '../Routes/register'
-import error from '../Routes/error'
-import forgotPassword from '../Routes/forgot-password'
+import MainRoute from '../routes';
+import login from '../routes/login'
+import register from '../routes/register'
+import error from '../routes/error'
+import forgotPassword from '../routes/forgot-password'
 
-import '../Assets/css/vendor/bootstrap.min.css'
+import '../assets/css/vendor/bootstrap.min.css'
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import '../Assets/css/sass/themes/gogo.light.purple.scss';
+import '../assets/css/sass/themes/gogo.light.purple.scss';
 
 const InitialPath = ({ component: Component,  authUser,...rest }) =>{
 	return (<Route

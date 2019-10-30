@@ -1,8 +1,8 @@
 import React, { PureComponent, Fragment } from "react";
 import { Col, Media } from "reactstrap";
 import { customerProfile } from '../../helpers/ajax/customer'
-import ViewAble from '../../Components/app/ViewAble'
-import { View, Button, Text, IText } from '../../Components/app/Page'
+import ViewAble from '../../components/app/ViewAble'
+import { View, Button, Text, IText } from '../../components/app/Page'
 
 export default class extends ViewAble {
   constructor(props){
