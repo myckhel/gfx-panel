@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import ReactDOM from "react-dom";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import { Nav, NavItem } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import classnames from "classnames";
@@ -13,7 +13,7 @@ import {
   setContainerClassnames,
   addContainerClassname,
   changeDefaultClassnames
-} from "../../Redux/actions";
+} from "../../redux/actions";
 
 class Sidebar extends PureComponent {
   constructor(props) {

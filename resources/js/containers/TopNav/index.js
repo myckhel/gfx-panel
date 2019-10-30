@@ -10,7 +10,7 @@ import {
   DropdownMenu,
   Input
 } from "reactstrap";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import { NavLink } from "react-router-dom";
@@ -21,11 +21,11 @@ import {
   logoutUser,
   changeLocale,
   checkAuth
-} from "../../Redux/actions";
+} from "../../redux/actions";
 
-import notifications from "../../Data/topnav.notifications.json";
+import notifications from "../../data/topnav.notifications.json";
 
-import { menuHiddenBreakpoint,searchPath,localeOptions } from "../../Constants/defaultValues";
+import { menuHiddenBreakpoint,searchPath,localeOptions } from "../../constants/defaultValues";
 import "../../assets/js/vendor/sweetalert.min.js";
 import "../../assets/css/vendor/sweetalert.css";
 

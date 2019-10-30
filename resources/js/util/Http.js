@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import axios from 'axios'
-import {configureStore} from '../Redux/store'
-import { logoutUser } from '../Redux/auth/actions'
+import {configureStore} from '../redux/store'
+import { logoutUser } from '../redux/auth/actions'
 import {toast} from 'react-toastify'
 
 const version = 'v1'

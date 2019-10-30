@@ -1,7 +1,7 @@
 import {
     CURRENT_USER,
     STORE_USER
-} from '../../Constants/actionTypes';
+} from '../../constants/actionTypes';
 
 export const getCurrentUser = () => {
     return (

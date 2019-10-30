@@ -8,7 +8,7 @@ import {
   REGISTER_ERROR,
   CHECK_AUTH,
   STORE_USER,
-} from '../../Constants/actionTypes';
+} from '../../constants/actionTypes';
 
 export const loginUser = (user, history) => ({
   type: LOGIN_USER,

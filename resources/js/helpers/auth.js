@@ -1,5 +1,5 @@
 import Http from '../util/Http'
-import {_token} from '../Constants/defaultValues';
+import {_token} from '../constants/defaultValues';
 // import
 export default class {
   constructor() {

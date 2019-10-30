@@ -3,14 +3,14 @@ import { Row, Button, Input, Label
 } from "reactstrap";
 import { Colxx, Separator } from "../CustomBootstrap";
 import BreadcrumbContainer, { BreadcrumbItems } from "../BreadcrumbContainer";
-import IntlMessages from "../../Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
+import { Redirect } from 'react-router-dom';
 
 // export
 export { Colxx, Separator }
 export { Row as View, Button, Input, Label}
 export { Table, Tr, Td, THead, TBody, TFoot, Title } from "../CustomBootstrap";
 
-import { Redirect } from 'react-router-dom';
 
 export const Text = (props) => <p {...props}>{props.children}</p>
 export const IText = (props) => <IntlMessages id={props.id} />

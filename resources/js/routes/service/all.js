@@ -7,13 +7,13 @@ import { Row, Button, Modal, ModalHeader,
 ButtonDropdown, DropdownMenu,
 DropdownToggle, DropdownItem, Input, Label } from "reactstrap";
 
-import { Colxx, Separator } from "../../Components/CustomBootstrap";
-import { BreadcrumbItems } from "../../Components/BreadcrumbContainer";
+import { Colxx, Separator } from "../../components/CustomBootstrap";
+import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
 
 import ServiceForm from './components/ServiceForm';
 import TableFilter from '../../components/List/TableFilter';
 
-import Table from '../../Components/List/Table';
+import Table from '../../components/List/Table';
 
 import { selectable } from '../../helpers/data'
 import Http from '../../util/Http'

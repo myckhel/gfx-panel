@@ -1,19 +1,19 @@
 import React, { PureComponent } from 'react'
-import {EmptyRow} from '../../Components/empty';
+import {EmptyRow} from '../../components/empty';
 import {
   Row, Card, CustomInput, CardBody, CardSubtitle, CardImg,
   CardText, Badge
 } from "reactstrap";
-import { Colxx } from "../../Components/CustomBootstrap";
+import classnames from "classnames";
+import { Colxx } from "../../components/CustomBootstrap";
 import { ContextMenuTrigger } from "react-contextmenu";
 import { NavLink } from "react-router-dom";
-import Pagination from "../../Components/List/Pagination";
+import Pagination from "./Pagination";
 
 function collect(props) {
   return { data: props.data };
 }
 
-import classnames from "classnames";
 
 export default class extends PureComponent {
   constructor(props) {

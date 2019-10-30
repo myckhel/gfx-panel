@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Route, withRouter, Switch,Redirect } from 'react-router-dom';
 
-import TopNav from '../Containers/TopNav'
-import Sidebar from '../Containers/Sidebar';
+import TopNav from '../containers/TopNav'
+import Sidebar from '../containers/Sidebar';
 
 // import dashboard from './dashboard';
 import customer from './customer';

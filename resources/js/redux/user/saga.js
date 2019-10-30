@@ -1,7 +1,7 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import {
     CURRENT_USER,
-} from '../../Constants/actionTypes';
+} from '../../constants/actionTypes';
 
 import {user} from '../../helpers'
 

@@ -8,7 +8,7 @@ import {
   LOGOUT_USER,
   CHECK_AUTH,
   STORE_USER,
-} from "../../Constants/actionTypes";
+} from "../../constants/actionTypes";
 import Http from '../../util/Http'
 import ReeValidate from 'ree-validate'
 import { removeErrors, addErrors } from '../../helpers/errors'
