@@ -46,6 +46,8 @@ Route::get('/db/migrate/fresh', function() {
   return Artisan::call('migrate:fresh');
 });
 
+// Api::routes();
+
 Route::any('{query}',
   function() { return view('welcome'); })
   ->where('query', '.*');

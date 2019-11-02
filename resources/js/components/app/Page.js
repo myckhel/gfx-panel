@@ -5,14 +5,18 @@ import { Colxx, Separator } from "../CustomBootstrap";
 import BreadcrumbContainer, { BreadcrumbItems } from "../BreadcrumbContainer";
 import IntlMessages from "../../util/IntlMessages";
 import { Redirect } from 'react-router-dom';
-
+import classnames from 'classnames'
 // export
 export { Colxx, Separator }
 export { Row as View, Button, Input, Label}
 export { Table, Tr, Td, THead, TBody, TFoot, Title } from "../CustomBootstrap";
 
 
-export const Text = (props) => <p {...props}>{props.children}</p>
+export const Text = ({children, style, className, lg, sm, }) => <p  className={classnames({
+    // 'text-medium': md,
+    'text-large': lg, 'text-small': sm,
+  })+`${className ? className : ''}`} >{children}
+</p>
 export const IText = (props) => <IntlMessages id={props.id} />
 
 class Page extends PureComponent {

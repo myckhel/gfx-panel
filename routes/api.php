@@ -38,5 +38,7 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
   Route::resource('service-metas', 'ServiceMetaController');
   Route::resource('users', 'UserController');
   Route::get('customers/profile/{id}', 'CustomerController@profile');
+  Route::get('customers/payments/{id}', 'CustomerController@payments');
+  Route::get('customers/jobs/{id}', 'CustomerController@jobs');
 
 });

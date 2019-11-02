@@ -33,7 +33,7 @@ class ViewService extends ViewAble {
 		return (
 			<this.Template
 				pageName={ service.name || 'Service'}
-				right={this.right}>
+				right={this.Right}>
 				<View className="col-sm-12">
 					<this.Status bg="danger" hd head="Jobs Failed" />
 					<this.Status bg="warning" hd head="Jobs On Hold" />

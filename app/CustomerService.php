@@ -18,7 +18,7 @@ class CustomerService extends Model
     return $this->hasOne(Job::class);
   }
   public function payment(){
-    return $this->hasOne(Payment::class, 'customer_services_id');
+    return $this->hasOne(Payment::class);
   }
   public function service(){
     return $this->hasOne(Service::class);

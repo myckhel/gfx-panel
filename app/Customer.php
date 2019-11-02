@@ -14,6 +14,10 @@ class Customer extends Model
     //
   protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
 
+  // public function payments(){
+  //   $this->load(['payments'])
+  // }
+
   public static function addNew($request){
     // $lastIndex = self::latest()->first();
     return self::create([
@@ -82,6 +86,11 @@ class Customer extends Model
   public function customer_services(){
     return $this->hasMany(CustomerService::class);
   }
+
+  public function payments(){
+    return $this->hasManyThrough(Payment::class, CustomerService::class);
+  }
+
   public function customer_service_metas(){
     return $this->hasMany(CustomerServiceMeta::class);
   }

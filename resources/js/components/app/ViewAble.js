@@ -35,7 +35,7 @@ class ViewAble extends Page {
 
   viewAsync = (id) => ({})
 
-	right = () => (
+	Right = () => (
 		<View className="col">
 			<Button color="danger"
 			size="lg"
@@ -83,9 +83,12 @@ class ViewAble extends Page {
 		</View>
 	)
 
-	Status = ({status, hd, bg, head}) => <Colxx  className={classnames({[`bg-${bg}`]: !!bg})} sm={3}>
-			{hd ? <Text className="text-center text-light text-large">{head}</Text>
-			: <Text className="text-center text-light text-large">{status}</Text>}
+	Status = ({status, hd, bg, head}) =>
+		<Colxx  className={classnames({[`bg-${bg}`]: !!bg})}
+			sm={3}>
+			{hd
+			? <Text className="text-center justify-content-center text-light text-large">{head}</Text>
+			: <Text className="text-center justify-content-center text-light text-large">{status}</Text>}
 		</Colxx>
 
 	render = () => {

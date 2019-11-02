@@ -12,6 +12,23 @@ use App\CustomerServiceMeta;
 
 class CustomerController extends Controller
 {
+  public function payments(Request $request, $customer){
+    // dd($customer);
+    $customer = Customer::findOrFail($customer);
+    $histories = $customer->payments()->get();
+    // dd($histories);
+
+    return ['status' => true, 'message' => null, 'histories' => $histories];
+  }
+
+  public function jobs(Request $request, $customer){
+    // dd($customer);
+    $customer = Customer::findOrFail($customer);
+    $histories = $customer->jobs()->get();
+    // dd($histories);
+
+    return ['status' => true, 'message' => null, 'histories' => $histories];
+  }
   /**
    * Display a listing of the resource.
    *

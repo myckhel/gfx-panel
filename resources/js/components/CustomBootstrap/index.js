@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col } from 'reactstrap';
+import { Col, Row as RRow } from 'reactstrap';
 export const Colxx = (props) => (
     <Col {...props} widths={['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl']} />
 );

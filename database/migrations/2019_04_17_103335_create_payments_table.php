@@ -28,7 +28,7 @@ class CreatePaymentsTable extends Migration
 
        Schema::table('payments', function (Blueprint $table) {
          // $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-         $table->foreign('customer_services_id')->references('id')->on('customer_services')->onDelete('cascade');
+         $table->foreign('customer_service_id')->references('id')->on('customer_services')->onDelete('cascade');
        });
      }
 

@@ -1,4 +1,8 @@
 import Http from '../../util/Http'
+import request from './request'
+
+export const payments = (customer_id) => request(`customers/payments/${customer_id}`)
+export const jobs = (customer_id) => request(`customers/jobs/${customer_id}`)
 
 export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption,search}) => {
   return new Promise((resolve, reject) => {
@@ -13,21 +17,21 @@ export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption
   });
 }
 
-export const request = (route, data = null, method = 'get') => {
-  return new Promise(async function(resolve, reject) {
-    try {
-      data = data ? (method === 'post') ? data : {params: {data}} : null
-      const res = await Http[method](route, data)
-      console.log(res);
-      resolve(res.data)
-    } catch (e) {
-      reject(e)
-    }
-  });
-}
+// export const request = (route, data = null, method = 'get') => {
+//   return new Promise(async function(resolve, reject) {
+//     try {
+//       data = data ? (method === 'post') ? data : {params: {data}} : null
+//       const res = await Http[method](route, data)
+//       console.log(res);
+//       resolve(res.data)
+//     } catch (e) {
+//       reject(e)
+//     }
+//   });
+// }
 
 export const customerProfile = (id) => {
-  return request(`/api/customers/profile/${parseInt(id)}`);
+  return request(`customers/profile/${parseInt(id)}`);
 }
 
 export const deleteCustomers = (ids) => {
