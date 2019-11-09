@@ -15,7 +15,7 @@ class CustomerService extends Model
     return $this->belongsTo(CustomerServiceMeta::class);
   }
   public function job(){
-    return $this->hasOne(Job::class);
+    return $this->hasOne(Work::class);
   }
   public function payment(){
     return $this->hasOne(Payment::class);

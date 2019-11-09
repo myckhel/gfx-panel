@@ -15,15 +15,14 @@ class CreateServiceMetasTable extends Migration
      {
        Schema::create('service_metas', function (Blueprint $table) {
          $table->bigIncrements('id');
-         // $table->bigInteger('service_id')->unsigned();
-         $table->string('name');
-         $table->string('rule')->nullable();//min|max
-         // $table->string('charge')->nullable();
+         $table->bigInteger('service_id')->unsigned();
+         $table->bigInteger('meta_id')->unsigned()->nullable();
          $table->timestamps();
        });
 
        Schema::table('service_metas', function (Blueprint $table) {
-         // $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+         $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+         $table->foreign('meta_id')->references('id')->on('metas')->onDelete('set null');
        });
 
      }

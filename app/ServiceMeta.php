@@ -12,6 +12,9 @@ class ServiceMeta extends Model
   public function services(){
     return $this->belongsTo(Service::class);
   }
+  public function metas(){
+    return $this->hasMany(Meta::class);
+  }
   public function customer_service_metas(){
     return $this->hasMany(CustomerServiceMetaService::class);
   }

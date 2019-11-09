@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Job;
+use App\UserCustomer;
 
-class JobTableSeeder extends Seeder
+class UserCustomerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,8 +12,7 @@ class JobTableSeeder extends Seeder
      */
     public function run()
     {
-      //
-      factory(Job::class, 500)->create()->each(function ($customer){
+      factory(UserCustomer::class, 500)->create()->each(function ($customer){
         $customer->save();
       });
     }

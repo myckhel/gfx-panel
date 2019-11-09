@@ -16,7 +16,7 @@ class CreatePaymentsTable extends Migration
        Schema::create('payments', function (Blueprint $table) {
          $table->bigIncrements('id');
          // $table->bigInteger('customer_id')->unsigned();
-         $table->bigInteger('customer_services_id')->unsigned();
+         $table->bigInteger('customer_service_id')->unsigned();
          $table->float('paid', 10, 2)->nullable();
          $table->enum('status', ['processing', 'on hold', 'pending', 'completed', 'canceled', 'failed'])->default('pending');
          $table->string('reference')->nullable();

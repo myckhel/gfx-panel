@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Customer;
 
-class Job extends Model
+class Work extends Model
 {
   // protected $job_statuses = [
   //   // 'services',
