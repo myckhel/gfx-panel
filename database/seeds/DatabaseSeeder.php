@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
       // $this->call(CustomerServiceMetaTableSeeder::class);
       // $this->call(CustomerServiceTableSeeder::class);
       // $this->call(PaymentTableSeeder::class);
-      $this->call(WorkTableSeeder::class);
-      // $this->call(UserCustomerSeeder::class);
+      // $this->call(WorkTableSeeder::class);
+      $this->call(UserCustomerSeeder::class);
     }
 }

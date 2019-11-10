@@ -36,9 +36,8 @@ class CustomerController extends Controller
    */
    public function index(Request $request)
    {
-     // return ['user' => $request->user('api')];
-     // return ['user' => auth()->user('api')];
-     $customer = Customer::with('customer_services.customer_service_metas')->withCount(['customer_services', 'customer_service_metas']);
+     $user = auth()->user();
+     $customer = $user->customers();
      $search = $request->search;
      if ($search) {
        $customer = $customer->where('firstname', 'LIKE', '%'.$search.'%')->orWhere('lastname', 'LIKE', '%'.$search.'%')
