@@ -1,15 +1,16 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { injectIntl} from 'react-intl';
+import { Redirect } from 'react-router-dom';
+
 import {
+  Nav,
   UncontrolledDropdown,
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Input,
-  Button
+  Input
 } from "reactstrap";
-import IntlMessages from "Util/IntlMessages";
-
+import IntlMessages from "../../util/IntlMessages";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 import { NavLink } from "react-router-dom";
@@ -18,33 +19,33 @@ import {
   setContainerClassnames,
   clickOnMobileMenu,
   logoutUser,
-  changeLocale
-} from "Redux/actions";
+  changeLocale,
+  checkAuth
+} from "../../redux/actions";
 
-import { menuHiddenBreakpoint, searchPath,localeOptions } from "Constants/defaultValues";
+import notifications from "../../data/topnav.notifications.json";
 
-import notifications from "Data/topnav.notifications.json";
+import { menuHiddenBreakpoint,searchPath,localeOptions } from "../../constants/defaultValues";
+import "../../assets/js/vendor/sweetalert.min.js";
+import "../../assets/css/vendor/sweetalert.css";
 
-
-class TopNav extends Component {
+class TopNav extends PureComponent {
   constructor(props) {
     super(props);
-    this.menuButtonClick = this.menuButtonClick.bind(this);
-    this.mobileMenuButtonClick = this.mobileMenuButtonClick.bind(this);
-    this.search = this.search.bind(this);
-    this.handleChangeLocale = this.handleChangeLocale.bind(this);
-    this.handleDocumentClickSearch = this.handleDocumentClickSearch.bind(this);
-    this.addEventsSearch = this.addEventsSearch.bind(this);
-    this.removeEventsSearch = this.removeEventsSearch.bind(this);
+
     this.state = {
+      user: {
+        name: props.user ? props.user.name : "Loading..."
+      },
       isInFullScreen: false,
       searchKeyword: ""
     };
   }
-  
-  handleChangeLocale = locale => {
-    this.props.changeLocale(locale);
-  };
+
+  componentDidMount = () => {
+    this.props.checkAuth()
+  }
+
   isInFullScreen = () => {
     return (
       (document.fullscreenElement && document.fullscreenElement !== null) ||
@@ -55,6 +56,11 @@ class TopNav extends Component {
       (document.msFullscreenElement && document.msFullscreenElement !== null)
     );
   };
+
+  handleChangeLocale = locale => {
+    this.props.changeLocale(locale);
+  };
+
   handleSearchIconClick = e => {
     if (window.innerWidth < menuHiddenBreakpoint) {
       let elem = e.target;
@@ -80,14 +86,14 @@ class TopNav extends Component {
       this.search();
     }
   };
-  addEventsSearch() {
+  addEventsSearch = () => {
     document.addEventListener("click", this.handleDocumentClickSearch, true);
   }
-  removeEventsSearch() {
+  removeEventsSearch = () => {
     document.removeEventListener("click", this.handleDocumentClickSearch, true);
   }
 
-  handleDocumentClickSearch(e) {
+  handleDocumentClickSearch = (e) => {
     let isSearchClick = false;
     if (
       e.target &&
@@ -116,24 +122,24 @@ class TopNav extends Component {
       });
     }
   }
-  handleSearchInputChange(e) {
+
+  handleSearchInputChange = (e) => {
     this.setState({
       searchKeyword: e.target.value
     });
   }
-  handleSearchInputKeyPress(e) {
-    if (e.key === "Enter") {
-      this.search();
+  handleSearchInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.search()
     }
   }
 
-  search() {
-    this.props.history.push(searchPath + "/" + this.state.searchKeyword);
+  search = () => {
+    this.props.history.push(searchPath+"/"+this.state.searchKeyword)
     this.setState({
       searchKeyword: ""
     });
   }
-
   toggleFullScreen = () => {
     const isInFullScreen = this.isInFullScreen();
 
@@ -168,7 +174,7 @@ class TopNav extends Component {
     this.props.logoutUser(this.props.history);
   };
 
-  menuButtonClick(e, menuClickCount, containerClassnames) {
+  menuButtonClick = (e, menuClickCount, containerClassnames) => {
     e.preventDefault();
 
     setTimeout(() => {
@@ -178,14 +184,24 @@ class TopNav extends Component {
     }, 350);
     this.props.setContainerClassnames(++menuClickCount, containerClassnames);
   }
-  mobileMenuButtonClick(e, containerClassnames) {
+  mobileMenuButtonClick = (e, containerClassnames) => {
     e.preventDefault();
     this.props.clickOnMobileMenu(containerClassnames);
   }
 
   render() {
-    const { containerClassnames, menuClickCount, locale } = this.props;
+    // authenticate
+    // if (!this.props.authenticated) {
+    //   return (<Redirect
+    //     to={{
+    //       pathname: '/login',
+    //       state: { from: this.props.location }
+    //     }}
+    //   />)
+    // }
+    const { containerClassnames, menuClickCount } = this.props;
     const {messages} = this.props.intl;
+
     return (
       <nav className="navbar fixed-top">
         <NavLink
@@ -226,24 +242,21 @@ class TopNav extends Component {
           </svg>
         </NavLink>
 
-        <div className="search" data-search-path="/app/pages/search">
+    <div className="search" >
           <Input
             name="searchKeyword"
             id="searchKeyword"
             placeholder={messages["menu.search"]}
             value={this.state.searchKeyword}
             onChange={e => this.handleSearchInputChange(e)}
-            onKeyPress={e => this.handleSearchInputKeyPress(e)}
+            onKeyPress ={e=> this.handleSearchInputKeyPress(e)}
           />
-          <span
-            className="search-icon"
-            onClick={e => this.handleSearchIconClick(e)}
-          >
+          <span className="search-icon" onClick={e => this.handleSearchIconClick(e)}>
             <i className="simple-icon-magnifier" />
           </span>
         </div>
 
-        <div className="d-inline-block">
+ <div className="d-inline-block">
           <UncontrolledDropdown className="ml-2">
             <DropdownToggle
               caret
@@ -267,6 +280,7 @@ class TopNav extends Component {
           </UncontrolledDropdown>
         </div>
 
+
         <a className="navbar-logo" href="/">
           <span className="logo d-none d-xs-block" />
           <span className="logo-mobile d-block d-xs-none" />
@@ -274,14 +288,6 @@ class TopNav extends Component {
 
         <div className="ml-auto">
           <div className="header-icons d-inline-block align-middle">
-            <div className="position-relative d-none d-none d-lg-inline-block">
-              <a
-                className="btn btn-outline-primary btn-sm mb-2 mr-3" target="_top"
-                href="https://themeforest.net/cart/configure_before_adding/22544383?license=regular&ref=ColoredStrategies&size=source"
-              >
-                <IntlMessages id="user.buy" />
-              </a>
-            </div>
             <div className="position-relative d-none d-sm-inline-block">
               <UncontrolledDropdown className="dropdown-menu-right">
                 <DropdownToggle className="header-icon" color="empty">
@@ -292,40 +298,27 @@ class TopNav extends Component {
                   right
                   id="iconMenuDropdown"
                 >
-                  <NavLink
-                    to="/app/dashboards/default"
-                    className="icon-menu-item"
-                  >
-                    <i className="iconsmind-Shop-4 d-block" />{" "}
-                    <IntlMessages id="menu.dashboards" />
+                  <NavLink to="#" className="icon-menu-item">
+                    <i className="iconsmind-Air-Balloon d-block" />{" "}
+                    <IntlMessages id="menu.gogo" />
                   </NavLink>
-
-                  <NavLink to="/app/ui" className="icon-menu-item">
+                  <NavLink to="#" className="icon-menu-item">
                     <i className="iconsmind-Pantone d-block" />{" "}
                     <IntlMessages id="menu.ui" />
                   </NavLink>
-                  <NavLink to="/app/ui/charts" className="icon-menu-item">
+                  <NavLink to="#" className="icon-menu-item">
                     <i className="iconsmind-Bar-Chart d-block" />{" "}
                     <IntlMessages id="menu.charts" />
                   </NavLink>
-                  <NavLink
-                    to="/app/applications/chat"
-                    className="icon-menu-item"
-                  >
+                  <NavLink to="#" className="icon-menu-item">
                     <i className="iconsmind-Speach-BubbleDialog d-block" />{" "}
                     <IntlMessages id="menu.chat" />
                   </NavLink>
-                  <NavLink
-                    to="/app/applications/survey"
-                    className="icon-menu-item"
-                  >
+                  <NavLink to="#" className="icon-menu-item">
                     <i className="iconsmind-Formula d-block" />{" "}
                     <IntlMessages id="menu.survey" />
                   </NavLink>
-                  <NavLink
-                    to="/app/applications/todo"
-                    className="icon-menu-item"
-                  >
+                  <NavLink to="#" className="icon-menu-item">
                     <i className="iconsmind-Check d-block" />{" "}
                     <IntlMessages id="menu.todo" />
                   </NavLink>
@@ -340,7 +333,6 @@ class TopNav extends Component {
                   color="empty"
                 >
                   <i className="simple-icon-bell" />
-                  <span className="count">3</span>
                 </DropdownToggle>
                 <DropdownMenu
                   className="position-absolute mt-3 scroll"
@@ -356,7 +348,7 @@ class TopNav extends Component {
                           key={index}
                           className="d-flex flex-row mb-3 pb-3 border-bottom"
                         >
-                          <a href="/app/pages/details">
+                          <a href="/app">
                             <img
                               src={n.image}
                               alt="Notification"
@@ -364,7 +356,7 @@ class TopNav extends Component {
                             />
                           </a>
                           <div className="pl-3 pr-2">
-                            <a href="/app/pages/details">
+                            <a href="/app">
                               <p className="font-weight-medium mb-1">
                                 {n.message}
                               </p>
@@ -397,7 +389,7 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+                <span className="name mr-1"> {this.props.user ? this.props.user.name : this.state.user.name} </span>
                 <span>
                   <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
                 </span>
@@ -420,12 +412,14 @@ class TopNav extends Component {
   }
 }
 
-const mapStateToProps = ({ menu, settings }) => {
+const mapStateToProps = ({ menu, settings, authUser }) => {
   const { containerClassnames, menuClickCount } = menu;
   const { locale } = settings;
-  return { containerClassnames, menuClickCount, locale };
+  const { authenticated, user } = authUser;
+
+  return { containerClassnames, menuClickCount,locale, authenticated, user };
 };
 export default injectIntl(connect(
   mapStateToProps,
-  { setContainerClassnames, clickOnMobileMenu, logoutUser, changeLocale }
+  { setContainerClassnames, clickOnMobileMenu, logoutUser,changeLocale, checkAuth }
 )(TopNav));

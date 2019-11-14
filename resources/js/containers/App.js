@@ -1,27 +1,26 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { NotificationContainer } from "../components/ReactNotifications";
+import { defaultStartPath } from '../constants/defaultValues'
 
-import ColorSwitcher from 'Components/ColorSwitcher'
-import { NotificationContainer } from "Components/ReactNotifications";
-
-import { defaultStartPath } from 'Constants/defaultValues'
-
-import { connect } from "react-redux";
+import { store } from '../redux/store';
+import { checkAuth } from '../redux/actions';
 
 import AppLocale from '../lang';
-import MainRoute from 'Routes';
-import login from 'Routes/pages/login'
-import register from 'Routes/pages/register'
-import error from 'Routes/pages/error'
-import forgotPassword from 'Routes/pages/forgot-password'
+import MainRoute from '../routes';
+import login from '../routes/login'
+import register from '../routes/register'
+import error from '../routes/error'
+import forgotPassword from '../routes/forgot-password'
 
-import 'Assets/css/vendor/bootstrap.min.css'
+import '../assets/css/vendor/bootstrap.min.css'
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import '../assets/css/sass/themes/gogo.light.purple.scss';
 
-
-const InitialPath = ({ component: Component, authUser, ...rest }) =>
-	<Route
+const InitialPath = ({ component: Component,  authUser,...rest }) =>{
+	return (<Route
 		{...rest}
 		render={props =>
 			authUser
@@ -32,37 +31,60 @@ const InitialPath = ({ component: Component, authUser, ...rest }) =>
 						state: { from: props.location }
 					}}
 				/>}
-	/>;
+	/>);}
 
-class App extends Component {
+const UnAuthRoute = ({ component: Component,  authUser,...rest }) =>{
+	return (<Route
+		{...rest}
+		render={props =>
+			authUser
+				? <Component {...props} />
+				: <Redirect
+					to={{
+						pathname: '/',
+						state: { from: props.location }
+					}}
+				/>}
+	/>);}
+
+class App extends PureComponent {
+	constructor(props){
+		super(props)
+
+		props.checkAuth()
+	}
+
 	render() {
-		const { location, match, user, locale } = this.props;
+		const { location, match, authenticated, locale } = this.props;
 		const currentAppLocale = AppLocale[locale];
-		if (location.pathname === '/' || location.pathname === '/app' || location.pathname === '/app/') {
+		if (location.pathname === '/' && authenticated) {
 			return (<Redirect to={defaultStartPath} />);
 		}
-		return (
-			<Fragment>
-				<IntlProvider
-					locale={currentAppLocale.locale}
-					messages={currentAppLocale.messages}
-				>
+		if ((location.pathname === '/login' || location.pathname === '/register'
+		|| location.pathname === '/forgot-password') && authenticated) {
+			return (<Redirect to='/' />);
+		}
 
+		return (
+				<Fragment>
+					<NotificationContainer />
+					<IntlProvider
+						locale={currentAppLocale.locale}
+						messages={currentAppLocale.messages}
+					>
 					<Fragment>
-						<NotificationContainer />
 						<Switch>
+							<Route exact path={`/login`} component={login} />
+							<Route exact path={`/register`} component={register} />
+							<Route exact path={`/forgot-password`} component={forgotPassword} />
+							<Route exact path={`/error`} component={error} />
 							<InitialPath
-								path={`${match.url}app`}
-								authUser={user}
+								path={`${match.url}`}
+								authUser={authenticated}
 								component={MainRoute}
 							/>
-							<Route path={`/login`} component={login} />
-							<Route path={`/register`} component={register} />
-							<Route path={`/forgot-password`} component={forgotPassword} />
-							<Route path={`/error`} component={error} />
 							<Redirect to="/error" />
 						</Switch>
-						<ColorSwitcher />
 					</Fragment>
 				</IntlProvider>
 			</Fragment>
@@ -71,10 +93,10 @@ class App extends Component {
 }
 
 const mapStateToProps = ({ authUser, settings }) => {
-	const { user } = authUser;
+	const { authenticated } = authUser;
 	const { locale } = settings;
-	return { user, locale };
+	return { authenticated, locale };
 };
 
-export default connect(mapStateToProps, {})(App);
-
+export default connect(mapStateToProps,{ checkAuth })(App);
+// || location.pathname === '/app' || location.pathname === '/app/'

@@ -12,10 +12,16 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
+     public function index(Request $request)
+     {
+       $service = Service::with('service_metas');
+       $search = $request->search;
+       if ($search) {
+         $service = $service->where('name', 'LIKE', '%'.$search.'%');//->orWhere('lastname', 'LIKE', '%'.$search.'%')
+         // ->orWhere('phone', 'LIKE', '%'.$search.'%')->orWhere('email', 'LIKE', '%'.$search.'%');
+       }
+       return $service->orderBy(($request->orderBy ? $request->orderBy : 'created_at'), 'Desc')->paginate($request->pageSize);
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -35,7 +41,23 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'name' => 'required|min:3|max:45',
+        'parent' => 'numeric',
+        'charge' => 'string',
+        'price' => 'numeric',
+        'logo' => 'string',
+      ]);
+      // check unique name
+      // if (Service::checkUnique('name', $request)) {
+      //   return ['status' => false, 'text' => 'Name Exists'];
+      // }
+      try {
+        $service = Service::addNew($request);
+        return ['status' => true, 'service' => $service];
+      } catch (\Exception $e) {
+        return ['status' => false, 'text' => $e->getMessage()];
+      }
     }
 
     /**
@@ -44,10 +66,11 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
-    {
-        //
-    }
+     public function show($id)
+     {
+       $service = Service::find($id);
+       return $service->getProfile();
+     }
 
     /**
      * Show the form for editing the specified resource.
@@ -55,9 +78,9 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit($id)
     {
-        //
+      return Service::find($id);
     }
 
     /**
@@ -67,9 +90,10 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $id)
     {
-        //
+      $service = Service::findOrFail($id);
+      return $service->update($request->all());
     }
 
     /**
@@ -78,8 +102,29 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
-    {
-        //
-    }
+     public function destroy($id)
+     {
+       //
+       $service = Service::find($id);
+       if ($service) {
+         $service->delete();
+         return ['status' => true];
+       }
+       return ['status' => false];
+     }
+
+     public function delete(Request $request)
+     {
+       //
+       $text = [];  $ids = $request->ids;
+       foreach ($ids as $id) {
+         if ($service = Service::find($id) ) {
+           $service->delete();
+         } else {
+           $text[] = $id;
+         }
+       }
+
+       return ['status' => true, 'text' => $text];
+     }
 }

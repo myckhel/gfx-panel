@@ -1,11 +1,12 @@
 import React from "react";
-import { Colxx } from "Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 import { Nav, NavItem, NavLink } from "reactstrap";
-class Pagination extends React.Component {
-  componentDidMount() {}
-  onChangePage(e) {
+class Pagination extends React.PureComponent {
+
+  onChangePage = (e) => {
     this.props.onChangePage(e);
   }
+
   render() {
     const {
       totalPage = 0,

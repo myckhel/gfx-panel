@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
-import IntlMessages from "Util/IntlMessages";
+import React, { PureComponent, Fragment } from "react";
+import IntlMessages from "../../util/IntlMessages";
 import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
-import { Colxx } from "Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
-class ForgotPasswordLayout extends Component {
+class ForgotPasswordLayout extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +30,7 @@ class ForgotPasswordLayout extends Component {
                 <Card className="auth-card">
                   <div className="position-relative image-side ">
                     <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
-                    <p className="white mb-0">
+                    <p className="white">
                       Please use your e-mail to reset your password. <br />
                       If you are not a member, please{" "}
                       <NavLink to={`/register`} className="white">
@@ -53,14 +53,14 @@ class ForgotPasswordLayout extends Component {
                       </Label>
 
                       <div className="d-flex justify-content-end align-items-center">
-                        <Button
+                          <Button
                           href="/app"
-                          color="primary"
-                          className="btn-shadow"
-                          size="lg"
-                        >
-                          <IntlMessages id="user.reset-password-button" />
-                        </Button>
+                            color="primary"
+                            className="btn-shadow"
+                            size="lg"
+                          >
+                            <IntlMessages id="user.reset-password-button" />
+                          </Button>
                       </div>
                     </Form>
                   </div>

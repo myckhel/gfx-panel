@@ -1,10 +1,10 @@
 import React, { Fragment } from "react";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import IntlMessages from "Util/IntlMessages";
+import IntlMessages from "../../util/IntlMessages";
 
 const getMenuTitle = sub => {
-  return <IntlMessages id={`menu.${sub}`} />;
+  return `menu.${sub}`;
 };
 
 const getUrl = (path, sub, index) => {
@@ -30,6 +30,7 @@ export const BreadcrumbItems = ({ match }) => {
   if (paths[paths.length - 1].indexOf(":") > -1) {
     paths = paths.filter(x => x.indexOf(":") === -1);
   }
+
   return (
     <Fragment>
       <Breadcrumb className="pt-0 breadcrumb-container d-none d-sm-block d-lg-inline-block">
@@ -38,10 +39,10 @@ export const BreadcrumbItems = ({ match }) => {
             <BreadcrumbItem key={index} active={paths.length === index + 1}>
               {paths.length !== index + 1 ? (
                 <NavLink to={"/" + getUrl(path, sub, index)}>
-                  {getMenuTitle(sub)}
+                  {<IntlMessages id={getMenuTitle(sub)} />}
                 </NavLink>
               ) : (
-                getMenuTitle(sub)
+                <IntlMessages id={getMenuTitle(sub)} />
               )}
             </BreadcrumbItem>
           );

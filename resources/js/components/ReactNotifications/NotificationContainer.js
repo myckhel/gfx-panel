@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import NotificationManager from './NotificationManager';
 import Notifications from './Notifications';
 
-class NotificationContainer extends React.Component {
+class NotificationContainer extends React.PureComponent {
   static propTypes = {
     enterTimeout: PropTypes.number,
     leaveTimeout: PropTypes.number
@@ -18,7 +18,7 @@ class NotificationContainer extends React.Component {
     notifications: []
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     NotificationManager.addChangeListener(this.handleStoreChange);
   };
 

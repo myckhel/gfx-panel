@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from "react";
-import IntlMessages from "Util/IntlMessages";
-import { Row, Card, CardTitle,Button } from "reactstrap";
+import React, { PureComponent, Fragment } from "react";
+import IntlMessages from "../../util/IntlMessages";
+import { Row, Card, CardTitle, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 
-import { Colxx } from "Components/CustomBootstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 
-class Error404 extends Component {
+class Error404 extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -27,26 +27,26 @@ class Error404 extends Component {
                 <Card className="auth-card">
                   <div className="position-relative image-side ">
                     <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
-                    <p className="white mb-0">Yes, it is indeed!</p>
+                    <p className="white">Yes, it is indeed!</p>
                   </div>
                   <div className="form-side">
                     <NavLink to={`/`} className="white">
                       <span className="logo-single" />
                     </NavLink>
                     <CardTitle className="mb-4">
-                      <IntlMessages id="pages.error-title" />
+                      <IntlMessages id="layouts.error-title" />
                     </CardTitle>
                     <p className="mb-0 text-muted text-small mb-0">
-                      <IntlMessages id="pages.error-code" />
+                      <IntlMessages id="layouts.error-code" />
                     </p>
                     <p className="display-1 font-weight-bold mb-5">404</p>
                     <Button
-                      href="/app"
+                      href="/"
                       color="primary"
                       className="btn-shadow"
                       size="lg"
                     >
-                      <IntlMessages id="pages.go-back-home" />
+                      <IntlMessages id="layouts.go-back-home" />
                     </Button>
                   </div>
                 </Card>
