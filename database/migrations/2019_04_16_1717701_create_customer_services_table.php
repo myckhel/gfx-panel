@@ -17,13 +17,13 @@ class CreateCustomerServicesTable extends Migration
         $table->bigIncrements('id');
         $table->bigInteger('customer_id')->nullable()->unsigned();
         $table->bigInteger('service_id')->nullable()->unsigned();
-        $table->bigInteger('customer_service_metas_id')->unsigned()->nullable();
+        // $table->bigInteger('customer_service_metas_id')->unsigned()->nullable();
         $table->timestamps();
       });
       Schema::table('customer_services', function (Blueprint $table) {
         $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
         $table->foreign('service_id')->references('id')->on('services')->onDelete('set null');
-        $table->foreign('customer_service_metas_id')->references('id')->on('customer_service_metas')->onDelete('set null');
+        // $table->foreign('customer_service_metas_id')->references('id')->on('customer_service_metas')->onDelete('set null');
       });
     }
 

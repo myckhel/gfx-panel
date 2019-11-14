@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import {
   Row, Button, ModalHeader, ModalBody,
   ModalFooter, Input, Label, Form, Col
@@ -11,10 +11,10 @@ import formToObj from '../../../helpers/formToObj'
 import { getCountriesCode, selectable } from '../../../helpers/data'
 import { addCustomers } from '../../../helpers/ajax/customer'
 import {toast} from 'react-toastify'
-// import csc from 'country-state-city'
+import csc from 'country-state-city'
 
 
-export default class extends PureComponent {
+export default class extends Component {
   constructor(props) {
     super(props)
 
@@ -65,7 +65,7 @@ export default class extends PureComponent {
     errors.remove(name)
     this.validator.validate(name, value)
       .then(() => {
-        this.setState({ errors: {...errors} })
+        this.setState({ errors })
       })
   }
 
@@ -97,7 +97,7 @@ export default class extends PureComponent {
     errors.remove(field)
     await this.validator.validate(field, value)
       .then(() => {
-        this.setState({ errors: {...errors} })
+        this.setState({ errors })
       })
   }
 
@@ -110,7 +110,7 @@ export default class extends PureComponent {
 
     const { errors } = this.validator
     this.setState(prev => ({
-      errors: {...removeErrors(prev.errors)},
+      errors: removeErrors(prev.errors),
       isLoading: true,
     }))
 
@@ -158,8 +158,8 @@ export default class extends PureComponent {
   // }
 
   render(){
-    // console.log(this.state);
     const errors = this.state.errors;
+    console.log(errors);
     return (
       <Form id={'customer-form'} onSubmit={(e) => {this.submitForm(e)}}>
         <ModalBody>

@@ -40,6 +40,6 @@ class User extends Authenticatable
     ];
 
     public function customers(){
-      return $this->belongsToMany(Customer::class, 'user_customers');
+      return $this->belongsToMany(Customer::class, 'user_customers')->withTimestamps();
     }
 }

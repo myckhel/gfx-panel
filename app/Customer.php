@@ -3,25 +3,20 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Job;
+use App\Work;
 use App\Payment;
 use App\Service;
 use App\ServiceMeta;
+use App\UserCustomer;
 use App\CustomerServiceMeta;
 
 class Customer extends Model
 {
     //
-  protected $fillable = [ 'gfx_id', 'firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
-
-  // public function payments(){
-  //   $this->load(['payments'])
-  // }
+  protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
 
   public static function addNew($request){
-    // $lastIndex = self::latest()->first();
     return self::create([
-      // 'gfx_id' => $lastIndex ? (int) $lastIndex->gfx_id+ 1 : 50001,
       'firstname'   => $request->firstname,
       'lastname'    => $request->lastname,
       'email'       => $request->email,
@@ -37,9 +32,8 @@ class Customer extends Model
     return self::where($field, $request->$field)->first();
   }
 
-  public function getProfile(){
+  public function jobsStatusCount(){
     $this->loadCount([
-      'customer_services', 'customer_service_metas',
       // 'services',
       'jobs as jobs_completed' => function($q){
         $q->where('status', 'completed');
@@ -54,15 +48,18 @@ class Customer extends Model
         $q->where('status', 'failed');
       }
     ]);
-    // $this->completed_jobs_count = Job::countCompletedCustomerService($this);
-    // $this->completed_payments_count = Payment::countCompletedCustomerService($this);
-    $this->credentialServices = $this->credentialsWithServices();
     return $this;
+  }
+
+  public function properties(){
+    return $this->credentialsWithServices();
   }
 
   public function credentialsWithServices(){
     $services = [];
     $credentials = CustomerServiceMeta::getCredantials($this);
+    return $credentials;
+
     if ($credentials) {
       $metas = ServiceMeta::with('services')->whereIn('id', $credentials->pluck('id'))->with('services')->get();
       if ($metas) {
@@ -83,8 +80,12 @@ class Customer extends Model
   }
 
   // relationship
-  public function customer_services(){
+  public function services(){
     return $this->hasMany(CustomerService::class);
+  }
+
+  public function clients(){
+    return $this->belongsToMany(Customer::class, 'user_customers');
   }
 
   public function payments(){
@@ -92,9 +93,13 @@ class Customer extends Model
   }
 
   public function customer_service_metas(){
-    return $this->hasMany(CustomerServiceMeta::class);
+    return $this->belongsToMany(CustomerServiceMeta::class, 'customer_properties')->withTimestamps();
   }
+
+  // public function customer_service_metas(){
+  //   return $this->hasManyThrough(CustomerServiceMeta::class, CustomerService::class);
+  // }
   public function jobs(){
-    return $this->hasManyThrough(Job::class, CustomerService::class);
+    return $this->hasManyThrough(Work::class, CustomerService::class);
   }
 }
