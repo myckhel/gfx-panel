@@ -37,8 +37,11 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
   Route::resource('customer_services', 'CustomerServiceController');
   Route::resource('service-metas', 'ServiceMetaController');
   Route::resource('users', 'UserController');
-  Route::get('customers/profile/{id}', 'CustomerController@profile');
-  Route::get('customers/payments/{id}', 'CustomerController@payments');
-  Route::get('customers/jobs/{id}', 'CustomerController@jobs');
+  // Route::group(['middleware' => 'can:view,App\Customer'], function() {
+    Route::get('customers/profile/{customer}', 'CustomerController@profile');
+    Route::get('customers/payments/{customer}', 'CustomerController@payments');
+    Route::get('customers/jobs/{customer}', 'CustomerController@jobs');
+    Route::get('customers/properties/{customer}', 'CustomerController@properties');
+  // });
 
 });

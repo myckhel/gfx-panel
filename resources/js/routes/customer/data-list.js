@@ -267,7 +267,7 @@ class DataListLayout extends Component {
       const {messages} = this.props.intl;
       const {errors, currentPage, totalItemCount, totalPage,
         displayOptionsIsOpen, displayMode, selectedOrderOption, orderOptions, search,
-        selectedPageSize, pageSizes,
+        selectedPageSize, pageSizes, isLoading,
       } = this.state;
 
       const { toggleDisplayOptions, changeDisplayMode, handleSearchChange,
@@ -275,10 +275,12 @@ class DataListLayout extends Component {
       } = this
 
       return (
-        !this.state.isLoading?
-          <div className="loading"></div>
-       :
         <Fragment>
+        {!isLoading &&
+          <div className="loading"></div>
+        }
+        {isLoading &&
+          <Fragment>
           <div className="disable-text-selection">
             <Row>
               <Colxx xxs="12">
@@ -424,7 +426,8 @@ class DataListLayout extends Component {
               <i className="simple-icon-trash" /> <span>Delete</span>
             </MenuItem>
           </ContextMenu>
-        </Fragment>
+        </Fragment>}
+      </Fragment>
       );
     }
   }

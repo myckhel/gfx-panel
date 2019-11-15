@@ -3,6 +3,7 @@ import request from './request'
 
 export const payments = (customer_id) => request(`customers/payments/${customer_id}`)
 export const jobs = (customer_id) => request(`customers/jobs/${customer_id}`)
+export const properties = (customer_id) => request(`customers/properties/${customer_id}`)
 
 export const fetchCustomers = ({selectedPageSize,currentPage,selectedOrderOption,search}) => {
   return new Promise((resolve, reject) => {

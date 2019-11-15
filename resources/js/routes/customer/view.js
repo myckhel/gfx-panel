@@ -5,6 +5,7 @@ import ViewAble from '../../components/app/ViewAble'
 import { Text, IText } from '../../components/app/Page'
 import PHistory from '../../components/customer/PHistory'
 import JHistory from '../../components/customer/JHistory'
+import Properties from '../../components/customer/Property'
 
 export default class extends ViewAble {
   constructor(props){
@@ -26,6 +27,7 @@ export default class extends ViewAble {
 
   render = () => {
     const { profile } = this.state.profile
+    const { id } = this.props.match.params
     const { firstname, lastname, jobs_failed, jobs_pending, jobs_completed, jobs_on_hold, credentialServices } = profile || {}
 
     return (
@@ -53,16 +55,18 @@ export default class extends ViewAble {
         </Col>
 
         <Col style={styles.body}>
-          <this.Table title="Properties" data={credentialServices} config={{
+          <Properties id={id} title="Properties"
+            Table={this.Table} TableActions={this.TableFilter} />
+          {/*<this.Table title="Properties" data={credentialServices} config={{
             key: 'id', fields: ['name', 'rule', (meta) => <this.TableActions data={meta} />],
             heads: ['Name', 'Rules', 'Actions']
-          }} />
+          }} />*/}
 
           <PHistory Table={this.Table} TableActions={this.TableFilter}
-          id={this.props.match.params.id} title="Payment History" />
+          id={id} title="Payment History" />
 
           <JHistory Table={this.Table} TableActions={this.TableFilter}
-          id={this.props.match.params.id} title="Jobs History" />
+          id={id} title="Jobs History" />
 
           <Col xxs="12">
             <Row>
