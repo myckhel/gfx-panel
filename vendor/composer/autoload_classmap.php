@@ -46,6 +46,7 @@ return array(
     'App\\Meta' => $baseDir . '/app/Meta.php',
     'App\\Notifications\\SignupActivate' => $baseDir . '/app/Notifications/SignupActivate.php',
     'App\\Payment' => $baseDir . '/app/Payment.php',
+    'App\\Policies\\CustomerPolicy' => $baseDir . '/app/Policies/CustomerPolicy.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',
     'App\\Providers\\BroadcastServiceProvider' => $baseDir . '/app/Providers/BroadcastServiceProvider.php',
