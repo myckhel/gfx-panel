@@ -18,10 +18,6 @@ class CustomerServiceMeta extends Model
       // return self::where('customer_id', $customer->id)->groupBy('service_metas_id', 'id', 'customer_id', 'value', 'created_at', 'updated_at')->get();
     }
 
-<<<<<<< HEAD
-    public function customer_service(){
-      return $this->belongsTo(CustomerService::class);
-=======
     public function service_metas(){
       return $this->belongsTo(ServiceMeta::class);
     }
@@ -30,7 +26,6 @@ class CustomerServiceMeta extends Model
     }
     public function customer(){
       return $this->belongsTo(Customer::class);
->>>>>>> development
     }
     public function properties(){
       return $this->belongsToMany(CustomerService::class, 'customer_properties')->withTimestamps();
