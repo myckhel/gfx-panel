@@ -176,7 +176,7 @@ class CustomerController extends Controller
      return ['status' => false, 'message' => 'Invalid Request Data'];
    }
 
-   public function profile($customer){
+   public function profile(Customer $customer){
      $this->authorize('view', $customer);
      $profile = $customer->jobsStatusCount();
      return ['profile' => $profile];

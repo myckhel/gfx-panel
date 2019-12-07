@@ -68,6 +68,6 @@ class Service extends Model
   }
 
   public function jobs(){
-    return $this->hasManyThrough(Job::class, CustomerService::class);
+    return $this->hasManyThrough(Work::class, CustomerService::class);
   }
 }

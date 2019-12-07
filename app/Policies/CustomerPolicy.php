@@ -30,9 +30,8 @@ class CustomerPolicy
      */
     public function view(User $user, Customer $customer)
     {
-      // return true;
-      return $customer->clients->contains($user->id);
-      // return $user->id == in_array($needle, $customer->agents->)
+      return in_array($user->id, $customer->clients()->pluck('user_id')->toArray());
+      // return $customer->clients->contains($user->id);
     }
 
     /**

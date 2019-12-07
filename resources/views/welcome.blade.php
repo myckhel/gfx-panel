@@ -42,6 +42,7 @@
     </noscript>
     <script>
         var theme = "light.purple";
+        console.log("{{ csrf_token() }}");
         if (typeof Storage !== "undefined") {
             if (localStorage.getItem("themeColor")) {
                 theme = localStorage.getItem("themeColor");
