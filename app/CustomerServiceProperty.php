@@ -10,9 +10,6 @@ class CustomerServiceProperty extends Model
     return $customer->services()->with('properties')->get();
   }
 
-  public function service_property(){
-    return $this->belongsTo(ServiceProperty::class);
-  }
   public function customer_service(){
     return $this->belongsTo(CustomerService::class);
   }

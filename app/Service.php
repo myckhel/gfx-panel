@@ -48,26 +48,24 @@ class Service extends Model
     return self::where($filed, $request->$filed)->first();
   }
   // relationship
-  // public function customer_service_meta(){
-  //   return $this->hasMany(CustomerServiceMeta::class);
-  // }
-  public function service_metas(){
-    return $this->hasMany(ServiceMeta::class);
-  }
   public function services(){
-    return $this->hasMany(Service::class, 'parent');
+    return $this->hasMany(Service::class);
   }
-  // public function service(){
-  //   return $this->belongsTo(Service::class, 'id');
-  // }
-  // public function customer_service_metas(){
-  //   return $this->belongsToMany(CustomerServiceMeta::class);
-  // }
-  public function customer_service(){
-    return $this->belongsTo(CustomerService::class);
+  public function service(){
+    return $this->belongsTo(Service::class);
+  }
+  public function customer_services(){
+    return $this->hasMany(CustomerService::class);
+  }
+  public function properties(){
+    return $this->hasMany(ServiceProperty::class);
   }
 
   public function jobs(){
     return $this->hasManyThrough(Work::class, CustomerService::class);
+  }
+
+  public function payments(){
+    return $this->hasManyThrough(Payment::class, CustomerService::class);
   }
 }

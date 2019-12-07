@@ -92,14 +92,15 @@ class Customer extends Model
     return $this->hasManyThrough(Payment::class, CustomerService::class);
   }
 
-  public function customer_service_metas(){
-    return $this->belongsToMany(CustomerServiceMeta::class, 'customer_properties')->withTimestamps();
+  public function properties(){
+    return $this->hasMany(CustomerProperty::class);
   }
 
-  // public function customer_service_metas(){
-  //   return $this->hasManyThrough(CustomerServiceMeta::class, CustomerService::class);
-  // }
   public function jobs(){
     return $this->hasManyThrough(Work::class, CustomerService::class);
+  }
+
+  public function metas(){
+    return $this->hasMany(CustomerMeta::class);
   }
 }
