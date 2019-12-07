@@ -15,13 +15,14 @@ class CreateCustomerPropertiesTable extends Migration
     {
         Schema::create('customer_properties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('customer_service_id')->unsigned();
-            $table->bigInteger('customer_service_meta_id')->unsigned()->nullable();
+            $table->bigInteger('customer_id')->unsigned()->nullable();
+            $table->bigInteger('service_property_id')->unsigned()->nullable();
+            $table->string('value');
             $table->timestamps();
         });
         Schema::table('customer_properties', function (Blueprint $table) {
-          $table->foreign('customer_service_id')->references('id')->on('customer_services')->onDelete('cascade');
-          $table->foreign('customer_service_meta_id')->references('id')->on('customer_service_metas')->onDelete('set null');
+          $table->foreign('service_property_id')->references('id')->on('service_properties')->onDelete('cascade');
+          $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

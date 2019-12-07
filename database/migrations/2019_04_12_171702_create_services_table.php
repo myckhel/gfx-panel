@@ -15,18 +15,15 @@ class CreateServicesTable extends Migration
     {
       Schema::create('services', function (Blueprint $table) {
         $table->bigIncrements('id');
-        $table->bigInteger('parent')->unsigned()->nullable();
-        // $table->bigInteger('service_metas_id')->unsigned()->nullable();
+        $table->bigInteger('service_id')->unsigned()->nullable();
         $table->string('name', 40)->unique();
         $table->float('price', 10, 2)->nullable();
         $table->string('charge')->nullable();
-        // $table->string('logo')->nullable();
         $table->timestamps();
       });//
 
      Schema::table('services', function (Blueprint $table) {
-       $table->foreign('parent')->references('id')->on('services')->onDelete('cascade');
-       // $table->foreign('service_metas_id')->references('id')->on('service_metas')->onDelete('set null');
+       $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
      });
     }
 
