@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Customer;
 
 class UserController extends Controller
 {
@@ -81,6 +82,23 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function destroyCustomer(Request $request, Customer $customer)
+    {
+      $this->authorize('remove', $customer);
+      $user = $request->user();
+
+      $user->customers()->detach($customer);
+
+      return ['status' => true, 'message' => trans('msg.removed')];
+    }
+
+    public function addCustomer(Request $request, Customer $customer){
+      $this->authorize('add', $customer);
+      $user = $request->user();
+      $user->customers()->attach($customer);
+      return ['status' => true, 'message' => trans('msg.added')];
     }
 
     public function current(Request $request)

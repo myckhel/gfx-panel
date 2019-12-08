@@ -42,6 +42,8 @@ Route::group([ 'middleware' => 'auth:api' ], function() {
     Route::get('customers/payments/{customer}', 'CustomerController@payments');
     Route::get('customers/jobs/{customer}', 'CustomerController@jobs');
     Route::get('customers/properties/{customer}', 'CustomerController@properties');
+    Route::delete('users/customers/{customer}', 'UserController@destroyCustomer');
+    Route::post('users/customers/{customer}', 'UserController@addCustomer');
   // });
 
 });

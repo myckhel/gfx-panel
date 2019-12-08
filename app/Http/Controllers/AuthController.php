@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\User;
 use App\Notifications\SignupActivate;
@@ -26,12 +27,10 @@ class AuthController extends Controller
             'name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
-            // 'password_confirmation' => 'required|min:6|confirmed:password'
         ], [
             'password.confirmed' => 'The password does not match.'
         ]);
 
-        // try {
           $user = $this->create($request->all());
           try {
             $user->notify(new SignupActivate($user));
@@ -55,14 +54,6 @@ class AuthController extends Controller
                   $tokenResult->token->expires_at
               )->toDateTimeString()
           ], 201);
-        // } catch (\Exception $e) {
-          // return response()->json([
-          //     "status" => false,
-          //     "error" => "invalid_credentials",
-          //     "message" => "The user credentials were incorrect.",
-          //     "debug" => ['message' => $e->getMessage(), 'code' => $e->getCode(), 'trace' => $e->getTrace()]
-          // ], 422);
-        // }
     }
 
     /**
@@ -77,7 +68,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'activation_token' => str_random(60)
+            'activation_token' => Str::random(60)
         ]);
     }
 

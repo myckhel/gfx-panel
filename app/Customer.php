@@ -13,7 +13,7 @@ use App\CustomerServiceMeta;
 class Customer extends Model
 {
     //
-  protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country'];
+  protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country', 'lat', 'long'];
 
   public static function addNew($request){
     return self::create([
@@ -25,6 +25,8 @@ class Customer extends Model
       'city'        => $request->city,
       'address'     => $request->address,
       'country'     => $request->country,
+      'lat'         => $request->lat,
+      'long'        => $request->long,
     ]);
   }
 
@@ -51,9 +53,9 @@ class Customer extends Model
     return $this;
   }
 
-  public function properties(){
-    return $this->credentialsWithServices();
-  }
+  // public function properties(){
+  //   return $this->credentialsWithServices();
+  // }
 
   public function credentialsWithServices(){
     $services = [];

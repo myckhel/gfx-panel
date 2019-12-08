@@ -13,19 +13,15 @@ use App\CustomerServiceMeta;
 class CustomerController extends Controller
 {
   public function payments(Request $request, $customer){
-    // dd($customer);
     $customer = Customer::findOrFail($customer);
     $histories = $customer->payments()->get();
-    // dd($histories);
 
     return ['status' => true, 'message' => null, 'histories' => $histories];
   }
 
   public function jobs(Request $request, $customer){
-    // dd($customer);
     $customer = Customer::findOrFail($customer);
     $histories = $customer->jobs()->get();
-    // dd($histories);
 
     return ['status' => true, 'message' => null, 'histories' => $histories];
   }
@@ -36,7 +32,7 @@ class CustomerController extends Controller
    */
    public function index(Request $request)
    {
-     $user = $request->user();// auth()->user();
+     $user = $request->user();
      $customer = $user->customers();
      $search = $request->search;
      if ($search) {
@@ -75,30 +71,10 @@ class CustomerController extends Controller
      ]);
 
     $user = $request->user();
-     // check unique email
-     // if (Customer::checkUnique('email', $request)) {
-     //   return ['status' => false, 'message' => 'Email Exists'];
-     // }
-     // check unique phone
-     // if (Customer::checkUnique('phone', $request)) {
-     //   return ['status' => false, 'message' => 'Phone Exists'];
-     // }
      try {
        $customer = Customer::addNew($request);
 
        $user->customers()->attach($customer->id);
-         // [
-         // 'address'          => $request->address,
-         //  'city'            => $request->city,
-         //  'country'         => $request->country,
-         //  'country_code'    => $request->country_code,
-         //  'email'           => $request->email,
-         //  'firstname'       => $request->firstname,
-         //  'lastname'        => $request->lastname,
-         //  'phone'           => $request->phone,
-         //  'state'           => $request->state,
-      // ]
-      // );
        return ['status' => true, 'message' => 'Customer Added Successfully', 'customer' => $customer];
      } catch (\Exception $e) {
        return ['status' => false, 'message' => $e->getMessage()];
@@ -110,7 +86,7 @@ class CustomerController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function show($customer)
+   public function show(Customer $customer)
    {
      $this->authorize('view', $customer);
      return $customer;
@@ -133,10 +109,10 @@ class CustomerController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function update(Request $request, $id)
+   public function update(Request $request, Customer $customer)
    {
        //
-       $customer = Customer::findOrFail($id);
+       // $customer = Customer::findOrFail($id);
        return $customer->update($request->all());
    }
    /**
@@ -145,10 +121,10 @@ class CustomerController extends Controller
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-   public function destroy($id)
+   public function destroy(Customer $customer)
    {
      //
-     $customer = Customer::find($id);
+     // $customer = Customer::find($id);
      if ($customer) {
        $customer->delete();
        return ['status' => true];

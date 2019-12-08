@@ -92,4 +92,12 @@ class CustomerPolicy
     {
         //
     }
+
+    public function remove(User $user, Customer $customer){
+      return in_array($user->id, $customer->clients()->pluck('user_id')->toArray());
+    }
+
+    public function add(User $user, Customer $customer){
+      return !in_array($user->id, $customer->clients()->pluck('user_id')->toArray());
+    }
 }
