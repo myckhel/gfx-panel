@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
 use App\Customer;
 
 class UserController extends Controller
@@ -13,9 +14,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+      $user = $request->user();
+      return $user->with('metas')->paginate($this->paginate($request));
     }
 
     /**
@@ -45,9 +47,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+      $this->authorize('view', $user);
+      return $user;
     }
 
     /**
@@ -68,9 +71,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+      $this->authorize('update', $user);
+      $request->validate(['updates' => 'required|array']);
+      $updates = $request->updates;
+      $user->update($updates);
+      return $user;
     }
 
     /**
@@ -79,9 +86,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, User $user)
     {
-        //
+      $this->authorize('delete', $user);
+      $user->delete();
+      return $user;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(Request $request, User $user)
+    {
+      // $this->authorize('restore', $user);
+      // return $user->restore();
     }
 
     public function destroyCustomer(Request $request, Customer $customer)

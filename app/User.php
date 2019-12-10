@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'activation_token', 'lat', 'long'
+        'name', 'email', 'password', 'activation_token', 'lat', 'lng'
     ];
     protected $dates = ['deleted_at'];
 
@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'activation_token'
     ];
 
     /**
@@ -41,5 +41,9 @@ class User extends Authenticatable
 
     public function customers(){
       return $this->belongsToMany(Customer::class, 'user_customers')->withTimestamps();
+    }
+
+    public function metas(){
+      return $this->hasMany(UserMeta::class);
     }
 }

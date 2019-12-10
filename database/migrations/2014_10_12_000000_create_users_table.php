@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('activation_token');
             $table->string('password');
             $table->decimal('lat', 10, 7)->nullable();
-            $table->decimal('long', 10, 7)->nullable();
+            $table->decimal('lng', 10, 7)->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
