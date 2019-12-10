@@ -111,9 +111,12 @@ class CustomerController extends Controller
     */
    public function update(Request $request, Customer $customer)
    {
-       //
+     // $this->authorize('update', $customer);
        // $customer = Customer::findOrFail($id);
-       return $customer->update($request->all());
+       $request->validate(['updates' => 'required|array']);
+       $updates = $request->updates;
+       $customer->update($updates);
+       return $customer;
    }
    /**
     * Remove the specified resource from storage.
@@ -123,13 +126,11 @@ class CustomerController extends Controller
     */
    public function destroy(Customer $customer)
    {
-     //
-     // $customer = Customer::find($id);
+     $deleted;
      if ($customer) {
-       $customer->delete();
-       return ['status' => true];
+       $deleted = $customer->delete();
      }
-     return ['status' => false];
+     return ['status' => !!$deleted];
    }
 
    public function delete(Request $request)

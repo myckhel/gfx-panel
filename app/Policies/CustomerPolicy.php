@@ -54,7 +54,7 @@ class CustomerPolicy
      */
     public function update(User $user, Customer $customer)
     {
-      return false;
+      // return $user->id;
     }
 
     /**
