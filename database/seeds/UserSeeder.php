@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Customer;
 
 class UserSeeder extends Seeder
 {
@@ -12,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-      factory(User::class, 500)->create()->each(function ($user){
+      factory(User::class, 50)->create()->each(function ($user){
         $user->save();
       });
     }

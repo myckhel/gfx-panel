@@ -39,14 +39,20 @@ class AppResetCommand extends Command
      */
     public function handle()
     {
-      Log::debug('app:reset');
+      Log::debug("app:reset");
+      print("app:reset\n");
       $output['freshDb'] = Artisan::call('migrate:fresh');
+      print("freshDb");
       $output['passportDb'] = Artisan::call('migrate', [
         '--path' => 'vendor/laravel/passport/database/migrations', '--force' => true
       ]);
+      print("passportDb\n");
       $output['passportInstall'] = Artisan::call('passport:install');
+      print("passportInstall\n");
       $output['eventGen'] = Artisan::call('event:generate');
+      print("eventGen\n");
       $output['dbSeed'] = Artisan::call('db:seed');
+      print("dbSeed\n");
       // $output['MigrateDB'] = Artisan::call('migrate');
       Log::debug($output);
       print_r($output);

@@ -13,8 +13,8 @@ class PaymentTableSeeder extends Seeder
     public function run()
     {
       //
-      factory(Payment::class, 500)->create()->each(function ($customer){
-        $customer->save();
+      factory(Payment::class, 1)->create()->each(function ($payment){
+        $payment->save();
       });
     }
 }

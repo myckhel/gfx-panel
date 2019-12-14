@@ -15,8 +15,9 @@ class CreateServicesTable extends Migration
     {
       Schema::create('services', function (Blueprint $table) {
         $table->bigIncrements('id');
+        $table->bigInteger('user_id')->unsigned();
         $table->bigInteger('service_id')->unsigned()->nullable();
-        $table->string('name', 40)->unique();
+        $table->string('name');
         $table->float('price', 10, 2)->nullable();
         $table->string('charge')->nullable();
         $table->timestamps();
@@ -24,6 +25,7 @@ class CreateServicesTable extends Migration
 
      Schema::table('services', function (Blueprint $table) {
        $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
      });
     }
 

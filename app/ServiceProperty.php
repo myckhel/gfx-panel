@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\CustomerServiceServiceProperty;
 
 class ServiceProperty extends Model
 {
@@ -14,5 +15,8 @@ class ServiceProperty extends Model
 
   public function customer_properties(){
     return $this->hasMany(CustomerProperty::class);
+  }
+  public function customer_service_properties(){
+    return $this->hasMany(CustomerServiceProperty::class);
   }
 }

@@ -46,4 +46,8 @@ class User extends Authenticatable
     public function metas(){
       return $this->hasMany(UserMeta::class);
     }
+
+    public function services(){
+      return $this->hasMany(Service::class);
+    }
 }

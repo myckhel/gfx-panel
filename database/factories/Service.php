@@ -4,22 +4,31 @@
 
 use App\Service;
 use App\ServiceMeta;
+use App\ServiceProperty;
 use Faker\Generator as Faker;
 
 $factory->define(Service::class, function (Faker $faker) {
   return [
-    'parent' => $faker->randomElement((function(){
-      if (App\Service::count() > 5) {
-        return App\Service::pluck('id')->toArray();
-      } else {
-        return [NULL];
-      }
-    })()),
-    // 'service_metas_id' => ServiceMeta::inRandomOrder()->first()->id,
-    'name' => $faker->unique()->word(10),
+    // user_id
+    'name' => $faker->word(10),
     'price' => $faker->randomNumber(4),
     'charge' => $faker->randomElement(['+', '*']).$faker->randomNumber(3),
-    // 'logo' => $faker->word(10),
-    // (App\Service::all()->count() > 5) ? App\Service::inRandomOrder()->first()->id : NULL,
   ];
+});
+
+// $factory->afterMaking(Service::class, function($service, $c){
+  // print_r($service);
+  // print_r($c);
+// });
+
+// $factory->state(Service::class, function($service){
+// });
+
+$factory->afterCreating(Service::class, function($service){
+  print($service->id);
+  try {
+    $service->properties()->createMany(factory(ServiceProperty::class, 3)->make()->toArray());
+    $service->update(['service_id' => $service->service()->inRandomOrder()->first()->id]);
+  } catch (\Exception $e) {}
+  // $user->services()->createMany(factory(App\Service::class, 30)->make()->toArray());
 });

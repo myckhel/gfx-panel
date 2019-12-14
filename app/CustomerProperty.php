@@ -13,4 +13,7 @@ class CustomerProperty extends Model
   public function service_property(){
     return $this->belongsTo(ServiceProperty::class);
   }
+  public function customer_service_properties(){
+    return $this->hasMany(CustomerServiceProperty::class);
+  }
 }

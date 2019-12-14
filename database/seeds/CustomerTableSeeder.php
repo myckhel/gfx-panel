@@ -13,7 +13,7 @@ class CustomerTableSeeder extends Seeder
     public function run()
     {
       //
-      factory(Customer::class, 500)->create()->each(function ($customer){
+      factory(Customer::class, 1000)->create()->each(function ($customer){
         $customer->save();
       });
     }

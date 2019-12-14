@@ -10,7 +10,7 @@ use App\UserCustomer;
 
 $factory->define(UserCustomer::class, function (Faker $faker) {
     return [
+      // 'user_id' => User::inRandomOrder()->first()->id,
       'customer_id' => Customer::inRandomOrder()->first()->id,
-      'user_id' => User::inRandomOrder()->first()->id,
     ];
 });

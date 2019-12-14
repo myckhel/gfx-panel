@@ -28,7 +28,7 @@ class Service extends Model
     return $this;
   }
 
-  protected $fillable = [ 'name', 'price', 'charge', 'parent' ];
+  protected $fillable = [ 'name', 'price', 'charge', 'service_id', 'user_id' ];
 
   public static function addNew($request){
     $create = [

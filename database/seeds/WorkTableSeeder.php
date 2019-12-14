@@ -13,7 +13,7 @@ class WorkTableSeeder extends Seeder
     public function run()
     {
       //
-      factory(Work::class, 500)->create()->each(function ($work){
+      factory(Work::class, 1)->create()->each(function ($work){
         $work->save();
       });
     }

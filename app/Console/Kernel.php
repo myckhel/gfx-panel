@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-      Commands\AppReset::class,
+      Commands\AppResetCommand::class,
     ];
 
     /**
@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
       $schedule->command('app:reset')
-               ->daily()->withoutOverlapping();
+               ->everyMinute()->withoutOverlapping();
     }
 
     /**

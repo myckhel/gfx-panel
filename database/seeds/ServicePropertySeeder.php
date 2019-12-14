@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\ServiceMeta;
+use App\ServiceProperty;
 
-class ServiceMetaTableSeeder extends Seeder
+class ServicePropertySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class ServiceMetaTableSeeder extends Seeder
      */
     public function run()
     {
-      factory(ServiceMeta::class, 500)->create()->each(function ($service){
+      factory(ServiceProperty::class, 3)->create()->each(function ($service){
         $service->save();
       });
     }
