@@ -17,7 +17,7 @@ class CustomerService extends Model
     return $this->hasOne(CustomerServiceProperty::class);
   }
   public function properties(){
-    return $this->belongsToMany(CustomerServiceProperty::class, 'customer_properties');
+    return $this->hasMany(CustomerServiceProperty::class);
   }
   public function job(){
     return $this->hasOne(Work::class);

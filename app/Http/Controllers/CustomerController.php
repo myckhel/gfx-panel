@@ -65,6 +65,8 @@ class CustomerController extends Controller
        'email'        => 'email|unique:customers,email',
        'country_code' => 'required',
        'city'         => 'max:45',
+       'lat'         => '',
+       'lng'         => '',
        'state'        => 'max:45',
        'address'      => 'nullable',
        'country'      => 'nullable'
@@ -161,16 +163,8 @@ class CustomerController extends Controller
 
    public function properties(Customer $customer){
      $this->authorize('view', $customer);
-     // return
-     $props = [];
-     $customer_services = $customer->services()->with(['properties.service_metas.metas', 'properties', 'service'])->get();
-     $customer_services->map(function($cs) use(&$props){
-       // $props[] = $cs->properties;
-       $props[$cs->service->name] = $cs->properties;
-       // array_merge($props, $cs->properties->toArray());
-     });
-     // ->properties()->get();
-     return [$props, $customer_services];
+     $customer_services = $customer->services()->with(['properties.service_property', 'service'])->get();
+     return $customer_services;
    }
 
 }

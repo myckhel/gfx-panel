@@ -30,7 +30,8 @@ class CustomerPolicy
      */
     public function view(User $user, Customer $customer)
     {
-      return in_array($user->id, $customer->clients()->pluck('user_id')->toArray());
+      return !!$user;
+      // return in_array($user->id, $customer->clients()->pluck('user_id')->toArray());
       // return $customer->clients->contains($user->id);
     }
 

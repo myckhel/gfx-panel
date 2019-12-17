@@ -13,7 +13,7 @@ use App\CustomerServiceMeta;
 class Customer extends Model
 {
     //
-    protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country', 'lat', 'long'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'phone', 'state', 'city','address','country', 'lat', 'lng'];
     protected $hidden = ['pivot'];
 
   public static function addNew($request){
@@ -27,7 +27,7 @@ class Customer extends Model
       'address'     => $request->address,
       'country'     => $request->country,
       'lat'         => $request->lat,
-      'long'        => $request->long,
+      'lng'        => $request->lng,
     ]);
   }
 
