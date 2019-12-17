@@ -29,21 +29,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group([ 'middleware' => 'auth:api' ], function() {
   Route::get('users/current', 'UserController@current');
-  Route::resource('customers', 'CustomerController');
   Route::delete('customers/delete/multiple', 'CustomerController@delete');
   // Route::get('customer_services', 'CustomerController@customer_services');
-  Route::resource('services', 'ServiceController');
   Route::delete('services/delete/multiple', 'ServiceController@delete');
+
+  // Route::group(['middleware' => 'can:view,App\Customer'], function() {
+  Route::get('customers/profile/{customer}', 'CustomerController@profile');
+  Route::get('customers/payments/{customer}', 'CustomerController@payments');
+  Route::get('customers/jobs/{customer}', 'CustomerController@jobs');
+  Route::get('customers/properties/{customer}', 'CustomerController@properties');
+  Route::delete('users/customers/{customer}', 'UserController@destroyCustomer');
+  Route::post('users/customers/{customer}', 'UserController@addCustomer');
+  Route::get('users/stats', 'UserController@stats');
+  // });
+  Route::resource('customers', 'CustomerController');
   Route::resource('customer_services', 'CustomerServiceController');
   Route::resource('service-metas', 'ServiceMetaController');
   Route::resource('users', 'UserController');
-  // Route::group(['middleware' => 'can:view,App\Customer'], function() {
-    Route::get('customers/profile/{customer}', 'CustomerController@profile');
-    Route::get('customers/payments/{customer}', 'CustomerController@payments');
-    Route::get('customers/jobs/{customer}', 'CustomerController@jobs');
-    Route::get('customers/properties/{customer}', 'CustomerController@properties');
-    Route::delete('users/customers/{customer}', 'UserController@destroyCustomer');
-    Route::post('users/customers/{customer}', 'UserController@addCustomer');
-  // });
+  Route::resource('services', 'ServiceController');
 
 });

@@ -101,8 +101,8 @@ class UserController extends Controller
      */
     public function restore(Request $request, User $user)
     {
-      // $this->authorize('restore', $user);
-      // return $user->restore();
+      $this->authorize('restore', $user);
+      return $user->restore();
     }
 
     public function destroyCustomer(Request $request, Customer $customer)
@@ -125,9 +125,15 @@ class UserController extends Controller
     public function current(Request $request)
     {
       $user = $request->user('api');
-      if ($user) {
-        return [ 'status' => true, 'user' => $user];
-      }
+      if ($user) return [ 'status' => true, 'user' => $user];
+
       return [ 'status' => false, 'text' => 'No Authenticated User' ];
+    }
+
+    public function stats(Request $request){
+      $user = $request->user();
+
+      $user->loadCount(['customers']);
+      return ['status' => true, 'user' => $user];
     }
 }

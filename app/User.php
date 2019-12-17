@@ -47,6 +47,11 @@ class User extends Authenticatable
       return $this->hasMany(UserMeta::class);
     }
 
+    // public function customer_services(){
+    //   return $this->customers->services()->count();
+    //   return $this->hasManyThrough(CustomerService::class, UserCustomer::class);
+    // }
+
     public function services(){
       return $this->hasMany(Service::class);
     }
