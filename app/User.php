@@ -52,6 +52,11 @@ class User extends Authenticatable
     //   return $this->hasManyThrough(CustomerService::class, UserCustomer::class);
     // }
 
+    public function payments(){
+      return $this->customers->services;
+      // (Service::class);
+    }
+
     public function services(){
       return $this->hasMany(Service::class);
     }
